@@ -24,6 +24,8 @@ if "%1" == "up" %DOCKER_COMPOSE% %COMPOSE_ALL_FILES% up -d --build %SERVICES%
 if "%1" == "build" %DOCKER_COMPOSE% %COMPOSE_ALL_FILES% build %SERVICES%
 :: Generate Username (Use only after make up).
 if "%1" == "username" %DOCKER_COMPOSE% %COMPOSE_ALL_FILES% exec web python3 manage.py createsuperuser
+:: Change Password
+if "%1" == "changepass" %DOCKER_COMPOSE% %COMPOSE_ALL_FILES% exec web python3 manage.py changepassword
 :: Apply migrations
 if "%1" == "migrate" %DOCKER_COMPOSE% %COMPOSE_ALL_FILES% exec web python3 manage.py migrate
 :: Pull Docker images.

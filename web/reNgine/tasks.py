@@ -2932,6 +2932,7 @@ def http_crawl(
 
 		# Parse httpx output
 		host = line.get('host', '')
+		ip_address = line.get('ip')
 		content_length = line.get('content_length', 0)
 		http_status = line.get('status_code')
 		http_url, is_redirect = extract_httpx_url(line)
@@ -3014,15 +3015,16 @@ def http_crawl(
 			add_meta_info=False)
 
 		# Add IP object for host in DB
-		if host:
+		if ip_address:
 			ip, created = save_ip_address(
-				host,
+				ip_address,
 				subdomain,
 				subscan=self.subscan,
 				cdn=cdn)
-			self.notify(
-				fields={'IPs': f'• `{ip.address}`'},
-				add_meta_info=False)
+			if ip:
+				self.notify(
+					fields={'IPs': f'• `{ip.address}`'},
+					add_meta_info=False)
 
 		# Save subdomain and endpoint
 		if is_ran_from_subdomain_scan:
@@ -4453,11 +4455,12 @@ def save_endpoint(
 			urls=[http_url],
 			method='HEAD',
 			ctx=ctx)
-		if results:
+		if results and isinstance(results, list) and isinstance(results[0], dict):
 			endpoint_data = results[0]
-			endpoint_id = endpoint_data['endpoint_id']
-			created = endpoint_data['endpoint_created']
-			endpoint = EndPoint.objects.get(pk=endpoint_id)
+			if 'endpoint_id' in endpoint_data:
+				endpoint_id = endpoint_data['endpoint_id']
+				created = endpoint_data.get('endpoint_created', False)
+				endpoint = EndPoint.objects.get(pk=endpoint_id)
 	elif not scheme:
 		return None, False
 	else: # add dumb endpoint without probing it

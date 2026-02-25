@@ -1671,11 +1671,12 @@ def is_valid_nmap_command(cmd):
 		and doesn't contain any dangerous characters, in the most basic form
 	"""
 	# if this is not a valid command nmap command at all, dont even run it
-	if not cmd.strip().startswith('nmap'):
+	parts = cmd.split()
+	if not parts or not (parts[0] == 'nmap' or parts[0].endswith('/nmap') or parts[0].endswith('\\nmap') or parts[0].endswith('\\nmap.exe')):
 		return False
 	
 	# check for dangerous chars
-	dangerous_chars = {';', '&', '|', '>', '<', '`', '$', '(', ')', '#', '\\'}
+	dangerous_chars = {';', '&', '|', '>', '<', '`', '$', '(', ')', '#'}
 	if any(char in cmd for char in dangerous_chars):
 		return False
 		
@@ -1686,7 +1687,8 @@ def is_valid_nmap_command(cmd):
 			continue
 		
 		# check for valid characters, . - etc are allowed in valid nmap command
-		if all(c.isalnum() or c in '.,/-_' for c in part):
+		# adding : and = to support script args, port specifications and Windows paths
+		if all(c.isalnum() or c in '.,/-_:=\\' for c in part):
 			continue
 		return False
 		
