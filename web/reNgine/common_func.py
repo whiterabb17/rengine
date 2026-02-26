@@ -928,7 +928,7 @@ def get_nmap_cmd(
 	}
 	cmd = _build_cmd(cmd, options, flags)
 
-	is_nmap_valid = is_valid_nmap_command(cmd)
+	is__valid = is_valid_nmap_command(cmd)
 	if not is_nmap_valid:
 		logger.error(f'Invalid nmap command or potentially dangerous: {cmd}')
 		return None
@@ -1672,7 +1672,7 @@ def is_valid_nmap_command(cmd):
 	"""
 	# if this is not a valid command nmap command at all, dont even run it
 	parts = cmd.split()
-	if not parts or not (parts[0] == 'nmap' or parts[0].endswith('/nmap') or parts[0].endswith('\\nmap') or parts[0].endswith('\\nmap.exe')):
+	if not parts or not (parts[0] == 'nmap' or parts[0].endswith('/nmap')):
 		return False
 	
 	# check for dangerous chars
@@ -1692,4 +1692,5 @@ def is_valid_nmap_command(cmd):
 			continue
 		return False
 		
+
 	return True
