@@ -11,6 +11,7 @@ import humanize
 import redis
 import requests
 import tldextract
+import shlex
 import xmltodict
 
 from time import sleep
@@ -895,7 +896,10 @@ def _build_cmd(cmd, options, flags, sep=" "):
 	for k,v in options.items():
 		if not v:
 			continue
-		cmd += f" {k}{sep}{v}"
+		if v is True:
+			cmd += f" {k}"
+		else:
+			cmd += f" {k}{sep}{v}"
 
 	for flag in flags:
 		if not flag:
@@ -928,7 +932,7 @@ def get_nmap_cmd(
 	}
 	cmd = _build_cmd(cmd, options, flags)
 
-	is__valid = is_valid_nmap_command(cmd)
+	is_nmap_valid = is_valid_nmap_command(cmd)
 	if not is_nmap_valid:
 		logger.error(f'Invalid nmap command or potentially dangerous: {cmd}')
 		return None
@@ -1671,8 +1675,11 @@ def is_valid_nmap_command(cmd):
 		and doesn't contain any dangerous characters, in the most basic form
 	"""
 	# if this is not a valid command nmap command at all, dont even run it
-	parts = cmd.split()
-	if not parts or not (parts[0] == 'nmap' or parts[0].endswith('/nmap')):
+	try:
+		parts = shlex.split(cmd)
+	except ValueError:
+		return False
+	if not parts or not (parts[0] == 'nmap' or parts[0].endswith('/nmap') or parts[0].endswith('\\nmap') or parts[0].endswith('\\nmap.exe')):
 		return False
 	
 	# check for dangerous chars
@@ -1681,16 +1688,16 @@ def is_valid_nmap_command(cmd):
 		return False
 		
 	# but we also need to check for flags and options, for example - and -- are allowed
-	parts = cmd.split()
 	for part in parts[1:]: # ignoring nmap the first part of command
 		if part.startswith('-') or part.startswith('--'):
 			continue
 		
 		# check for valid characters, . - etc are allowed in valid nmap command
 		# adding : and = to support script args, port specifications and Windows paths
-		if all(c.isalnum() or c in '.,/-_:=\\' for c in part):
+		# adding [] for IPv6, @ for script-args, +!* for general nmap flexibility
+		# adding space to support quoted arguments from shlex.split
+		if all(c.isalnum() or c in '.,/-_:=\\ []@+!*' for c in part):
 			continue
 		return False
 		
-
 	return True
