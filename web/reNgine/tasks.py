@@ -1508,8 +1508,6 @@ def nmap(
 	output_file = self.output_path
 	output_file_xml = f'{self.results_dir}/{host}_{self.filename}'
 	vulns_file = f'{self.results_dir}/{host}_{filename_vulns}'
-	logger.warning(f'Running nmap on {host}:{ports}')
-
 	# Build cmd
 	nmap_cmd = get_nmap_cmd(
 		cmd=cmd,
