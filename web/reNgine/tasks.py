@@ -1,4 +1,5 @@
 import csv
+import requests
 import json
 import os
 import pprint
@@ -4734,3 +4735,81 @@ def llm_vulnerability_description(vulnerability_id):
 			vuln.save()
 
 	return response
+
+
+@app.task(name='fetch_proxies_task', bind=True, queue='main_scan_queue')
+def fetch_proxies_task(self):
+    logger.info("Starting automated proxy fetch and verification task.")
+    self.update_state(state='PROGRESS', meta={'message': 'Downloading new proxies', 'progress': 10})
+    urls = [
+        'https://github.com/ProxyScraper/ProxyScraper/raw/refs/heads/main/http.txt',
+        'https://sunny9577.github.io/proxy-scraper/proxies.txt'
+    ]
+    all_proxies = set()
+    for url in urls:
+        logger.info(f"Downloading proxy list from: {url}")
+        try:
+            response = requests.get(url, timeout=10)
+            if response.status_code == 200:
+                proxies = response.text.splitlines()
+                logger.info(f"Successfully downloaded {len(proxies)} proxies from {url}")
+                for p in proxies:
+                    p = p.strip()
+                    if p:
+                        all_proxies.add(p)
+            else:
+                logger.warning(f"Failed to download proxy list from {url}. Status code: {response.status_code}")
+        except Exception as e:
+            logger.error(f"Error fetching proxies from {url}: {str(e)}")
+
+    logger.info(f"Total unique proxies found after merging: {len(all_proxies)}")
+    self.update_state(state='PROGRESS', meta={'message': 'Merging proxy lists', 'progress': 30})
+    unique_proxies = list(all_proxies)
+
+    logger.info("Starting proxy verification process...")
+    self.update_state(state='PROGRESS', meta={'message': 'Checking proxy access', 'progress': 40})
+    live_proxies = []
+    total = len(unique_proxies)
+
+    def check_proxy(proxy_str):
+        try:
+            proxies = {
+                "http": f"http://{proxy_str}",
+                "https": f"http://{proxy_str}",
+            }
+            # Use a fast responding site
+            requests.get("http://www.google.com", proxies=proxies, timeout=3)
+            logger.info(f"Proxy LIVE: {proxy_str}")
+            return proxy_str
+        except:
+            # logger.debug(f"Proxy DEAD: {proxy_str}")
+            return None
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=50) as executor:
+        future_to_proxy = {executor.submit(check_proxy, proxy): proxy for proxy in unique_proxies}
+        completed = 0
+        for future in concurrent.futures.as_completed(future_to_proxy):
+            completed += 1
+            res = future.result()
+            if res:
+                live_proxies.append(res)
+
+            if completed % 100 == 0 or completed == total:
+                logger.info(f"Verification progress: {completed}/{total} - Found {len(live_proxies)} live proxies so far.")
+                progress = 40 + int((completed / total) * 50)
+                self.update_state(state='PROGRESS', meta={
+                    'message': f'Checking proxies: {completed}/{total} ({len(live_proxies)} live)',
+                    'progress': progress
+                })
+
+    logger.info(f"Proxy verification complete. Found {len(live_proxies)} live proxies out of {total} tested.")
+    self.update_state(state='PROGRESS', meta={'message': 'Discarding bad hits', 'progress': 95})
+
+    logger.info("Updating final proxy list and adding http:// prefix.")
+    self.update_state(state='PROGRESS', meta={'message': 'Proxy list updated', 'progress': 100})
+
+    # Prefix with http:// as requested
+    final_list = [f"http://{p}" if not p.startswith('http') else p for p in live_proxies]
+    
+    logger.info("Automated proxy fetch task finished successfully.")
+    return "\n".join(final_list)

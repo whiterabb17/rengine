@@ -22,6 +22,8 @@ if "%1" == "setup" %DOCKER_COMPOSE% -f docker-compose.setup.yml run --rm certs
 if "%1" == "up" %DOCKER_COMPOSE% %COMPOSE_ALL_FILES% up -d --build %SERVICES%
 :: Build all services.
 if "%1" == "build" %DOCKER_COMPOSE% %COMPOSE_ALL_FILES% build %SERVICES%
+:: Build all services no cache.
+if "%1" == "rebuild" %DOCKER_COMPOSE% %COMPOSE_ALL_FILES% build --no-cache %SERVICES%
 :: Generate Username (Use only after make up).
 if "%1" == "username" %DOCKER_COMPOSE% %COMPOSE_ALL_FILES% exec web python3 manage.py createsuperuser
 :: Change Password

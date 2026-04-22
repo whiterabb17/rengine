@@ -12,7 +12,9 @@ from django.urls import reverse
 from rolepermissions.decorators import has_permission_decorator
 
 from reNgine.common_func import *
-from reNgine.tasks import (run_command, send_discord_message, send_slack_message,send_lark_message, send_telegram_message)
+from reNgine.tasks import (run_command, send_discord_message, send_slack_message,send_lark_message, send_telegram_message, fetch_proxies_task)
+from celery.result import AsyncResult
+from reNgine.celery import app
 from scanEngine.forms import *
 from scanEngine.forms import ConfigurationForm
 from scanEngine.models import *
@@ -452,6 +454,36 @@ def report_settings(request, slug):
     context['primary_color'] = primary_color
     context['secondary_color'] = secondary_color
     return render(request, 'scanEngine/settings/report.html', context)
+
+
+@has_permission_decorator(PERM_MODIFY_SCAN_CONFIGURATIONS, redirect_url=FOUR_OH_FOUR_URL)
+def fetch_proxies(request, slug):
+    if request.method == "POST":
+        logger.info("Initiating fetch_proxies_task...")
+        task = fetch_proxies_task.delay()
+        logger.info(f"Task initiated with ID: {task.id}")
+        return http.JsonResponse({'task_id': task.id})
+    return http.JsonResponse({'error': 'Invalid request'}, status=400)
+
+
+@has_permission_decorator(PERM_MODIFY_SCAN_CONFIGURATIONS, redirect_url=FOUR_OH_FOUR_URL)
+def get_proxy_task_status(request, slug, task_id):
+    logger.info(f"Checking status for task: {task_id}")
+    task_result = AsyncResult(task_id, app=app)
+    result = {
+        "task_id": task_id,
+        "status": task_result.status,
+        "result": task_result.result if task_result.ready() else None,
+    }
+    if task_result.status == 'PROGRESS':
+        result['message'] = task_result.info.get('message')
+        result['progress'] = task_result.info.get('progress')
+    elif task_result.status == 'SUCCESS':
+        result['message'] = 'Proxy list updated'
+        result['progress'] = 100
+    
+    logger.info(f"Task {task_id} status: {task_result.status}")
+    return http.JsonResponse(result)
 
 
 @has_permission_decorator(PERM_MODIFY_SYSTEM_CONFIGURATIONS, redirect_url=FOUR_OH_FOUR_URL)

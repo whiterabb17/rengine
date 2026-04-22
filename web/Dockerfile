@@ -123,8 +123,6 @@ RUN chaos -update
 COPY ./requirements.txt /tmp/requirements.txt
 RUN pip3 install --upgrade setuptools==72.1.0
 RUN pip3 install -r /tmp/requirements.txt --no-cache-dir
-RUN apt install chromium-driver -y
-RUN bash /usr/src/github/EyeWitness/setup/setup.sh
 
 # install eyewitness
 RUN pip3 install --no-cache-dir fuzzywuzzy \
