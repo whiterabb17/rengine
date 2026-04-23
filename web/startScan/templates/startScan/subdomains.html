@@ -1,50 +1,5 @@
-{% extends 'base/base.html' %}
-{% load static %}
-{% load humanize %}
-{% load custom_tags %}
-{% block title %}
-All subdomains
-{% endblock title %}
-
-{% block custom_js_css_link %}
-<link href="{% static 'plugins/perfect-scrollbar/perfect-scrollbar.css' %}" rel="stylesheet" type="text/css" />
-<link href="{% static 'plugins/lightbox/css/lightbox.css' %}" rel="stylesheet" />
-{% endblock custom_js_css_link %}
-
-{% block main_content %}
-<div class="row justify-content-center">
-	{% include 'base/_items/subdomain_tab_content.html' with all_subdomains=True%}
-</div>
-{% include "base/_items/recon_note_modal.html" %}
-{% include "base/_items/subscan_modal.html" %}
-{# for passing subdomain id to initiate subtask scan #}
-<input type="hidden" name="subtask_subdomain_id" id="subtask_subdomain_id" value="0">
-{% endblock main_content %}
-
-
-{% block page_level_script %}
-<script src="{% static 'custom/todo.js' %}"></script>
-<script src="{% static 'note/js/todo.js' %}"></script>
-<script src="{% static 'startScan/js/detail_scan.js' %}"></script>
-<script src="{% static 'plugins/lightbox/js/lightbox.js' %}"></script>
-<script src="{% static 'plugins/perfect-scrollbar/perfect-scrollbar.min.js' %}"></script>
-<script src="{% static 'assets/js/clipboard.min.js' %}"></script>
-<script src="{% static 'startScan/js/subdomains-suggestions.js' %}"></script>
-<script src="{% static 'custom/subdomain.js' %}"></script>
-<script src="{% static 'custom/subdomain_datatable.js' %}"></script>
-<script type="text/javascript">
 $(document).ready(function() {
-	const ps = new PerfectScrollbar(document.querySelector('.mt-container'));
-	var clipboard = new Clipboard('.copyable');
-	var is_subd_grouping = false;
-	var subd_grouping_col = 8;
-	{% if request.GET.ip_address %}
-	var url = '/api/listDatatableSubdomain/?&project={{current_project.slug}}&format=datatables&ip_address={{request.GET.ip_address}}';
-	{% elif request.GET.name %}
-	var url = '/api/listDatatableSubdomain/?&project={{current_project.slug}}&format=datatables&name={{request.GET.name}}';
-	{% else %}
-	var url = '/api/listDatatableSubdomain/?&project={{current_project.slug}}&format=datatables';
-	{% endif %}
+	var url = '/api/listDatatableSubdomain/?project={{current_project.slug}}&scan_id={{scan_history_id}}&format=datatables';
 	var subdomain_datatables = $('#subdomain_scan_results').DataTable({
 		"headerCallback": function(e, a, t, n, s) {
 			e.getElementsByTagName("th")[0].innerHTML='<div class="form-check ms-1 form-check-primary"><input type="checkbox" class="float-start form-check-input chk-parent" id="head_checkbox" onclick=mainCheckBoxSelected(this)>\n<span class="new-control-indicator"></span><span style="visibility:hidden">c</span></div>\n'
@@ -128,7 +83,7 @@ $(document).ready(function() {
 							endpoint_count_badge = `<span class="pl-2 pr-2 me-1 badge badge-soft-primary badge-link bs-tooltip" title="Endpoints" onclick="get_endpoint_modal(project='{{current_project.slug}}', scan_id=null, subdomain_id=${row['id']}, '${row['name']}')">${row['endpoint_count']} <i class=" fas fa-link"></i></span>`;
 						}
 
-						if(row['waf'].length){
+						if(Array.isArray(row['waf']) && row['waf'].length){
 							waf_badge = `<div><span class="pl-2 pr-2 my-1 badge badge-soft-danger" bs-tooltip" title="WAF Detected by wafw00f!""><i class="fe-cloud-lightning mx-1"></i>WAF Detected</span>`;
 							for (var waf in row['waf']) {
 								var waf_object = row['waf'][waf];
@@ -333,160 +288,23 @@ $(document).ready(function() {
 					api.order([col_index, 'asc']).draw();
 					subdomain_datatables.rowGroup().dataSrc(this.value);
 					Snackbar.show({
-						text: 'Subdomains grouped by ' + this.value,
+						text: 'Grouping by ' + this.value,
 						pos: 'top-right',
-						duration: 2500
+						actionText: 'OK',
+						actionTextColor: '#fff',
+						backgroundColor: '#1b55e2'
 					});
 				}
 			});
 		});
 
-		$('#reload_subdomain_table_btn').click(function () {
+		$('#reload_subdomain_table_btn').click(function() {
 			subdomain_datatables.ajax.reload();
 		});
 
-		$('#subdomain-search-button').click(function () {
-			subdomain_datatables.search($("#subdomains-search").val()).draw() ;
-		});
-
 		$('#load_important_subdomain_table_btn').click(function() {
-			subdomain_datatables.search('is_important=true').draw();
+			var url = '/api/listDatatableSubdomain/?project={{current_project.slug}}&scan_id={{scan_history_id}}&is_important=true&format=datatables';
+			subdomain_datatables.ajax.url(url).load();
 		});
 
-		$('input[name=sub_http_status_filter_checkbox]').change(function() {
-			if ($(this).is(':checked')) {
-				subdomain_datatables.column(4).visible(true);
-			} else {
-				subdomain_datatables.column(4).visible(false);
-			}
-			window.localStorage.setItem('sub_http_status_filter_checkbox', $(this).is(':checked'));
-		});
-
-		$('input[name=sub_page_title_filter_checkbox]').change(function() {
-			if ($(this).is(':checked')) {
-				subdomain_datatables.column(5).visible(true);
-			} else {
-				subdomain_datatables.column(5).visible(false);
-			}
-			window.localStorage.setItem('sub_page_title_filter_checkbox', $(this).is(':checked'));
-		});
-		$('input[name=sub_ip_filter_checkbox]').change(function() {
-			if ($(this).is(':checked')) {
-				subdomain_datatables.column(6).visible(true);
-			} else {
-				subdomain_datatables.column(6).visible(false);
-			}
-			window.localStorage.setItem('sub_ip_filter_checkbox', $(this).is(':checked'));
-		});
-		$('input[name=sub_ports_filter_checkbox]').change(function() {
-			if ($(this).is(':checked')) {
-				subdomain_datatables.column(7).visible(true);
-			} else {
-				subdomain_datatables.column(7).visible(false);
-			}
-			window.localStorage.setItem('sub_ports_filter_checkbox', $(this).is(':checked'));
-		});
-		$('input[name=sub_content_length_filter_checkbox]').change(function() {
-			if ($(this).is(':checked')) {
-				subdomain_datatables.column(8).visible(true);
-			} else {
-				subdomain_datatables.column(8).visible(false);
-			}
-			window.localStorage.setItem('sub_content_length_filter_checkbox', $(this).is(':checked'));
-		});
-		$('input[name=sub_response_time_filter_checkbox]').change(function() {
-			if ($(this).is(':checked')) {
-				subdomain_datatables.column(10).visible(true);
-			} else {
-				subdomain_datatables.column(10).visible(false);
-			}
-			window.localStorage.setItem('sub_response_time_filter_checkbox', $(this).is(':checked'));
-		});
-		$('input[name=sub_screenshot_filter_checkbox]').change(function() {
-			if ($(this).is(':checked')) {
-				subdomain_datatables.column(9).visible(true);
-			} else {
-				subdomain_datatables.column(9).visible(false);
-			}
-			window.localStorage.setItem('sub_screenshot_filter_checkbox', $(this).is(':checked'));
-		});
-
-
-		$("#subdomain_scan_results").on('click', '.btn-delete-subdomain', function () {
-			var subdomain_id = $(this).attr('id');
-			var data = {'subdomain_ids': [subdomain_id]};
-			var row = this;
-			Swal.fire({
-				showCancelButton: true,
-				title: 'Delete Subdomain!',
-				text: 'Do you really want to delete this subdomain? This action cannot be undone.',
-				icon: 'error',
-				confirmButtonText: 'Delete',
-			}).then((result) => {
-				if (result.isConfirmed) {
-					Swal.fire({
-						title: 'Deleting Subdomain...',
-						allowOutsideClick: false
-					});
-					swal.showLoading();
-					fetch('/api/action/subdomain/delete/', {
-						method: 'POST',
-						credentials: "same-origin",
-						headers: {
-							"X-CSRFToken": getCookie("csrftoken"),
-							'Content-Type': 'application/json'
-						},
-						body: JSON.stringify(data)
-					})
-					.then(response => response.json())
-					.then(function (response) {
-						swal.close();
-						if (response['status']) {
-							$(row).parent().parent().parent().remove();
-							Snackbar.show({
-								text: 'Subdomain successfully deleted!',
-								pos: 'top-right',
-								duration: 2500
-							});
-						}
-						else{
-							Swal.fire({
-								title:  'Could not delete Subdomain!',
-								icon: 'fail',
-							});
-						}
-					});
-				}
-			});;
-			$('a[data-toggle="tooltip"]').tooltip("hide")
-		});
-
-		$("#subdomain_scan_results").on('click', '.btn-scan-subdomain', function () {
-			$('input[type=checkbox]').prop('checked',false);
-			$('#subscan-modal').modal('show');
-			var subdomain_id = $(this).attr('id');
-			$('a[data-toggle="tooltip"]').tooltip("hide")
-			$('#subtask_subdomain_id').val(subdomain_id);
-			// to distinguish multiple subscan or single, put a extra attribute on button
-			$('#btn-initiate-subtask').attr('multiple-subscan', false);
-		});
-
-		var subdomain_cols = [
-			'sub_http_status_filter_checkbox',
-			'sub_page_title_filter_checkbox',
-			'sub_ip_filter_checkbox',
-			'sub_ports_filter_checkbox',
-			'sub_content_length_filter_checkbox',
-			'sub_response_time_filter_checkbox',
-			'sub_screenshot_filter_checkbox'
-		];
-
-		for (var col in subdomain_cols) {
-			if(window.localStorage.getItem(subdomain_cols[col]) != null && window.localStorage.getItem(subdomain_cols[col]) === 'false'){
-				$('#' + subdomain_cols[col]).prop('checked', false);
-			}
-		}
-
-});
-</script>
-{% endblock page_level_script %}
+	});

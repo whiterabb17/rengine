@@ -138,4 +138,47 @@ class LLMAttackSuggestionGenerator:
 			'description': response_content,
 			'input': user_input
 		}
+
+
+class LLMReportGenerator:
+
+	def __init__(self, logger=None):
+		selected_model = OllamaSettings.objects.first()
+		self.model_name = selected_model.selected_model if selected_model else 'gpt-3.5-turbo'
+		self.use_ollama = selected_model.use_ollama if selected_model else False
+		self.logger = logger
+
+	def _generate_section(self, system_prompt, context):
+		if self.use_ollama:
+			prompt = system_prompt + "\nAssessment Context:\n" + context
+			llm = Ollama(base_url=OLLAMA_INSTANCE, model=self.model_name)
+			return llm.invoke(prompt)
+		else:
+			openai_api_key = get_open_ai_key()
+			if not openai_api_key:
+				return "Error: OpenAI API Key not set"
+			try:
+				openai.api_key = openai_api_key
+				response = openai.ChatCompletion.create(
+					model=self.model_name,
+					messages=[
+						{'role': 'system', 'content': system_prompt},
+						{'role': 'user', 'content': context}
+					]
+				)
+				return response['choices'][0]['message']['content']
+			except Exception as e:
+				return f"Error: {str(e)}"
+
+	def generate_overview(self, context):
+		from reNgine.definitions import LLM_REPORT_OVERVIEW_SYSTEM_PROMPT
+		return self._generate_section(LLM_REPORT_OVERVIEW_SYSTEM_PROMPT, context)
+
+	def generate_executive_brief(self, context):
+		from reNgine.definitions import LLM_REPORT_EXECUTIVE_BRIEF_SYSTEM_PROMPT
+		return self._generate_section(LLM_REPORT_EXECUTIVE_BRIEF_SYSTEM_PROMPT, context)
+
+	def generate_conclusion(self, context):
+		from reNgine.definitions import LLM_REPORT_CONCLUSION_SYSTEM_PROMPT
+		return self._generate_section(LLM_REPORT_CONCLUSION_SYSTEM_PROMPT, context)
 		

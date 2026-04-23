@@ -549,6 +549,14 @@ class ReportForm(forms.ModelForm):
                 "id": "show_executive_summary",
             }))
 
+    enable_llm_report_generation = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(
+            attrs={
+                "class": "form-check-input",
+                "id": "enable_llm_report_generation",
+            }))
+
     executive_summary_description = forms.CharField(
         required=False,
         widget=forms.Textarea(
@@ -580,6 +588,7 @@ class ReportForm(forms.ModelForm):
         self.initial['show_rengine_banner'] = key.show_rengine_banner
         self.initial['show_executive_summary'] = key.show_executive_summary
         self.initial['executive_summary_description'] = key.executive_summary_description
+        self.initial['enable_llm_report_generation'] = key.enable_llm_report_generation
         self.initial['show_footer'] = key.show_footer
         self.initial['footer_text'] = key.footer_text
         self.initial['primary_color'] = key.primary_color
@@ -589,6 +598,7 @@ class ReportForm(forms.ModelForm):
         self.initial['show_rengine_banner'] = True
         self.initial['show_footer'] = False
         self.initial['show_executive_summary'] = False
+        self.initial['enable_llm_report_generation'] = False
         self.initial['primary_color'] = '#FFB74D'
         self.initial['secondary_color'] = '#212121'
         self.initial['executive_summary_description'] = '''On **{scan_date}**, **{target_name}** engaged **{company_name}** to perform a security audit on their Web application.

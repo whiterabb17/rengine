@@ -1167,6 +1167,35 @@ def create_report(request, id):
         # Convert to Markdown
         data['executive_summary_description'] = markdown.markdown(description)
 
+        # LLM Generated Sections
+        if report.enable_llm_report_generation:
+            from reNgine.llm import LLMReportGenerator
+            llm_gen = LLMReportGenerator()
+            
+            # Prepare context for LLM
+            llm_context = f"Target: {scan.domain.name}\n"
+            if scan.domain.description:
+                llm_context += f"Target Description: {scan.domain.description}\n"
+            llm_context += f"Scan Date: {scan.start_scan_date.strftime('%d %B, %Y')}\n"
+            llm_context += f"Subdomains discovered: {subdomains.count()}\n"
+            llm_context += f"Vulnerabilities identified: {vulns.count()}\n"
+            llm_context += f"- Critical: {vulns.filter(severity=4).count()}\n"
+            llm_context += f"- High: {vulns.filter(severity=3).count()}\n"
+            llm_context += f"- Medium: {vulns.filter(severity=2).count()}\n"
+            llm_context += f"- Low: {vulns.filter(severity=1).count()}\n"
+            llm_context += f"- Info: {vulns.filter(severity=0).count()}\n"
+            
+            # List some vulnerability names if any
+            if vulns.exists():
+                llm_context += "Top Vulnerabilities:\n"
+                for v in unique_vulns[:10]:
+                    llm_context += f"- {v['name']} ({v['count']})\n"
+
+            data['llm_overview'] = markdown.markdown(llm_gen.generate_overview(llm_context))
+            data['llm_executive_brief'] = markdown.markdown(llm_gen.generate_executive_brief(llm_context))
+            data['llm_conclusion'] = markdown.markdown(llm_gen.generate_conclusion(llm_context))
+            data['enable_llm_report_generation'] = True
+
         primary_color = report.primary_color
         secondary_color = report.secondary_color
 

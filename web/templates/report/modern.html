@@ -680,6 +680,16 @@
                             <span class="toc-number" data-href="#executive-summary"></span>
                         </div>
                     {% endif %}
+                    {% if enable_llm_report_generation %}
+                        <div class="toc-item">
+                            <a href="#llm-overview" class="toc-link">Assessment Overview</a>
+                            <span class="toc-number" data-href="#llm-overview"></span>
+                        </div>
+                        <div class="toc-item">
+                            <a href="#llm-executive-brief" class="toc-link">Executive Brief</a>
+                            <span class="toc-number" data-href="#llm-executive-brief"></span>
+                        </div>
+                    {% endif %}
                     <div class="toc-item">
                         <a href="#quick-summary" class="toc-link">Quick Summary</a>
                         <span class="toc-number" data-href="#quick-summary"></span>
@@ -704,6 +714,12 @@
                             <span class="toc-number" data-href="#vulnerabilities-discovered"></span>
                         </div>
                     {% endif %}
+                    {% if enable_llm_report_generation %}
+                        <div class="toc-item">
+                            <a href="#llm-conclusion" class="toc-link">Final Conclusion</a>
+                            <span class="toc-number" data-href="#llm-conclusion"></span>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </article>
@@ -712,6 +728,18 @@
                 <h2 id="executive-summary" class="page-title">Executive Summary</h2>
                 <br />
                 {{ executive_summary_description | safe }}
+            </article>
+        {% endif %}
+        {% if enable_llm_report_generation %}
+            <article id="llm-overview-page" style="page-break-before: always">
+                <h2 id="llm-overview" class="page-title">Assessment Overview</h2>
+                <br />
+                {{ llm_overview | safe }}
+            </article>
+            <article id="llm-executive-brief-page" style="page-break-before: always">
+                <h2 id="llm-executive-brief" class="page-title">Executive Brief</h2>
+                <br />
+                {{ llm_executive_brief | safe }}
             </article>
         {% endif %}
         <article id="quick-summary-page" style="page-break-before: always">
@@ -1167,6 +1195,13 @@
                     {% endfor %}
                 </article>
             {% endif %}
+        {% if enable_llm_report_generation %}
+            <article id="llm-conclusion-page" style="page-break-before: always">
+                <h2 id="llm-conclusion" class="page-title">Final Conclusion</h2>
+                <br />
+                {{ llm_conclusion | safe }}
+            </article>
+        {% endif %}
             <article id="end-of-report">
                 <div class="content-wrapper">
                     <h1 class="no-fade-line">END OF REPORT</h1>

@@ -2402,7 +2402,7 @@ $(document).ready(function() {
 								endpoint_count_badge = `<span class="pl-2 pr-2 me-1 badge badge-soft-primary badge-link bs-tooltip" title="Endpoints" onclick="get_endpoint_modal('{{current_project.slug}}', {{history.id}}, ${row['id']}, '${row['name']}')">${row['endpoint_count']} <i class=" fas fa-link"></i></span>`;
 							}
 
-							if(row['waf'].length){
+							if(Array.isArray(row['waf']) && row['waf'].length){
 								waf_badge = `<div><span class="pl-2 pr-2 my-1 badge badge-soft-danger" bs-tooltip" title="WAF Detected by wafw00f!""><i class="fe-cloud-lightning mx-1"></i>WAF Detected</span>`;
 								for (var waf in row['waf']) {
 									var waf_object = row['waf'][waf];
