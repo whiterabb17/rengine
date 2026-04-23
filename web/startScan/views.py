@@ -1,4 +1,5 @@
 import markdown
+import requests
 
 from celery import group
 from weasyprint import HTML, CSS
@@ -160,6 +161,10 @@ def detail_scan(request, id, slug):
     total_count = vulns.count()
     total_count_ignore_info = vulns.exclude(severity=0).count()
 
+    # Exploitable vulnerabilities
+    exploitable_vulns = vulns.exclude(exploit_url__isnull=True).exclude(exploit_url__exact='')
+    exploitable_count = exploitable_vulns.count()
+
     # Emails
     exposed_count = emails.exclude(password__isnull=True).count()
 
@@ -181,6 +186,8 @@ def detail_scan(request, id, slug):
         'unknown_count': unknown_count,
         'total_vulnerability_count': total_count,
         'total_vul_ignore_info_count': total_count_ignore_info,
+        'exploitable_count': exploitable_count,
+        'non_exploitable_count': total_count - exploitable_count,
         'vulnerability_list': vulns.order_by('-severity').all(),
         'scan_history_active': 'active',
         'scan_engines': scan_engines,
@@ -745,6 +752,46 @@ def change_vuln_status(request, id):
         vuln.open_status = not vuln.open_status
         vuln.save()
     return HttpResponse('')
+
+
+def update_vuln_validation_status(request, id):
+    if request.method == 'POST':
+        vuln = get_object_or_404(Vulnerability, id=id)
+        status = request.POST.get('status')
+        if status in ['unverified', 'verified', 'not_working', 'patched']:
+            vuln.validation_status = status
+            vuln.save()
+            return JsonResponse({'status': True})
+    return JsonResponse({'status': False})
+
+
+def fetch_exploit_source(request, id):
+    vuln = get_object_or_404(Vulnerability, id=id)
+    if vuln.exploit_url:
+        try:
+            # We should probably use a timeout and limit the response size
+            response = requests.get(vuln.exploit_url, timeout=10, verify=False)
+            if response.status_code == 200:
+                # If it's HTML, we might want to extract just the code if possible
+                # But for now let's just return the text
+                return JsonResponse({
+                    'status': True,
+                    'content': response.text
+                })
+            else:
+                return JsonResponse({
+                    'status': False,
+                    'error': f'Failed to fetch exploit source. Status code: {response.status_code}'
+                })
+        except Exception as e:
+            return JsonResponse({
+                'status': False,
+                'error': str(e)
+            })
+    return JsonResponse({
+        'status': False,
+        'error': 'No exploit URL found for this vulnerability.'
+    })
 
 
 @has_permission_decorator(PERM_MODIFY_SYSTEM_CONFIGURATIONS, redirect_url=FOUR_OH_FOUR_URL)

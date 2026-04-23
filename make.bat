@@ -29,6 +29,8 @@ if "%1" == "username" %DOCKER_COMPOSE% %COMPOSE_ALL_FILES% exec web python3 mana
 :: Change Password
 if "%1" == "changepass" %DOCKER_COMPOSE% %COMPOSE_ALL_FILES% exec web python3 manage.py changepassword
 :: Apply migrations
+if "%1" == "makemigrations" %DOCKER_COMPOSE% %COMPOSE_ALL_FILES% exec web python3 manage.py makemigrations
+:: Apply migrations
 if "%1" == "migrate" %DOCKER_COMPOSE% %COMPOSE_ALL_FILES% exec web python3 manage.py migrate
 :: Pull Docker images.
 if "%1" == "pull" %DOCKER_COMPOSE% docker.pkg.github.com & docker-compose %COMPOSE_ALL_FILES% pull

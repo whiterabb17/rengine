@@ -1032,6 +1032,10 @@
                     {% endfor %}
                   </ul>
                 {% endif %}
+                {% if vulnerability.exploit_url %}
+                  <p class="mini-heading primary-color" style="margin-top: 10px;">Potential Exploit</p>
+                  {{vulnerability.exploit_url}}
+                {% endif %}
                 <br>
                 <br>
               </div>

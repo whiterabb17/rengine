@@ -1153,6 +1153,14 @@
                                         </ul>
                                     </div>
                                     {% endif %}
+                                    {% if vulnerability.exploit_url %}
+                                    <div class="vuln-section">
+                                        <p class="section-title">Potential Exploit</p>
+                                        <p>
+                                            <a href="{{vulnerability.exploit_url}}" target="_blank" rel="noopener noreferrer" class="no-style-a">{{vulnerability.exploit_url}}</a>
+                                        </p>
+                                    </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         {% endfor %}

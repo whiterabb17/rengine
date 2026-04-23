@@ -492,6 +492,15 @@ class Vulnerability(models.Model):
 	# used for subscans
 	vuln_subscan_ids = models.ManyToManyField('SubScan', related_name='vuln_subscan_ids', blank=True)
 
+	exploit_url = models.CharField(max_length=2500, null=True, blank=True)
+	VULNERABILITY_STATUS_CHOICES = (
+		('unverified', 'Unverified'),
+		('verified', 'Verified'),
+		('not_working', 'Not Working'),
+		('patched', 'Patched'),
+	)
+	validation_status = models.CharField(max_length=20, choices=VULNERABILITY_STATUS_CHOICES, default='unverified')
+
 	def __str__(self):
 		cve_str = ', '.join(f'`{cve.name}`' for cve in self.cve_ids.all())
 		severity = NUCLEI_REVERSE_SEVERITY_MAP[self.severity]

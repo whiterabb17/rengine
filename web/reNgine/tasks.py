@@ -1309,7 +1309,9 @@ def port_scan(self, hosts=[], ctx={}, description=None):
 		list: List of open ports (dict).
 	"""
 	input_file = f'{self.results_dir}/input_subdomains_port_scan.txt'
-	proxy = get_random_proxy()
+	# projectdiscovery tools like naabu and httpx seem to fail when proxies are used
+	# ensuring that proxies are never used for naabu
+	proxy = ''
 
 	# Config
 	config = self.yaml_configuration.get(PORT_SCAN) or {}
@@ -2896,8 +2898,9 @@ def http_crawl(
 	if len(urls) < threads:
 		threads = len(urls)
 
-	# Get random proxy
-	proxy = get_random_proxy()
+	# projectdiscovery tools like naabu and httpx seem to fail when proxies are used
+	# ensuring that proxies are never used for httpx
+	proxy = ''
 
 	# Run command
 	cmd += f' -cl -ct -rt -location -td -websocket -cname -asn -cdn -probe -random-agent'
@@ -3448,20 +3451,22 @@ def parse_nmap_results(xml_file, output_file=None):
 					elif script_id == 'vulners':
 						vulns = parse_nmap_vulners_output(script_output)
 						url_vulns.extend(vulns)
-					# elif script_id == 'http-server-header':
-					# 	TODO: nmap can help find technologies as well using the http-server-header script
-					# 	regex = r'(\w+)/([\d.]+)\s?(?:\((\w+)\))?'
-					# 	tech_name, tech_version, tech_os = re.match(regex, test_string).groups()
-					# 	Technology.objects.get_or_create(...)
-					# elif script_id == 'http_csrf':
-					# 	vulns = parse_nmap_http_csrf_output(script_output)
-					# 	url_vulns.extend(vulns)
+					elif script_id == 'http-server-header':
+						vulns = parse_nmap_http_server_header_output(script_output)
+						url_vulns.extend(vulns)
+					elif script_id == 'fingerprint-strings':
+						vulns = parse_nmap_fingerprint_strings_output(script_output)
+						url_vulns.extend(vulns)
+					elif script_id == 'https-redirect':
+						vulns = parse_nmap_https_redirect_output(script_output)
+						url_vulns.extend(vulns)
 					else:
 						logger.warning(f'Script output parsing for script "{script_id}" is not supported yet.')
 
 				# Add URL & source to vuln
 				for vuln in url_vulns:
-					vuln['source'] = NMAP
+					if 'source' not in vuln:
+						vuln['source'] = NMAP
 					# TODO: This should extend to any URL, not just HTTP
 					vuln['http_url'] = url
 					if 'http_path' in vuln:
@@ -3469,6 +3474,33 @@ def parse_nmap_results(xml_file, output_file=None):
 					all_vulns.append(vuln)
 
 	return all_vulns
+
+
+def parse_nmap_https_redirect_output(script_output):
+	return [{
+		'name': 'HTTPS Redirect Detected',
+		'severity': 0,
+		'description': f'Service redirects to HTTPS:\n{script_output}',
+		'type': 'info'
+	}]
+
+
+def parse_nmap_http_server_header_output(script_output):
+	return [{
+		'name': 'HTTP Server Header',
+		'severity': 0,
+		'description': f'HTTP Server Header detected: {script_output}',
+		'type': 'info'
+	}]
+
+
+def parse_nmap_fingerprint_strings_output(script_output):
+	return [{
+		'name': 'Service Fingerprint',
+		'severity': 0,
+		'description': f'Nmap discovered service fingerprint strings:\n{script_output}',
+		'type': 'info'
+	}]
 
 
 def parse_nmap_http_csrf_output(script_output):
@@ -3545,11 +3577,20 @@ def parse_nmap_vulscan_output(script_output):
 	return vulns
 
 
+def get_severity_from_cvss(cvss_score):
+	"""Get severity integer from CVSS score."""
+	if cvss_score < 4:
+		return NUCLEI_SEVERITY_MAP['low']
+	elif cvss_score < 7:
+		return NUCLEI_SEVERITY_MAP['medium']
+	elif cvss_score < 9:
+		return NUCLEI_SEVERITY_MAP['high']
+	else:
+		return NUCLEI_SEVERITY_MAP['critical']
+
+
 def parse_nmap_vulners_output(script_output, url=''):
 	"""Parse nmap vulners script output.
-
-	TODO: Rework this as it's currently matching all CVEs no matter the
-	confidence.
 
 	Args:
 		script_output (str): Script output.
@@ -3558,14 +3599,55 @@ def parse_nmap_vulners_output(script_output, url=''):
 		list: List of found vulnerabilities.
 	"""
 	vulns = []
-	# Check for CVE in script output
-	CVE_REGEX = re.compile(r'.*(CVE-\d\d\d\d-\d+).*')
-	matches = CVE_REGEX.findall(script_output)
-	matches = list(dict.fromkeys(matches))
-	for cve_id in matches: # get CVE info
-		vuln = cve_to_vuln(cve_id, vuln_type='nmap-vulners-nse')
-		if vuln:
-			vulns.append(vuln)
+	lines = script_output.split('\n')
+	for line in lines:
+		line = line.strip()
+		# Typical line: ID   SCORE   URL   [*EXPLOIT*]
+		# Example: PACKETSTORM:173661      9.8     https://vulners.com/packetstorm/PACKETSTORM:173661      *EXPLOIT*
+		parts = re.split(r'\s+', line)
+		if len(parts) >= 3:
+			vuln_id = parts[0]
+			try:
+				vuln_cvss = float(parts[1])
+			except (ValueError, TypeError):
+				continue # Not a vuln line
+
+			vuln_url = parts[2]
+			is_exploit = '*EXPLOIT*' in line
+
+			# If it's a CVE, we can still use cve_to_vuln but we might want to override some fields
+			if vuln_id.startswith('CVE-'):
+				vuln = cve_to_vuln(vuln_id, vuln_type='nmap-vulners-nse')
+			else:
+				# Custom vuln for non-CVE findings
+				vuln = {
+					'name': vuln_id,
+					'type': 'nmap-vulners-nse',
+					'severity': get_severity_from_cvss(vuln_cvss),
+					'description': f"Vulnerability found by nmap vulners script: {vuln_id}",
+					'cvss_score': vuln_cvss,
+					'references': [vuln_url],
+					'cve_ids': [],
+					'cwe_ids': []
+				}
+
+			if vuln:
+				vuln['source'] = 'VULNERS'
+				if is_exploit:
+					vuln['exploit_url'] = vuln_url
+				vulns.append(vuln)
+
+	# If no structured findings found, fallback to the old regex
+	if not vulns:
+		# Check for CVE in script output
+		CVE_REGEX = re.compile(r'.*(CVE-\d\d\d\d-\d+).*')
+		matches = CVE_REGEX.findall(script_output)
+		matches = list(dict.fromkeys(matches))
+		for cve_id in matches: # get CVE info
+			vuln = cve_to_vuln(cve_id, vuln_type='nmap-vulners-nse')
+			if vuln:
+				vuln['source'] = 'VULNERS'
+				vulns.append(vuln)
 	return vulns
 
 
@@ -4367,6 +4449,9 @@ def save_vulnerability(**vuln_data):
 	tags = vuln_data.pop('tags', [])
 	subscan = vuln_data.pop('subscan', None)
 
+	exploit_url = vuln_data.pop('exploit_url', None)
+	validation_status = vuln_data.pop('validation_status', 'unverified')
+
 	# remove nulls
 	vuln_data = replace_nulls(vuln_data)
 
@@ -4375,6 +4460,12 @@ def save_vulnerability(**vuln_data):
 	if created:
 		vuln.discovered_date = timezone.now()
 		vuln.open_status = True
+		if exploit_url:
+			vuln.exploit_url = exploit_url
+		vuln.validation_status = validation_status
+		vuln.save()
+	elif exploit_url and not vuln.exploit_url:
+		vuln.exploit_url = exploit_url
 		vuln.save()
 
 	# Save vuln tags
