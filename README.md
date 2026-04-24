@@ -3,10 +3,10 @@
 </p>
 
 <p align="center">
-  <h3>reNgine: The Ultimate Web Reconnaissance & Vulnerability Scanner 🚀</h3>
+  <h3>Unofficial Fork of reNgine: The Ultimate Web Reconnaissance & Vulnerability Scanner 🚀</h3>
 </p>
 
-<p align="center"><a href="https://github.com/yogeshojha/rengine/releases" target="_blank"><img src="https://img.shields.io/badge/version-v2.2.4-informational?&logo=none" alt="reNgine Latest Version" /></a>&nbsp;<a href="https://www.gnu.org/licenses/gpl-3.0" target="_blank"><img src="https://img.shields.io/badge/License-GPLv3-red.svg?&logo=none" alt="License" /></a>&nbsp;<a href="#" target="_blank"><img src="https://img.shields.io/badge/first--timers--only-friendly-blue.svg?&logo=none" alt="" /></a></p>
+<p align="center"><a href="https://github.com/yogeshojha/rengine/releases" target="_blank"><img src="https://img.shields.io/badge/version-v2.3.0-informational?&logo=none" alt="reNgine Latest Version" /></a>&nbsp;<a href="https://www.gnu.org/licenses/gpl-3.0" target="_blank"><img src="https://img.shields.io/badge/License-GPLv3-red.svg?&logo=none" alt="License" /></a>&nbsp;<a href="#" target="_blank"><img src="https://img.shields.io/badge/first--timers--only-friendly-blue.svg?&logo=none" alt="" /></a></p>
 
 <p align="center">
   <a href="https://www.youtube.com/watch?v=Xk_YH83IQgg" target="_blank"><img src="https://img.shields.io/badge/BlackHat--Arsenal--Asia-2023-blue.svg?logo=none" alt="" /></a>&nbsp;
@@ -30,12 +30,11 @@
 <a href="https://opensourcesecurityindex.io/" target="_blank" rel="noopener">
 <img style="width: 282px; height: 56px" src="https://opensourcesecurityindex.io/badge.svg" alt="Open Source Security Index - Fastest Growing Open Source Security Projects" width="282" height="56" /> </a>
 </p>
-<h4>reNgine 2.2.4 is released!</h4>
+<h4>reNgine 2.3.0 is released!</h4>
 <p>
-  reNgine 2.2.4 comes with automatic proxy fetching and validation, better NMap vulners script parsing, LLM-based report summaries and conclusions, bounty hub where you can sync and import your hackerone programs, in app notifications, chaos as subdomain enumeration tool, and many more. 
-  <b>Check out <a href="https://rengine.wiki/whats-new/2_2_3/">What's new in reNgine 2.2.4!</a></b>
+  reNgine 2.3.0 comes with automatic proxy fetching and validation, better NMap vulners script parsing, LLM-based report summaries and conclusions, bounty hub where you can sync and import your hackerone programs, in app notifications, chaos as subdomain enumeration tool, and many more. 
+  <b>Check out <a href="https://rengine.wiki/whats-new/2_3_0/">What's new in reNgine 2.3.0!</a></b>
 </p>
-
 
 <h4>What is reNgine?</h4>
 reNgine is your ultimate web application reconnaissance suite, designed to supercharge the recon process for security pros, pentesters, and bug bounty hunters. It is go-to web application reconnaissance suite that's designed to simplify and streamline the reconnaissance process for all the needs of security professionals, penetration testers, and bug bounty hunters. With its highly configurable engines, data correlation capabilities, continuous monitoring, database-backed reconnaissance data, and an intuitive user interface, reNgine redefines how you gather critical information about your target web applications.
