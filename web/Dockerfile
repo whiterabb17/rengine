@@ -34,7 +34,9 @@ RUN apt update -y && \
     libpci-dev \
     libpciaccess-dev \
     libegl-dev \
-    libegl1
+    libegl1 \
+    libcap2-bin \
+    libcap2
 
 
 # Install essential packages
@@ -63,7 +65,9 @@ RUN apt install -y --no-install-recommends \
     libjpeg-dev \
     libopenjp2-7-dev \
     python3-netaddr \
-    software-properties-common
+    software-properties-common \
+    ike-scan \
+    sslscan
 
 RUN add-apt-repository ppa:mozillateam/ppa
 

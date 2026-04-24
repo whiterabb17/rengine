@@ -200,7 +200,8 @@ def initiate_scan(
 				dir_file_fuzz.si(ctx=ctx, description='Directories & files fuzz'),
 				vulnerability_scan.si(ctx=ctx, description='Vulnerability scan'),
 				screenshot.si(ctx=ctx, description='Screenshot'),
-				waf_detection.si(ctx=ctx, description='WAF detection')
+				waf_detection.si(ctx=ctx, description='WAF detection'),
+				firewall_vpn_scan.si(ctx=ctx, description='Firewall & VPN scan')
 			)
 		)
 
@@ -4962,3 +4963,71 @@ def fetch_proxies_task(self):
     
     logger.info("Automated proxy fetch task finished successfully.")
     return "\n".join(final_list)
+
+
+@app.task(name='firewall_vpn_scan', queue='main_scan_queue', base=RengineTask, bind=True)
+def firewall_vpn_scan(self, ctx={}, description=None):
+	"""
+	Specialized scan for Firewalls and VPNs (Sophos focus).
+	Runs ike-scan and sslscan.
+	"""
+	config = self.yaml_configuration.get(FIREWALL_VPN_SCAN) or {}
+	run_ike_scan = config.get('run_ike_scan', True)
+	run_sslscan = config.get('run_sslscan', True)
+	ssl_ports = config.get('ports', [443, 4444, 8443])
+
+	target = self.domain.name
+	proxy = get_random_proxy()
+
+	# 1. IKE-scan
+	if run_ike_scan:
+		logger.warning(f'Running IKE-scan on {target}')
+		ike_output_file = f'{self.results_dir}/ike_scan_{target}.txt'
+		# ike-scan does not natively support HTTP/SOCKS proxies
+		cmd = f'ike-scan --multiline {target} > {ike_output_file}'
+		run_command(
+			cmd,
+			shell=True,
+			history_file=self.history_file,
+			scan_id=self.scan_id,
+			activity_id=self.activity_id)
+
+		if os.path.isfile(ike_output_file):
+			with open(ike_output_file, 'r') as f:
+				content = f.read()
+			if "Main Mode" in content or "Aggressive Mode" in content:
+				vuln_data = {
+					'name': 'IPSec VPN Detected',
+					'severity': 0,
+					'description': f'IKE-scan detected an IPSec VPN service.\n\nResults:\n{content}',
+					'http_url': target,
+					'type': 'Infrastructure'
+				}
+				save_vulnerability(target_domain=self.domain, scan_history=self.scan, **vuln_data)
+
+	# 2. SSLScan
+	if run_sslscan:
+		for port in ssl_ports:
+			logger.warning(f'Running SSLScan on {target}:{port}')
+			ssl_output_file = f'{self.results_dir}/sslscan_{target}_{port}.xml'
+			cmd = f'sslscan --xml={ssl_output_file} {target}:{port}'
+			if proxy:
+				p = proxy.replace('http://', '').replace('https://', '')
+				cmd += f' --proxy={p}'
+			run_command(
+				cmd,
+				shell=True,
+				history_file=self.history_file,
+				scan_id=self.scan_id,
+				activity_id=self.activity_id)
+
+			if os.path.isfile(ssl_output_file):
+				vuln_data = {
+					'name': f'SSL/TLS Configuration Audit (Port {port})',
+					'severity': 0,
+					'description': f'SSLScan performed an audit of SSL/TLS configurations on port {port}. Check the results directory for detailed XML report.',
+					'http_url': f'https://{target}:{port}',
+					'type': 'SSL/TLS'
+				}
+				save_vulnerability(target_domain=self.domain, scan_history=self.scan, **vuln_data)
+	return True

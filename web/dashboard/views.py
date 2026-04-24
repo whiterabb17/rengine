@@ -9,7 +9,7 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.contrib import messages
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.db.models.functions import TruncDay
 from django.dispatch import receiver
 from django.shortcuts import redirect, render, get_object_or_404
@@ -57,6 +57,7 @@ def index(request, slug):
     high_count = vulnerabilities.filter(severity=3).count()
     critical_count = vulnerabilities.filter(severity=4).count()
     unknown_count = vulnerabilities.filter(severity=-1).count()
+    firewall_count = subdomains.filter(Q(waf__name__icontains='Sophos') | Q(ip_addresses__ports__number__in=[4444, 500, 4500])).distinct().count()
 
     vulnerability_feed = vulnerabilities.order_by('-discovered_date')[:50]
     activity_feed = scan_activities.order_by('-time')[:50]
@@ -144,6 +145,7 @@ def index(request, slug):
         'high_count': high_count,
         'critical_count': critical_count,
         'unknown_count': unknown_count,
+        'firewall_count': firewall_count,
         'total_vul_count': total_vul_count,
         'total_vul_ignore_info_count': total_vul_ignore_info_count,
         'vulnerability_feed': vulnerability_feed,

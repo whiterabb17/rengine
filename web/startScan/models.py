@@ -3,6 +3,7 @@ from django.apps import apps
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
+from django.db.models import Q
 from django.utils import timezone
 from reNgine.definitions import (CELERY_TASK_STATUSES,
 								 NUCLEI_REVERSE_SEVERITY_MAP)
@@ -160,6 +161,12 @@ class ScanHistory(models.Model):
 			.filter(severity=4)
 			.count()
 		)
+
+	def get_firewall_count(self):
+		return Subdomain.objects.filter(scan_history__id=self.id).filter(
+			Q(waf__name__icontains='Sophos') |
+			Q(ip_addresses__ports__number__in=[4444, 500, 4500, 8443, 1194])
+		).distinct().count()
 
 	def get_progress(self):
 		"""Formulae to calculate count number of true things to do, for http

@@ -384,12 +384,14 @@
       .low { border-left: 1mm solid #27ae60; }
       .info { border-left: 1mm solid #3498db; }
       .unknown { border-left: 1mm solid #95a5a6; }
+      .warning { border-left: 1mm solid #f1c40f; }
       .critical .number, .critical::before { color: #e74c3c; border-right-color: #e74c3c; }
       .high .number, .high::before { color: #e67e22; border-right-color: #e67e22; }
       .medium .number, .medium::before { color: #f39c12; border-right-color: #f39c12; }
       .low .number, .low::before { color: #27ae60; border-right-color: #27ae60; }
       .info .number, .info::before { color: #3498db; border-right-color: #3498db; }
       .unknown .number, .unknown::before { color: #95a5a6; border-right-color: #95a5a6; }
+      .warning .number, .warning::before { color: #f1c40f; border-right-color: #f1c40f; }
       .primary { color: {{primary_color}}; }
 
       {% comment %} table related {% endcomment %}
@@ -764,6 +766,10 @@
                         <div class="box critical">
                             <h3>Vulnerabilities</h3>
                             <div class="number">{{ all_vulnerabilities_count }}</div>
+                        </div>
+                        <div class="box warning">
+                            <h3>Firewalls/VPNs</h3>
+                            <div class="number">{{ scan_object.get_firewall_count }}</div>
                         </div>
                     </div>
                 </div>

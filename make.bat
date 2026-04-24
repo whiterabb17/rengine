@@ -42,6 +42,10 @@ if "%1" == "stop" %DOCKER_COMPOSE% %COMPOSE_ALL_FILES% stop %SERVICES%
 if "%1" == "restart" %DOCKER_COMPOSE% %COMPOSE_ALL_FILES% restart %SERVICES%
 :: Remove all services containers.
 if "%1" == "rm" %DOCKER_COMPOSE% %COMPOSE_ALL_FILES% rm -f %SERVICES%
+:: Load external tools.
+if "%1" == "loadtools" %DOCKER_COMPOSE% %COMPOSE_ALL_FILES% exec web python3 manage.py loaddata external_tools.yaml
+:: Load default engines.
+if "%1" == "loadengines" %DOCKER_COMPOSE% %COMPOSE_ALL_FILES% exec web python3 manage.py loaddata default_scan_engines.yaml
 :: Tail all logs with -n 1000.
 if "%1" == "logs" %DOCKER_COMPOSE% %COMPOSE_ALL_FILES% logs --follow --tail=1000 %SERVICES%
 :: Show all Docker images.

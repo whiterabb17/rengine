@@ -91,6 +91,7 @@ BLIND_XSS_SERVER = 'blind_xss_server'
 USER_AGENT = 'user_agent'
 DELAY = 'delay'
 PROVIDERS = 'providers'
+FIREWALL_VPN_SCAN = 'firewall_vpn_scan'
 
 ###############################################################################
 # Scan DEFAULTS
