@@ -1,5 +1,12 @@
 # Changelog
 
+## v2.2.3
+
+### New Features
+- **Automatic Proxy Fetching and Validation**: Automatically sources and tests live proxies from multiple providers to ensure scan stability and stealth.
+- **Improved NMap Vulners Script Parsing**: Enhanced parsing of NMap vulnerability scan results for more accurate service and version identification.
+- **LLM-Powered Report Summaries and Conclusions**: Automatically generates Assessment Overviews, Executive Briefs, and Final Conclusions in PDF reports using OpenAI or local LLMs (Ollama).
+
 ## v2.2.0
 
 ## What's Changed

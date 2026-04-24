@@ -3444,12 +3444,16 @@ def parse_nmap_results(xml_file, output_file=None):
 					script_id = script['@id']
 					script_output = script['@output']
 					script_output_table = script.get('table', [])
+					service = port.get('service', {})
+					service_product = service.get('@product', '')
+					service_version = service.get('@version', '')
+					service_title = f"{service_product} {service_version}".strip()
 					logger.debug(f'Ran nmap script "{script_id}" on {port_number}/{port_protocol}:\n{script_output}\n')
 					if script_id == 'vulscan':
 						vulns = parse_nmap_vulscan_output(script_output)
 						url_vulns.extend(vulns)
 					elif script_id == 'vulners':
-						vulns = parse_nmap_vulners_output(script_output)
+						vulns = parse_nmap_vulners_output(script_output, service_title=service_title)
 						url_vulns.extend(vulns)
 					elif script_id == 'http-server-header':
 						vulns = parse_nmap_http_server_header_output(script_output)
@@ -3589,7 +3593,7 @@ def get_severity_from_cvss(cvss_score):
 		return NUCLEI_SEVERITY_MAP['critical']
 
 
-def parse_nmap_vulners_output(script_output, url=''):
+def parse_nmap_vulners_output(script_output, url='', service_title=''):
 	"""Parse nmap vulners script output.
 
 	Args:
@@ -3617,16 +3621,43 @@ def parse_nmap_vulners_output(script_output, url=''):
 			vuln_url = parts[2]
 			is_exploit = '*EXPLOIT*' in line
 
+			# Determine a better vulnerability name
+			vuln_name = vuln_id
+			if service_title:
+				vuln_name = f"{service_title} ({vuln_id})"
+
+			# Extract tags
+			tags = []
+			if is_exploit:
+				tags.append('is exploit')
+			
+			source_tag = ''
+			vuln_url_lower = vuln_url.lower()
+			if 'packetstorm' in vuln_url_lower:
+				source_tag = 'packetstorm'
+			elif 'githubexploit' in vuln_url_lower:
+				source_tag = 'githubexploit'
+			elif 'seebug' in vuln_url_lower or 'ssv:' in vuln_id.lower():
+				source_tag = 'seebug'
+			elif 'zdt' in vuln_url_lower or '1337day' in vuln_url_lower or '1337day' in vuln_id.lower():
+				source_tag = '1337day'
+			elif 'exploit-db' in vuln_url_lower or 'edb' in vuln_id.lower():
+				source_tag = 'exploit-db'
+			
+			if source_tag:
+				tags.append(source_tag)
+
 			# Create a base vulnerability object
 			vuln = {
-				'name': vuln_id,
+				'name': vuln_name,
 				'type': 'nmap-vulners-nse',
 				'severity': get_severity_from_cvss(vuln_cvss),
-				'description': f"Vulnerability found by nmap vulners script: {vuln_id}",
+				'description': f"Vulnerability found by nmap vulners script: {vuln_id}. Product: {service_title}",
 				'cvss_score': vuln_cvss,
 				'references': [vuln_url],
 				'cve_ids': [],
-				'cwe_ids': []
+				'cwe_ids': [],
+				'tags': tags
 			}
 
 			# If it's a CVE, try to enrich it with cve_to_vuln
@@ -3634,7 +3665,25 @@ def parse_nmap_vulners_output(script_output, url=''):
 				enriched_vuln = cve_to_vuln(vuln_id, vuln_type='nmap-vulners-nse')
 				if enriched_vuln:
 					# Use enriched data but keep some nmap specifics if needed
+					old_tags = vuln.get('tags', [])
 					vuln.update(enriched_vuln)
+					
+					# Merge tags
+					if 'tags' not in vuln:
+						vuln['tags'] = []
+					vuln['tags'].extend(old_tags)
+					vuln['tags'] = list(set(vuln['tags']))
+					
+					# Improve name if service_title is present
+					if service_title:
+						# If enriched name is just the CVE, use service title
+						if enriched_vuln.get('name') == vuln_id:
+							vuln['name'] = f"{service_title} ({vuln_id})"
+						else:
+							# Combine them if they are different
+							if service_title.lower() not in enriched_vuln.get('name', '').lower():
+								vuln['name'] = f"{service_title}: {enriched_vuln.get('name')}"
+					
 					# Ensure the CVSS score from nmap is used if API has -1 or something
 					if vuln.get('cvss_score', -1) == -1:
 						vuln['cvss_score'] = vuln_cvss

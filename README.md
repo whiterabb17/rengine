@@ -6,7 +6,7 @@
   <h3>reNgine: The Ultimate Web Reconnaissance & Vulnerability Scanner 🚀</h3>
 </p>
 
-<p align="center"><a href="https://github.com/yogeshojha/rengine/releases" target="_blank"><img src="https://img.shields.io/badge/version-v2.2.0-informational?&logo=none" alt="reNgine Latest Version" /></a>&nbsp;<a href="https://www.gnu.org/licenses/gpl-3.0" target="_blank"><img src="https://img.shields.io/badge/License-GPLv3-red.svg?&logo=none" alt="License" /></a>&nbsp;<a href="#" target="_blank"><img src="https://img.shields.io/badge/first--timers--only-friendly-blue.svg?&logo=none" alt="" /></a></p>
+<p align="center"><a href="https://github.com/yogeshojha/rengine/releases" target="_blank"><img src="https://img.shields.io/badge/version-v2.2.4-informational?&logo=none" alt="reNgine Latest Version" /></a>&nbsp;<a href="https://www.gnu.org/licenses/gpl-3.0" target="_blank"><img src="https://img.shields.io/badge/License-GPLv3-red.svg?&logo=none" alt="License" /></a>&nbsp;<a href="#" target="_blank"><img src="https://img.shields.io/badge/first--timers--only-friendly-blue.svg?&logo=none" alt="" /></a></p>
 
 <p align="center">
   <a href="https://www.youtube.com/watch?v=Xk_YH83IQgg" target="_blank"><img src="https://img.shields.io/badge/BlackHat--Arsenal--Asia-2023-blue.svg?logo=none" alt="" /></a>&nbsp;
@@ -30,10 +30,10 @@
 <a href="https://opensourcesecurityindex.io/" target="_blank" rel="noopener">
 <img style="width: 282px; height: 56px" src="https://opensourcesecurityindex.io/badge.svg" alt="Open Source Security Index - Fastest Growing Open Source Security Projects" width="282" height="56" /> </a>
 </p>
-<h4>reNgine 2.2.0 is released!</h4>
+<h4>reNgine 2.2.4 is released!</h4>
 <p>
-  reNgine 2.2.0 comes with bounty hub where you can sync and import your hackerone programs, in app notifications, chaos as subdomain enumeration tool, ability to upload multiple nuclei and gf patterns, support for regex in out of scope subdomain config, additional pdf report template and many more. 
-  <b>Check out <a href="https://rengine.wiki/whats-new/2_2_0/">What's new in reNgine 2.2.0!</a></b>
+  reNgine 2.2.4 comes with automatic proxy fetching and validation, better NMap vulners script parsing, LLM-based report summaries and conclusions, bounty hub where you can sync and import your hackerone programs, in app notifications, chaos as subdomain enumeration tool, and many more. 
+  <b>Check out <a href="https://rengine.wiki/whats-new/2_2_3/">What's new in reNgine 2.2.4!</a></b>
 </p>
 
 
@@ -88,7 +88,7 @@ reNgine is not an ordinary reconnaissance suite; it's a game-changer! We've turb
 
 💎&nbsp;&nbsp;Subscans: Subscan is a game-changing feature in reNgine, setting it apart as the only open-source tool of its kind to offer this capability. With Subscan, waiting for the entire pipeline to complete is a thing of the past. Now, users can swiftly respond to newfound discoveries during reconnaissance. Whether you've stumbled upon an intriguing subdomain and wish to conduct a focused port scan or want to delve deeper with a vulnerability assessment, reNgine has you covered.
 
-📃&nbsp;&nbsp; PDF Reports: In addition to its robust reconnaissance capabilities, reNgine goes the extra mile by simplifying the report generation process, recognizing the crucial role that PDF reports play in the realm of end-to-end reconnaissance. Users can effortlessly generate and customize PDF reports to suit their exact needs. Whether it's a Full Scan Report, Vulnerability Report, or a concise reconnaissance report, reNgine provides the flexibility to choose the report type that best communicates your findings. Moreover, the level of customization is unparalleled, allowing users to select report colors, fine-tune executive summaries, and even add personalized touches like company names and footers. With GPT integration, your reports aren't just a report, with remediation steps, and impacts, you get 360-degree view of the vulnerabilities you've uncovered.
+📃&nbsp;&nbsp; PDF Reports: In addition to its robust reconnaissance capabilities, reNgine goes the extra mile by simplifying the report generation process, recognizing the crucial role that PDF reports play in the realm of end-to-end reconnaissance. Users can effortlessly generate and customize PDF reports to suit their exact needs. Whether it's a Full Scan Report, Vulnerability Report, or a concise reconnaissance report, reNgine provides the flexibility to choose the report type that best communicates your findings. Moreover, the level of customization is unparalleled, allowing users to select report colors, fine-tune executive summaries, and even add personalized touches like company names and footers. With GPT and LLM integration, your reports aren't just a report; with Assessment Overviews, Executive Briefs, Final Conclusions, remediation steps, and impacts, you get a 360-degree view of the vulnerabilities you've uncovered.
 
 🔖&nbsp; &nbsp; Say Hello to Projects! reNgine 2.0 introduces a powerful addition that enables you to efficiently organize your web application reconnaissance efforts. With this feature, you can create distinct project spaces, each tailored to a specific purpose, such as personal bug bounty hunting, client engagements, or any other specialized recon task. Each projects will have separate dashboard and all the scan results will be separated from each project, while scan engines and configuration will be shared across all the projects.
 
@@ -98,7 +98,7 @@ reNgine is not an ordinary reconnaissance suite; it's a game-changer! We've turb
   - 🔍 Penetration Tester: Penetration Tester will be allowed to modify and initiate scans and subscans, add or update targets, etc. A penetration tester will not be allowed to modify system configurations.
   - 📊 Auditor: Auditor can only view and download the report. An auditor can not change any system or scan related configurations nor can initiate any scans or subscans.
 
-🚀&nbsp;&nbsp; GPT Vulnerability Report Generation: Get ready for the future of penetration testing reports with reNgine's groundbreaking feature: "GPT-Powered Report Generation"! With the power of OpenAI's GPT, reNgine now provides you with detailed vulnerability descriptions, remediation strategies, and impact assessments that read like they were written by a human security expert! **But that's not all!** Our GPT-driven reports go the extra mile by scouring the web for related news articles, blogs, and references, so you have a 360-degree view of the vulnerabilities you've uncovered. With reNgine 2.0 revolutionize your penetration testing game and impress your clients with reports that are not just informative but engaging and comprehensive with detailed analysis on impact assessment and remediation strategies.
+🚀&nbsp;&nbsp; GPT/LLM-Powered Report Generation: Get ready for the future of penetration testing reports with reNgine's groundbreaking feature: "GPT-Powered Report Generation"! With the power of OpenAI's GPT or local LLMs (Ollama), reNgine now provides you with detailed vulnerability descriptions, remediation strategies, and impact assessments that read like they were written by a human security expert! **But that's not all!** reNgine now automatically generates Assessment Overviews, Executive Briefs, and Final Conclusions, giving you a complete report structure. Our GPT-driven reports go the extra mile by scouring the web for related news articles, blogs, and references, so you have a 360-degree view of the vulnerabilities you've uncovered. With reNgine 2.2.3 revolutionize your penetration testing game and impress your clients with reports that are not just informative but engaging and comprehensive with detailed analysis on impact assessment and remediation strategies.
 
 🥷&nbsp;&nbsp; GPT-Powered Attack Surface Generation: With reNgine 2.0, reNgine seamlessly integrates with GPT to identify the attacks that you can likely perform on a subdomain. By making use of reconnaissance data such as page title, open ports, subdomain name etc. reNgine can advise you the attacks you could perform on a target. reNgine will also provide you the rationale on why the specific attack is likely to be successful.
 
@@ -126,6 +126,7 @@ reNgine is not an ordinary reconnaissance suite; it's a game-changer! We've turb
     * Dalfox XSS Scanner
     * CRLFuzzer
     * Misconfigured S3 Scanner
+    * NMap Vulners (Improved Parsing)
   * WHOIS Identification
   * WAF Detection
 * OSINT Capabilities
@@ -139,14 +140,14 @@ reNgine is not an ordinary reconnaissance suite; it's a game-changer! We've turb
 * Support for Parallel Scans
 * Support for Subscans
 * Recon Data visualization
-* GPT Vulnerability Description, Impact and Remediation generation
+* GPT-Powered Vulnerability Description, Impact, Remediation, and Report Summaries/Conclusions
 * GPT Attack Surface Generator
 * Multiple Roles and Permissions to cater a team's need
 * Customizable Alerts/Notifications on Slack, Discord, and Telegram
 * Automatically report Vulnerabilities to HackerOne
 * Recon Notes and Todos
 * Clocked Scans (Run reconnaissance exactly at X Hours and Y minutes) and Periodic Scans (Runs reconnaissance every X minutes/- hours/days/week)
-* Proxy Support
+* Proxy Support with Automatic Proxy Fetching and Validation
 * Screenshot Gallery with Filters
 * Powerful recon data filtering with autosuggestions
 * Recon Data changes, find new/removed subdomains/endpoints
