@@ -3598,6 +3598,8 @@ def parse_nmap_vulners_output(script_output, url=''):
 	Returns:
 		list: List of found vulnerabilities.
 	"""
+	if not script_output or not isinstance(script_output, str):
+		return []
 	vulns = []
 	lines = script_output.split('\n')
 	for line in lines:
@@ -3615,21 +3617,28 @@ def parse_nmap_vulners_output(script_output, url=''):
 			vuln_url = parts[2]
 			is_exploit = '*EXPLOIT*' in line
 
-			# If it's a CVE, we can still use cve_to_vuln but we might want to override some fields
+			# Create a base vulnerability object
+			vuln = {
+				'name': vuln_id,
+				'type': 'nmap-vulners-nse',
+				'severity': get_severity_from_cvss(vuln_cvss),
+				'description': f"Vulnerability found by nmap vulners script: {vuln_id}",
+				'cvss_score': vuln_cvss,
+				'references': [vuln_url],
+				'cve_ids': [],
+				'cwe_ids': []
+			}
+
+			# If it's a CVE, try to enrich it with cve_to_vuln
 			if vuln_id.startswith('CVE-'):
-				vuln = cve_to_vuln(vuln_id, vuln_type='nmap-vulners-nse')
-			else:
-				# Custom vuln for non-CVE findings
-				vuln = {
-					'name': vuln_id,
-					'type': 'nmap-vulners-nse',
-					'severity': get_severity_from_cvss(vuln_cvss),
-					'description': f"Vulnerability found by nmap vulners script: {vuln_id}",
-					'cvss_score': vuln_cvss,
-					'references': [vuln_url],
-					'cve_ids': [],
-					'cwe_ids': []
-				}
+				enriched_vuln = cve_to_vuln(vuln_id, vuln_type='nmap-vulners-nse')
+				if enriched_vuln:
+					# Use enriched data but keep some nmap specifics if needed
+					vuln.update(enriched_vuln)
+					# Ensure the CVSS score from nmap is used if API has -1 or something
+					if vuln.get('cvss_score', -1) == -1:
+						vuln['cvss_score'] = vuln_cvss
+						vuln['severity'] = get_severity_from_cvss(vuln_cvss)
 
 			if vuln:
 				vuln['source'] = 'VULNERS'
@@ -3664,7 +3673,7 @@ def cve_to_vuln(cve_id, vuln_type=''):
 	if not cve_info:
 		logger.error(f'Could not fetch CVE info for cve {cve_id}. Skipping.')
 		return None
-	vuln_cve_id = cve_info['id']
+	vuln_cve_id = cve_info.get('id', cve_info.get('CVE', cve_id))
 	vuln_name = vuln_cve_id
 	vuln_description = cve_info.get('summary', 'none').replace(vuln_cve_id, '').strip()
 	try:
@@ -3679,9 +3688,9 @@ def cve_to_vuln(cve_id, vuln_type=''):
 
 	# Parse ovals for a better vuln name / type
 	ovals = cve_info.get('oval', [])
-	if ovals:
-		vuln_name = ovals[0]['title']
-		vuln_type = ovals[0]['family']
+	if ovals and isinstance(ovals, list) and len(ovals) > 0:
+		vuln_name = ovals[0].get('title', vuln_name)
+		vuln_type = ovals[0].get('family', vuln_type)
 
 	# Set vulnerability severity based on CVSS score
 	vuln_severity = 'info'

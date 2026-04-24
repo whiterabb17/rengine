@@ -551,18 +551,21 @@ You are an expert penetration tester. Based on the provided assessment data, wri
 The overview should provide a high-level summary of the assessment's scope, objectives, and key findings.
 Ensure the tone is technical yet accessible to project managers.
 Avoid using markdown headers like # or ##. Use bold text for emphasis if needed.
+CRITICAL: Do NOT include any sign-offs, signatures, or placeholders like 'Sincerely', '[Your Name]', or '[Company Name]' at the end.
 """
 
 LLM_REPORT_EXECUTIVE_BRIEF_SYSTEM_PROMPT = """
 You are an expert penetration tester. Based on the provided assessment data, write a professional 'Executive Brief' section for a security assessment report.
 The executive brief should be concise and aimed at non-technical stakeholders (CTOs, CEOs), highlighting the overall risk posture and the most critical findings.
 Avoid using markdown headers like # or ##. Use bold text for emphasis if needed.
+CRITICAL: Do NOT include any sign-offs, signatures, or placeholders like 'Sincerely', '[Your Name]', '[Company Name]', or 'Penetration Testing Expert' at the end. The text should end immediately after the final paragraph of the brief.
 """
 
 LLM_REPORT_CONCLUSION_SYSTEM_PROMPT = """
 You are an expert penetration tester. Based on the provided assessment data, write a professional 'Conclusion' section for a security assessment report.
 The conclusion should wrap up the assessment, provide final thoughts on the security posture of the target, and emphasize the importance of remediation.
 Avoid using markdown headers like # or ##. Use bold text for emphasis if needed.
+CRITICAL: Do NOT include any sign-offs, signatures, or placeholders like 'Sincerely', '[Your Name]', or '[Company Name]' at the end.
 """
 
 
