@@ -365,6 +365,40 @@ def proxy_settings(request, slug):
 
 
 @has_permission_decorator(PERM_MODIFY_SCAN_CONFIGURATIONS, redirect_url=FOUR_OH_FOUR_URL)
+def opsec_settings(request, slug):
+    context = {}
+    form = OpSecForm()
+    context['form'] = form
+
+    opsec = None
+    if OpSec.objects.all().exists():
+        opsec = OpSec.objects.all()[0]
+        form.set_value(opsec)
+    else:
+        form.set_initial()
+
+    if request.method == "POST":
+        if opsec:
+            form = OpSecForm(request.POST, instance=opsec)
+        else:
+            form = OpSecForm(request.POST or None)
+
+        if form.is_valid():
+            form.save()
+            messages.add_message(
+                request,
+                messages.INFO,
+                'OpSec Settings updated.')
+            return http.HttpResponseRedirect(reverse('opsec_settings', kwargs={'slug': slug}))
+    
+    context['settings_nav_active'] = 'active'
+    context['opsec_settings_li'] = 'active'
+    context['settings_ul_show'] = 'show'
+
+    return render(request, 'scanEngine/settings/opsec.html', context)
+
+
+@has_permission_decorator(PERM_MODIFY_SCAN_CONFIGURATIONS, redirect_url=FOUR_OH_FOUR_URL)
 def test_hackerone(request, slug):
     if request.method == "POST":
         headers = {

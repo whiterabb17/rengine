@@ -5,7 +5,7 @@ ARG GECKOVERSION=0.36.0
 ARG GOVERSION=1.21.5
 
 RUN ARCH=$(dpkg --print-architecture) \ 
-    && if [ "${ARCH}" ! "arm64" ] || [ "${ARCH}" ! "amd64" ]; then \
+    && if [ "${ARCH}" != "arm64" ] && [ "${ARCH}" != "amd64" ]; then \
       echo "reNgine not supported, encountered unknown architecture: ${TARGETPLATFORM}" \
       && exit 1; \
     fi
@@ -70,6 +70,10 @@ RUN apt install -y --no-install-recommends \
     sslscan
 
 RUN add-apt-repository ppa:mozillateam/ppa
+
+# Install uv
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+ENV PATH="/root/.local/bin:${PATH}"
 
 RUN ARCH=$(dpkg --print-architecture) \ 
     && curl -L https://go.dev/dl/go${GOVERSION}.linux-${ARCH}.tar.gz | tar -xzC /usr/local

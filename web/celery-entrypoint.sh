@@ -111,7 +111,6 @@ then
   echo "Cloning theHarvester"
   git clone https://github.com/laramies/theHarvester /usr/src/github/theHarvester
 fi
-python3 -m pip install -r /usr/src/github/theHarvester/requirements/base.txt
 
 # clone vulscan
 if [ ! -d "/usr/src/github/scipag_vulscan" ]
