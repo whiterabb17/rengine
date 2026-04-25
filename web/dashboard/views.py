@@ -438,3 +438,34 @@ def list_bountyhub_programs(request, slug):
     context['platform'] = platform.capitalize()
     
     return render(request, 'dashboard/bountyhub_programs.html', context)
+    
+
+def monitoring_dashboard(request, slug):
+    try:
+        project = Project.objects.get(slug=slug)
+    except Project.DoesNotExist:
+        return HttpResponseRedirect(reverse('four_oh_four'))
+    
+    # Get all monitoring discoveries for this project
+    discoveries = MonitoringDiscovery.objects.filter(domain__project=project).order_by('-discovery_date')
+    
+    # Statistics
+    total_discoveries = discoveries.count()
+    subdomain_discoveries = discoveries.filter(discovery_type='subdomain').count()
+    endpoint_discoveries = discoveries.filter(discovery_type='directory').count()
+    login_discoveries = discoveries.filter(discovery_type='login').count()
+    
+    # Recent discoveries
+    recent_discoveries = discoveries[:100]
+    
+    context = {
+        'monitoring_active': 'active',
+        'project': project,
+        'discoveries': recent_discoveries,
+        'total_discoveries': total_discoveries,
+        'subdomain_discoveries': subdomain_discoveries,
+        'endpoint_discoveries': endpoint_discoveries,
+        'login_discoveries': login_discoveries,
+    }
+    
+    return render(request, 'dashboard/monitoring.html', context)

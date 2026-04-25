@@ -1,0 +1,175 @@
+{% extends 'base/base.html' %}
+{% load humanize %}
+{% load static %}
+
+{% block title %}
+Continuous Monitoring Dashboard
+{% endblock title %}
+
+{% block page_title %}
+Continuous Monitoring Dashboard
+{% endblock page_title %}
+
+{% block custom_js_css_link %}
+<link rel="stylesheet" type="text/css" href="{% static 'custom/custom.css' %}">
+{% endblock custom_js_css_link %}
+
+{% block breadcrumb_title %}
+<li class="breadcrumb-item"><a href="{% url 'dashboardIndex' project.slug %}">Dashboard</a></li>
+<li class="breadcrumb-item active">Monitoring</li>
+{% endblock breadcrumb_title %}
+
+{% block main_content %}
+<div class="row">
+  <div class="col-md-6 col-xl-3">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-6">
+            <div class="avatar-sm bg-soft-primary rounded">
+              <i class="fe-monitor avatar-title font-22 text-primary"></i>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="text-end">
+              <h3 class="text-dark my-1"><span data-plugin="counterup">{{ total_discoveries }}</span></h3>
+              <p class="text-muted mb-1 text-truncate">Total Discoveries</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-xl-3">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-6">
+            <div class="avatar-sm bg-soft-success rounded">
+              <i class="fe-globe avatar-title font-22 text-success"></i>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="text-end">
+              <h3 class="text-dark my-1"><span data-plugin="counterup">{{ subdomain_discoveries }}</span></h3>
+              <p class="text-muted mb-1 text-truncate">New Subdomains</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-xl-3">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-6">
+            <div class="avatar-sm bg-soft-info rounded">
+              <i class="fe-link avatar-title font-22 text-info"></i>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="text-end">
+              <h3 class="text-dark my-1"><span data-plugin="counterup">{{ endpoint_discoveries }}</span></h3>
+              <p class="text-muted mb-1 text-truncate">New Directories</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-xl-3">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-6">
+            <div class="avatar-sm bg-soft-warning rounded">
+              <i class="fe-lock avatar-title font-22 text-warning"></i>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="text-end">
+              <h3 class="text-dark my-1"><span data-plugin="counterup">{{ login_discoveries }}</span></h3>
+              <p class="text-muted mb-1 text-truncate">Login Pages</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="header-title mb-4">Recent Discoveries</h4>
+        <div class="table-responsive">
+          <table class="table table-hover table-centered mb-0" id="monitoring-table">
+            <thead class="table-light">
+              <tr>
+                <th>Type</th>
+                <th>Target</th>
+                <th>Discovery</th>
+                <th>Details</th>
+                <th>Date</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for discovery in discoveries %}
+              <tr>
+                <td>
+                  {% if discovery.discovery_type == 'subdomain' %}
+                  <span class="badge badge-soft-success">Subdomain</span>
+                  {% elif discovery.discovery_type == 'login' %}
+                  <span class="badge badge-soft-warning">Login Page</span>
+                  {% elif discovery.discovery_type == 'directory' %}
+                  <span class="badge badge-soft-info">Directory</span>
+                  {% endif %}
+                </td>
+                <td><a href="{% url 'target_summary' project.slug discovery.domain.id %}">{{ discovery.domain.name }}</a></td>
+                <td>
+                  <code class="text-dark">
+                    {% if discovery.discovery_type == 'subdomain' %}
+                    {{ discovery.content.name }}
+                    {% else %}
+                    {{ discovery.content.url }}
+                    {% endif %}
+                  </code>
+                </td>
+                <td>
+                  {% if discovery.discovery_type == 'login' or discovery.discovery_type == 'directory' %}
+                  <span class="badge badge-outline-secondary">{{ discovery.content.status }}</span>
+                  <small class="ms-1 text-muted">{{ discovery.content.title|truncatechars:30 }}</small>
+                  {% endif %}
+                </td>
+                <td>{{ discovery.discovery_date|naturaltime }}</td>
+                <td>
+                  <a href="{% url 'scan_history' project.slug discovery.scan_history.id %}" class="btn btn-xs btn-light"><i class="mdi mdi-eye"></i> View Scan</a>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="6" class="text-center">No discoveries found yet. Monitoring runs will populate this table.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock main_content %}
+
+{% block page_level_script %}
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#monitoring-table').DataTable({
+      "order": [[4, "desc"]],
+      "pageLength": 25,
+    });
+  });
+</script>
+{% endblock page_level_script %}

@@ -43,6 +43,9 @@ Target Summary
 				<li class="nav-item">
 					<a class="nav-link" id="pills-vulnerabilities-tab" data-bs-toggle="tab" aria-expanded="false" class="nav-link" href="#vulnerabilities-tab">Vulnerabilities</a>
 				</li>
+				<li class="nav-item">
+					<a class="nav-link" id="pills-monitoring-tab" data-bs-toggle="tab" aria-expanded="false" class="nav-link" href="#monitoring-tab">Monitoring</a>
+				</li>
 			</ul>
 		</div>
 	</div>
@@ -714,6 +717,69 @@ Target Summary
 
 <div class="tab-pane" id="vulnerabilities-tab">
 	{% include 'base/_items/vulnerability_tab_content.html' %}
+</div>
+
+<div class="tab-pane" id="monitoring-tab">
+	<div class="row">
+		<div class="col-12">
+			<div class="card">
+				<div class="card-body">
+					<h4 class="header-title mb-4">Monitoring Discoveries for {{ target.name }}</h4>
+					<div class="table-responsive">
+						<table class="table table-hover table-centered mb-0" id="target-monitoring-table">
+							<thead class="table-light">
+								<tr>
+									<th>Type</th>
+									<th>Discovery</th>
+									<th>Details</th>
+									<th>Date</th>
+									<th>Scan History</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for discovery in monitoring_discoveries %}
+								<tr>
+									<td>
+										{% if discovery.discovery_type == 'subdomain' %}
+										<span class="badge badge-soft-success">Subdomain</span>
+										{% elif discovery.discovery_type == 'login' %}
+										<span class="badge badge-soft-warning">Login Page</span>
+										{% elif discovery.discovery_type == 'directory' %}
+										<span class="badge badge-soft-info">Directory</span>
+										{% endif %}
+									</td>
+									<td>
+										<code class="text-dark">
+											{% if discovery.discovery_type == 'subdomain' %}
+											{{ discovery.content.name }}
+											{% else %}
+											{{ discovery.content.url }}
+											{% endif %}
+										</code>
+									</td>
+									<td>
+										{% if discovery.discovery_type == 'login' or discovery.discovery_type == 'directory' %}
+										<span class="badge badge-outline-secondary">{{ discovery.content.status }}</span>
+										<small class="ms-1 text-muted">{{ discovery.content.title|truncatechars:30 }}</small>
+										{% endif %}
+									</td>
+									<td>{{ discovery.discovery_date|naturaltime }}</td>
+									<td>
+										<a href="{% url 'scan_history' current_project.slug discovery.scan_history.id %}" class="btn btn-xs btn-light"><i class="mdi mdi-eye"></i> View</a>
+									</td>
+								</tr>
+								{% empty %}
+								<tr>
+									<td colspan="5" class="text-center">No monitoring discoveries found for this target.</td>
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 </div>

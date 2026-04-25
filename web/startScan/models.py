@@ -695,3 +695,21 @@ class S3Bucket(models.Model):
 	perm_all_users_full_control = models.IntegerField(default=0)
 	num_objects = models.IntegerField(default=0)
 	size = models.IntegerField(default=0)
+
+class MonitoringDiscovery(models.Model):
+	id = models.AutoField(primary_key=True)
+	domain = models.ForeignKey(Domain, on_delete=models.CASCADE)
+	discovery_type = models.CharField(max_length=50, choices=(
+		('subdomain', 'New Subdomain'),
+		('ip', 'IP Change'),
+		('vhost', 'New Virtual Host'),
+		('directory', 'New Directory'),
+		('login', 'New Login Page'),
+		('status_change', 'Status Code Change'),
+	))
+	content = models.JSONField()
+	discovered_at = models.DateTimeField(auto_now_add=True)
+	scan_history = models.ForeignKey(ScanHistory, on_delete=models.SET_NULL, null=True, blank=True)
+
+	def __str__(self):
+		return f"{self.discovery_type} - {self.domain.name}"

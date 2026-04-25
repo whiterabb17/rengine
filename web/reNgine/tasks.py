@@ -32,11 +32,12 @@ from reNgine.definitions import *
 from reNgine.settings import *
 from reNgine.llm import *
 from reNgine.utilities import *
-from reNgine.opsec_utils import OpSecManager
+from reNgine.opsec_utils import OpSecManager, BruteForceOrchestrator
 from scanEngine.models import (EngineType, InstalledExternalTool, Notification, Proxy, OpSec)
 from startScan.models import *
 from startScan.models import EndPoint, Subdomain, Vulnerability
 from targetApp.models import Domain
+from reNgine.monitor_tasks import *
 
 """
 Celery tasks.
@@ -1578,9 +1579,24 @@ def nmap(
 			logger.warning(str(vuln))
 
 	# Send only 1 notif for all vulns to reduce number of notifs
-	if notif and notif.send_vuln_notif and vulns_str:
-		logger.warning(vulns_str)
-		self.notify(fields={'CVEs': vulns_str})
+	if len(vulns) > 0:
+		self.notify(
+			severity=0,
+			fields={'Vulnerabilities discovered': vulns_str},
+			add_meta_info=False)
+
+	# Automatic Trigger for Brute Force Scan
+	auth_targets = []
+	for v in vulns:
+		if 'auth_portal' in v.get('tags', []):
+			auth_targets.append(v['http_url'])
+	
+	if auth_targets:
+		logger.warning(f'Detected Auth Portals on {host}. Triggering Brute Force Scan...')
+		# We use delay to run it asynchronously
+		from reNgine.tasks import brute_force_scan
+		brute_force_scan.delay(targets=list(set(auth_targets)), ctx=ctx)
+
 	return vulns
 
 
@@ -3498,8 +3514,19 @@ def parse_nmap_results(xml_file, output_file=None):
 					elif script_id == 'https-redirect':
 						vulns = parse_nmap_https_redirect_output(script_output)
 						url_vulns.extend(vulns)
+					elif script_id == 'http-title':
+						vulns = parse_nmap_http_title_output(script_output)
+						url_vulns.extend(vulns)
+					elif script_id == 'http-vuln-*' or script_id.startswith('http-vuln'):
+						vulns = parse_nmap_generic_vuln_output(script_id, script_output)
+						url_vulns.extend(vulns)
 					else:
-						logger.warning(f'Script output parsing for script "{script_id}" is not supported yet.')
+						# Generic vuln script handling
+						if 'vuln' in script_id:
+							vulns = parse_nmap_generic_vuln_output(script_id, script_output)
+							url_vulns.extend(vulns)
+						else:
+							logger.warning(f'Script output parsing for script "{script_id}" is not supported yet.')
 
 				# Add URL & source to vuln
 				for vuln in url_vulns:
@@ -3533,11 +3560,44 @@ def parse_nmap_http_server_header_output(script_output):
 
 
 def parse_nmap_fingerprint_strings_output(script_output):
-	return [{
+	vulns = [{
 		'name': 'Service Fingerprint',
 		'severity': 0,
 		'description': f'Nmap discovered service fingerprint strings:\n{script_output}',
 		'type': 'info'
+	}]
+	# Deep inspection for titles
+	title_match = re.search(r'<title>(.*?)</title>', script_output, re.IGNORECASE | re.DOTALL)
+	if title_match:
+		title = title_match.group(1).strip()
+		vulns.append({
+			'name': f'{title} (Service Fingerprint)',
+			'severity': 0,
+			'description': f'Extracted title "{title}" from service fingerprint.',
+			'type': 'info',
+			'tags': ['auth_portal'] if any(x in title.lower() for x in ['vpn', 'portal', 'login', 'auth', 'admin']) else []
+		})
+	return vulns
+
+
+def parse_nmap_http_title_output(script_output):
+	title = script_output.strip()
+	return [{
+		'name': f'HTTP Title: {title}',
+		'severity': 0,
+		'description': f'Detected HTTP page title: {title}',
+		'type': 'info',
+		'tags': ['auth_portal'] if any(x in title.lower() for x in ['vpn', 'portal', 'login', 'auth', 'admin']) else []
+	}]
+
+
+def parse_nmap_generic_vuln_output(script_id, script_output):
+	return [{
+		'name': f'Nmap Vuln Script: {script_id}',
+		'severity': 2, # Medium by default for vuln scripts
+		'description': f'Nmap script {script_id} flagged a potential issue:\n{script_output}',
+		'type': 'Vulnerability',
+		'tags': ['auth_portal'] if any(x in script_output.lower() for x in ['login', 'auth', 'brute', 'password']) else []
 	}]
 
 
@@ -5043,10 +5103,8 @@ def firewall_vpn_scan(self, ctx={}, description=None):
 		for port in ssl_ports:
 			logger.warning(f'Running SSLScan on {target}:{port}')
 			ssl_output_file = f'{self.results_dir}/sslscan_{target}_{port}.xml'
+			# sslscan does not natively support proxies
 			cmd = f'sslscan --xml={ssl_output_file} {target}:{port}'
-			if proxy:
-				p = proxy.replace('http://', '').replace('https://', '')
-				cmd += f' --proxy={p}'
 			run_command(
 				cmd,
 				shell=True,
@@ -5063,4 +5121,81 @@ def firewall_vpn_scan(self, ctx={}, description=None):
 					'type': 'SSL/TLS'
 				}
 				save_vulnerability(target_domain=self.domain, scan_history=self.scan, **vuln_data)
+	
+	# Automatic Trigger for Brute Force Scan on Sophos Portals
+	if run_sslscan:
+		auth_targets = [f'https://{target}:{port}' for port in ssl_ports]
+		logger.warning(f'Triggering Brute Force Scan for potential Sophos Portals on {target}')
+		from reNgine.tasks import brute_force_scan
+		brute_force_scan.delay(targets=auth_targets, ctx=ctx)
+
+	return True
+
+
+@app.task(name='brute_force_scan', queue='main_scan_queue', base=RengineTask, bind=True)
+def brute_force_scan(self, targets=[], ctx={}, description=None):
+	"""
+	Perform brute-force authentication testing on selected targets.
+	"""
+	logger.info(f'Running Brute Force Scan on {len(targets)} targets...')
+	
+	# Load configuration from ctx
+	# Supporting multiple wordlists as requested ['wordlist1', 'wordlist2']
+	users_wordlists = ctx.get('users_wordlist', [DEFAULT_AUTH_USER_WORDLIST])
+	pass_wordlists = ctx.get('pass_wordlist', [DEFAULT_AUTH_PASS_WORDLIST])
+	
+	# Handle both string and list inputs for robustness
+	if isinstance(users_wordlists, str): users_wordlists = [users_wordlists]
+	if isinstance(pass_wordlists, str): pass_wordlists = [pass_wordlists]
+	
+	service = ctx.get('service', 'http')
+	port = ctx.get('port', None)
+	
+	# Load and merge wordlists
+	users = []
+	for wl in users_wordlists:
+		path = os.path.join(AUTH_WORDLIST_PATH, wl)
+		if os.path.exists(path):
+			with open(path, 'r') as f:
+				users.extend([l.strip() for l in f.readlines() if l.strip()])
+		else:
+			logger.warning(f"Wordlist not found: {path}")
+	
+	passwords = []
+	for wl in pass_wordlists:
+		path = os.path.join(AUTH_WORDLIST_PATH, wl)
+		if os.path.exists(path):
+			with open(path, 'r') as f:
+				passwords.extend([l.strip() for l in f.readlines() if l.strip()])
+		else:
+			logger.warning(f"Wordlist not found: {path}")
+
+    # Remove duplicates
+	users = list(set(users))
+	passwords = list(set(passwords))
+
+	if not users or not passwords:
+		logger.error("No valid credentials found in wordlists. Skipping brute force.")
+		return False
+
+	for target in targets:
+		logger.warning(f"Starting brute-force orchestration for {target} ({service})")
+		orchestrator = BruteForceOrchestrator(target, service, port, users, passwords)
+		
+		# Execute with 1-10 attempts per proxy rotation
+		results = orchestrator.run(min_attempts=1, max_attempts=10, stop_on_success=True)
+		
+		for res in results:
+			vuln_data = {
+				'name': f'Successful Brute-Force: {res["service"]}',
+				'severity': 4, # Critical
+				'description': f'Successfully identified valid credentials via Medusa on {res["target"]}.\n\n'
+							 f'User: {res["user"]}\n'
+							 f'Password: {res["password"]}\n'
+							 f'Service: {res["service"]}',
+				'http_url': res["target"],
+				'type': 'Broken Authentication'
+			}
+			save_vulnerability(target_domain=self.domain, scan_history=self.scan, **vuln_data)
+	
 	return True

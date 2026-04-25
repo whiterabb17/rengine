@@ -67,7 +67,9 @@ RUN apt install -y --no-install-recommends \
     python3-netaddr \
     software-properties-common \
     ike-scan \
-    sslscan
+    sslscan \
+    medusa \
+    proxychains4
 
 RUN add-apt-repository ppa:mozillateam/ppa
 

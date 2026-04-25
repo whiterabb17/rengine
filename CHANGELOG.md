@@ -1,5 +1,17 @@
 # Changelog
 
+## v2.5.0
+
+### New Features
+- **Continuous Monitoring Engine**: Automated periodic discovery of new subdomains, directories, and login pages with real-time alerting and automated scan triggers.
+- **Monitoring Dashboards**: Dedicated global monitoring dashboard and target-specific monitoring tabs to track asset growth over time.
+- **Auth Brute-Force Engine**: Integrated Medusa for high-performance authentication testing across multiple services (HTTP, SSH, etc.).
+- **Stealth Brute-Force Orchestrator**: Advanced orchestrator with dynamic proxy rotation via Proxychains4, batched attempts (1-10 per proxy), and random delays to bypass account lockout and IP blacklisting.
+- **Deep Fingerprint Parsing**: Enhanced Nmap parsing to extract page titles even from 404, 401, and 403 responses by analyzing raw service fingerprint strings.
+- **Automated Auth Triggering**: New logic to automatically trigger brute-force scans when an authentication portal or VPN gateway is detected during port scanning or firewall auditing.
+- **Curated Auth Wordlists**: Added specially curated "top/default" and "most common" wordlists for authentication testing, persisted in the `/usr/src/wordlist/auth/` volume.
+- **Nmap Vuln Script Support**: Added comprehensive parsing for Nmap `vuln` script outputs, integrating them directly into the vulnerability dashboard.
+
 ## v2.4.0
 
 ### New Features

@@ -81,6 +81,15 @@ then
   wget https://raw.githubusercontent.com/danielmiessler/SecLists/master/Discovery/DNS/deepmagic.com-prefixes-top50000.txt -O /usr/src/wordlist/deepmagic.com-prefixes-top50000.txt
 fi
 
+# Setup Auth Brute-Force Wordlists
+if [ ! -d "/usr/src/wordlist/auth" ]
+then
+  echo "Making Auth Wordlist directory"
+  mkdir -p /usr/src/wordlist/auth
+fi
+echo "Copying Auth Wordlists"
+cp -r /usr/src/app/wordlist/auth/* /usr/src/wordlist/auth/
+
 # clone Sublist3r
 if [ ! -d "/usr/src/github/Sublist3r" ]
 then

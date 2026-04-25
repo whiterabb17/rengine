@@ -33,8 +33,7 @@
       false,\r\n  'nuclei': {\r\n    'use_nuclei_config': false,\r\n    'severities':
       ['unknown', 'info', 'low', 'medium', 'high', 'critical']\r\n  }\r\n}\r\nwaf_detection:
       {\r\n\r\n}\r\nscreenshot: {\r\n  'enable_http_crawl': true,\r\n  'intensity':
-      'normal',\r\n  'timeout': 10,\r\n  'threads': 40\r\n}\r\n\r\n# custom_headers:
-      [\"Cookie: Test\"]"
+      'normal',\r\n  'timeout': 10,\r\n  'threads': 40\r\n}\r\n\r\n      [\"Cookie: Test\"]\r\n\r\nbrute_force_scan: {\r\n  'users_wordlist': ['top_default_usernames.txt', 'most_common_usernames.txt'],\r\n  'pass_wordlist': ['top_default_passwords.txt', 'most_common_passwords.txt'],\r\n  'service': 'http',\r\n  'stop_on_success': true\r\n}"
     default_engine: true
 - model: scanEngine.enginetype
   pk: 2
@@ -121,5 +120,5 @@
       'high', 'critical'],\r\n    'tags': ['sophos', 'firewall', 'vpn'],\r\n    'custom_templates':
       ['/root/nuclei-templates/']\r\n  }\r\n}\r\nfirewall_vpn_scan:
       {\r\n  'run_ike_scan': true,\r\n  'run_sslscan': true,\r\n  'ports': [443, 4444,
-      8443]\r\n}"
+      8443]\r\n}\r\n\r\nbrute_force_scan: {\r\n  'users_wordlist': ['top_default_usernames.txt', 'most_common_usernames.txt'],\r\n  'pass_wordlist': ['top_default_passwords.txt', 'most_common_passwords.txt'],\r\n  'service': 'http',\r\n  'stop_on_success': true\r\n}"
     default_engine: true

@@ -92,6 +92,7 @@ USER_AGENT = 'user_agent'
 DELAY = 'delay'
 PROVIDERS = 'providers'
 FIREWALL_VPN_SCAN = 'firewall_vpn_scan'
+BRUTE_FORCE_SCAN = 'brute_force_scan'
 
 ###############################################################################
 # Scan DEFAULTS
@@ -99,6 +100,7 @@ FIREWALL_VPN_SCAN = 'firewall_vpn_scan'
 
 LIVE_SCAN = 1
 SCHEDULED_SCAN = 0
+MONITORING_SCAN = 2
 
 DEFAULT_SCAN_INTENSITY = 'normal'
 
@@ -572,6 +574,15 @@ CRITICAL: Do NOT include any sign-offs, signatures, or placeholders like 'Sincer
 
 # OSINT GooFuzz Path
 GOFUZZ_EXEC_PATH = '/usr/src/github/goofuzz/GooFuzz'
+
+# Auth Brute-Force Paths
+MEDUSA_EXEC_PATH = '/usr/bin/medusa'
+PROXYCHAINS_EXEC_PATH = '/usr/bin/proxychains4'
+AUTH_WORDLIST_PATH = '/usr/src/wordlist/auth'
+DEFAULT_AUTH_USER_WORDLIST = 'top_default_usernames.txt'
+DEFAULT_AUTH_PASS_WORDLIST = 'top_default_passwords.txt'
+COMPREHENSIVE_USER_WORDLIST = 'most_common_usernames.txt'
+COMPREHENSIVE_PASS_WORDLIST = 'most_common_passwords.txt'
 
 
 # In App Notification Definitions
