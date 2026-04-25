@@ -73,6 +73,10 @@ urlpatterns = [
         views.proxy_settings,
         name='proxy_settings'),
     path(
+        '<slug:slug>/opsec_settings',
+        views.opsec_settings,
+        name='opsec_settings'),
+    path(
         '<slug:slug>/hackerone_settings',
         views.hackerone_settings,
         name='hackerone_settings'),

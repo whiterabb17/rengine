@@ -393,6 +393,151 @@ class ProxyForm(forms.ModelForm):
         self.fields['proxies'].widget.attrs['readonly'] = True
 
 
+class OpSecForm(forms.ModelForm):
+    class Meta:
+        model = OpSec
+        fields = '__all__'
+
+    enable_opsec = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(
+            attrs={
+                "class": "form-check-input",
+                "id": "enable_opsec",
+            }))
+
+    enable_random_ua = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(
+            attrs={
+                "class": "form-check-input",
+                "id": "enable_random_ua",
+            }))
+
+    enable_rate_limit = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(
+            attrs={
+                "class": "form-check-input",
+                "id": "enable_rate_limit",
+            }))
+
+    max_rps = forms.IntegerField(
+        required=False,
+        widget=forms.NumberInput(
+            attrs={
+                "class": "form-control",
+                "id": "max_rps",
+                "min": "1",
+            }))
+
+    enable_delay = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(
+            attrs={
+                "class": "form-check-input",
+                "id": "enable_delay",
+            }))
+
+    delay_ms = forms.IntegerField(
+        required=False,
+        widget=forms.NumberInput(
+            attrs={
+                "class": "form-control",
+                "id": "delay_ms",
+                "min": "0",
+            }))
+
+    enable_jitter = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(
+            attrs={
+                "class": "form-check-input",
+                "id": "enable_jitter",
+            }))
+
+    jitter_percent = forms.IntegerField(
+        required=False,
+        widget=forms.NumberInput(
+            attrs={
+                "class": "form-control",
+                "id": "jitter_percent",
+                "min": "0",
+                "max": "100",
+            }))
+
+    enable_waf_bypass = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(
+            attrs={
+                "class": "form-check-input",
+                "id": "enable_waf_bypass",
+            }))
+
+    enable_ja3_randomization = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(
+            attrs={
+                "class": "form-check-input",
+                "id": "enable_ja3_randomization",
+            }))
+
+    http_protocol = forms.ChoiceField(
+        choices=[('http1.1', 'HTTP/1.1'), ('http2', 'HTTP/2')],
+        widget=forms.Select(
+            attrs={
+                "class": "form-control",
+                "id": "http_protocol",
+            }))
+
+    custom_dns_servers = forms.CharField(
+        required=False,
+        widget=forms.Textarea(
+            attrs={
+                "class": "form-control",
+                "id": "custom_dns_servers",
+                "rows": "3",
+                "placeholder": "8.8.8.8\n1.1.1.1",
+            }))
+
+    enable_metadata_stripping = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(
+            attrs={
+                "class": "form-check-input",
+                "id": "enable_metadata_stripping",
+            }))
+
+    def set_value(self, key):
+        self.initial['enable_opsec'] = key.enable_opsec
+        self.initial['enable_random_ua'] = key.enable_random_ua
+        self.initial['enable_rate_limit'] = key.enable_rate_limit
+        self.initial['max_rps'] = key.max_rps
+        self.initial['enable_delay'] = key.enable_delay
+        self.initial['delay_ms'] = key.delay_ms
+        self.initial['enable_jitter'] = key.enable_jitter
+        self.initial['jitter_percent'] = key.jitter_percent
+        self.initial['enable_waf_bypass'] = key.enable_waf_bypass
+        self.initial['enable_ja3_randomization'] = key.enable_ja3_randomization
+        self.initial['http_protocol'] = key.http_protocol
+        self.initial['custom_dns_servers'] = key.custom_dns_servers
+        self.initial['enable_metadata_stripping'] = key.enable_metadata_stripping
+
+    def set_initial(self):
+        self.initial['enable_opsec'] = False
+        self.initial['enable_random_ua'] = True
+        self.initial['enable_rate_limit'] = False
+        self.initial['max_rps'] = 10
+        self.initial['enable_delay'] = False
+        self.initial['delay_ms'] = 100
+        self.initial['enable_jitter'] = False
+        self.initial['jitter_percent'] = 10
+        self.initial['enable_waf_bypass'] = False
+        self.initial['enable_ja3_randomization'] = False
+        self.initial['http_protocol'] = 'http2'
+        self.initial['enable_metadata_stripping'] = False
+
+
 class HackeroneForm(forms.ModelForm):
     class Meta:
         model = Hackerone

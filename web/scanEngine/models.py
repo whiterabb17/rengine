@@ -95,6 +95,23 @@ class Proxy(models.Model):
     proxies = models.TextField(blank=True, null=True)
 
 
+class OpSec(models.Model):
+    id = models.AutoField(primary_key=True)
+    enable_opsec = models.BooleanField(default=False)
+    enable_random_ua = models.BooleanField(default=True)
+    enable_rate_limit = models.BooleanField(default=False)
+    max_rps = models.IntegerField(default=10)
+    enable_delay = models.BooleanField(default=False)
+    delay_ms = models.IntegerField(default=100)
+    enable_jitter = models.BooleanField(default=False)
+    jitter_percent = models.IntegerField(default=10)
+    enable_waf_bypass = models.BooleanField(default=False)
+    enable_ja3_randomization = models.BooleanField(default=False)
+    http_protocol = models.CharField(max_length=10, default='http2') # http1.1, http2
+    custom_dns_servers = models.TextField(blank=True, null=True)
+    enable_metadata_stripping = models.BooleanField(default=False)
+
+
 class Hackerone(models.Model):
     id = models.AutoField(primary_key=True)
     # TODO: username and api_key fields will be deprecated in another major release, Instead HackerOneAPIKey model from dasbhboard/models.py will be used

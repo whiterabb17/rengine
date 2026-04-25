@@ -100,6 +100,7 @@
             <div class="dropdown-menu" aria-labelledby="topnav-settings">
               {% if user|can:'modify_scan_configurations' %}
               <a href="{% url 'proxy_settings' current_project.slug %}" class="dropdown-item">Proxies</a>
+              <a href="{% url 'opsec_settings' current_project.slug %}" class="dropdown-item">OpSec Settings</a>
               <a href="{% url 'tool_settings' current_project.slug %}" class="dropdown-item">Tool Settings</a>
               {% endif %}
               {% if user|can:'modify_system_configurations' %}

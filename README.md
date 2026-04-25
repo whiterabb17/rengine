@@ -6,7 +6,7 @@
   <h3>Unofficial Fork of reNgine: The Ultimate Web Reconnaissance & Vulnerability Scanner 🚀</h3>
 </p>
 
-<p align="center"><a href="https://github.com/yogeshojha/rengine/releases" target="_blank"><img src="https://img.shields.io/badge/version-v2.3.0-informational?&logo=none" alt="reNgine Latest Version" /></a>&nbsp;<a href="https://www.gnu.org/licenses/gpl-3.0" target="_blank"><img src="https://img.shields.io/badge/License-GPLv3-red.svg?&logo=none" alt="License" /></a>&nbsp;<a href="#" target="_blank"><img src="https://img.shields.io/badge/first--timers--only-friendly-blue.svg?&logo=none" alt="" /></a></p>
+<p align="center"><a href="https://github.com/yogeshojha/rengine/releases" target="_blank"><img src="https://img.shields.io/badge/version-v2.4.0-informational?&logo=none" alt="reNgine Latest Version" /></a>&nbsp;<a href="https://www.gnu.org/licenses/gpl-3.0" target="_blank"><img src="https://img.shields.io/badge/License-GPLv3-red.svg?&logo=none" alt="License" /></a>&nbsp;<a href="#" target="_blank"><img src="https://img.shields.io/badge/first--timers--only-friendly-blue.svg?&logo=none" alt="" /></a></p>
 
 <p align="center">
   <a href="https://www.youtube.com/watch?v=Xk_YH83IQgg" target="_blank"><img src="https://img.shields.io/badge/BlackHat--Arsenal--Asia-2023-blue.svg?logo=none" alt="" /></a>&nbsp;
@@ -30,10 +30,10 @@
 <a href="https://opensourcesecurityindex.io/" target="_blank" rel="noopener">
 <img style="width: 282px; height: 56px" src="https://opensourcesecurityindex.io/badge.svg" alt="Open Source Security Index - Fastest Growing Open Source Security Projects" width="282" height="56" /> </a>
 </p>
-<h4>reNgine 2.3.0 is released!</h4>
+<h4>reNgine 2.4.0 is released!</h4>
 <p>
-  reNgine 2.3.0 comes with automatic proxy fetching and validation, better NMap vulners script parsing, LLM-based report summaries and conclusions, bounty hub where you can sync and import your hackerone programs, in app notifications, chaos as subdomain enumeration tool, and many more. 
-  <b>Check out <a href="https://rengine.wiki/whats-new/2_3_0/">What's new in reNgine 2.3.0!</a></b>
+  reNgine 2.4.0 introduces the powerful <b>OpSec Settings</b> module for stealth reconnaissance (UA rotation, rate limiting, WAF bypass, metadata stripping), automatic proxy fetching and validation, better NMap vulners script parsing, LLM-based report summaries and conclusions, bounty hub where you can sync and import your hackerone programs, in app notifications, chaos as subdomain enumeration tool, and many more. 
+  <!--<b>Check out <a href="https://rengine.wiki/whats-new/2_4_0/">What's new in reNgine 2.4.0!</a></b> -->
 </p>
 
 <h4>What is reNgine?</h4>
@@ -164,6 +164,9 @@ reNgine is not an ordinary reconnaissance suite; it's a game-changer! We've turb
 * Find actionable insights such as Most Common Vulnerability, Most Common CVE ID, Most Vulnerable Target/Subdomain, etc.
 * You can now use local LLMs for Attack surface identification and vulnerability description (NEW: reNgine 2.1.0)
 * BountyHub, a central hub to manage your hackerone targets
+* OpSec Settings (Stealth presets, UA rotation, rate limiting, WAF bypass, metadata stripping)
+* New Scan Engine: Firewall and VPN (Sophos) for perimeter security auditing
+* Integrated New Discovery Tools: Chaos, TLSX, CTFR, Netlas, and Katana
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/aqua.png)
 

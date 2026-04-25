@@ -118,7 +118,8 @@
       true,\r\n  'concurrency': 20,\r\n  'intensity': 'normal',\r\n  'rate_limit':
       100,\r\n  'retries': 1,\r\n  'timeout': 5,\r\n  'fetch_gpt_report': false,\r\n
       \ 'nuclei': {\r\n    'use_nuclei_config': false,\r\n    'severities': ['medium',
-      'high', 'critical'],\r\n    'tags': ['sophos', 'firewall', 'vpn']\r\n  }\r\n}\r\nfirewall_vpn_scan:
+      'high', 'critical'],\r\n    'tags': ['sophos', 'firewall', 'vpn'],\r\n    'custom_templates':
+      ['/root/nuclei-templates/']\r\n  }\r\n}\r\nfirewall_vpn_scan:
       {\r\n  'run_ike_scan': true,\r\n  'run_sslscan': true,\r\n  'ports': [443, 4444,
       8443]\r\n}"
     default_engine: true

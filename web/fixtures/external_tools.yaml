@@ -199,8 +199,6 @@
     github_url: https://github.com/laramies/theHarvester
     license_url: https://github.com/laramies/theHarvester/blob/master/README/LICENSES
     version_lookup_command: cat /usr/src/github/theHarvester/theHarvester/lib/version.py
-    update_command: git pull
-    install_command: git clone https://github.com/laramies/theHarvester
     version_match_regex: \b\d+\.\d+\.\d+\b
     is_default: true
     is_subdomain_gathering: false

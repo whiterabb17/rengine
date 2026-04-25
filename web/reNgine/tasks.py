@@ -32,7 +32,8 @@ from reNgine.definitions import *
 from reNgine.settings import *
 from reNgine.llm import *
 from reNgine.utilities import *
-from scanEngine.models import (EngineType, InstalledExternalTool, Notification, Proxy)
+from reNgine.opsec_utils import OpSecManager
+from scanEngine.models import (EngineType, InstalledExternalTool, Notification, Proxy, OpSec)
 from startScan.models import *
 from startScan.models import EndPoint, Subdomain, Vulnerability
 from targetApp.models import Domain
@@ -444,6 +445,7 @@ def subdomain_discovery(
 	default_subdomain_tools.append('amass-active')
 
 	# Run tools
+	opsec = OpSecManager()
 	for tool in tools:
 		cmd = None
 		logger.info(f'Scanning subdomains for {host} with {tool}')
@@ -531,6 +533,9 @@ def subdomain_discovery(
 			logger.warning(
 				f'Subdomain discovery tool "{tool}" is not supported by reNgine. Skipping.')
 			continue
+
+		# Apply OpSec stealth
+		cmd = opsec.apply_stealth(tool, cmd)
 
 		# Run tool
 		try:
@@ -760,9 +765,10 @@ def osint_discovery(config, host, scan_history_id, activity_id, results_dir, ctx
 		# wait for all jobs to complete
 		time.sleep(5)
 
-	# results['emails'] = results.get('emails', []) + emails
-	# results['creds'] = creds
-	# results['meta_info'] = meta_info
+	# Strip metadata from OSINT results
+	opsec = OpSecManager()
+	opsec.strip_directory(results_dir)
+
 	return results
 
 
@@ -1055,7 +1061,6 @@ def theHarvester(config, host, scan_history_id, activity_id, results_dir, ctx={}
 	output_path_json = f'{results_dir}/theHarvester.json'
 	theHarvester_dir = '/usr/src/github/theHarvester'
 	history_file = f'{results_dir}/commands.txt'
-	cmd  = f'python3 {theHarvester_dir}/theHarvester.py -d {host} -b all -f {output_path_json}'
 
 	# Update proxies.yaml
 	proxy_query = Proxy.objects.all()
@@ -1297,6 +1302,13 @@ def screenshot(self, ctx={}, description=None):
 				self.filename)
 			send_file_to_discord.delay(path, title)
 
+	# Strip metadata from screenshots
+	opsec = OpSecManager()
+	for path in screenshot_paths:
+		opsec.strip_metadata(path)
+
+	return True
+
 
 @app.task(name='port_scan', queue='main_scan_queue', base=RengineTask, bind=True)
 def port_scan(self, hosts=[], ctx={}, description=None):
@@ -1527,6 +1539,10 @@ def nmap(
 		logger.error('Could not build nmap command')
 		return
 
+	# Apply OpSec stealth
+	opsec = OpSecManager()
+	nmap_cmd = opsec.apply_stealth('nmap', nmap_cmd)
+
 	# Run cmd
 	run_command(
 		nmap_cmd,
@@ -1717,6 +1733,10 @@ def dir_file_fuzz(self, ctx={}, description=None):
 		fcmd = cmd
 		fcmd += f' -x {proxy}' if proxy else ''
 		fcmd += f' -u {url} -json'
+
+		# Apply OpSec stealth
+		opsec = OpSecManager()
+		fcmd = opsec.apply_stealth('ffuf', fcmd)
 
 		# Initialize DirectoryScan object
 		dirscan = DirectoryScan()
@@ -2476,13 +2496,22 @@ def nuclei_scan(self, urls=[], ctx={}, description=None):
 			templates.extend(nuclei_templates)
 
 	if custom_nuclei_templates:
-		custom_nuclei_template_paths = [f'{str(elem)}.yaml' for elem in custom_nuclei_templates]
-		template = templates.extend(custom_nuclei_template_paths)
+		custom_nuclei_template_paths = []
+		for elem in custom_nuclei_templates:
+			if str(elem).endswith(('.yaml', '.yml')) or str(elem).endswith('/'):
+				custom_nuclei_template_paths.append(str(elem))
+			else:
+				custom_nuclei_template_paths.append(f'{str(elem)}.yaml')
+		templates.extend(custom_nuclei_template_paths)
 
 	# Build CMD
 	cmd = 'nuclei -j'
 	cmd += ' -config /root/.config/nuclei/config.yaml' if use_nuclei_conf else ''
 	cmd += f' -irr'
+
+	# Apply OpSec stealth
+	opsec = OpSecManager()
+	cmd = opsec.apply_stealth('nuclei', cmd)
 	formatted_headers = ' '.join(f'-H "{header}"' for header in custom_headers)
 	if formatted_headers:
 		cmd += formatted_headers
@@ -2913,9 +2942,13 @@ def http_crawl(
 	cmd += f' -json'
 	cmd += f' -u {urls[0]}' if len(urls) == 1 else f' -l {input_path}'
 	cmd += f' -x {method}' if method else ''
-	cmd += f' -silent'
 	if follow_redirect:
 		cmd += ' -fr'
+	
+	# Apply OpSec stealth
+	opsec = OpSecManager()
+	cmd = opsec.apply_stealth('httpx', cmd)
+
 	results = []
 	endpoint_ids = []
 	for line in stream_command(

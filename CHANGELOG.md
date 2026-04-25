@@ -1,11 +1,19 @@
 # Changelog
 
-## v2.2.3
+## v2.4.0
 
 ### New Features
+- **OpSec Settings**: Advanced stealth configuration including User-Agent rotation, custom rate limiting, WAF bypass headers, and custom DNS resolvers.
+- **Stealth Presets**: Quick configuration for "Quiet", "Balanced", and "Aggressive" scan modes.
+- **Metadata Stripping**: Automatically remove sensitive EXIF data and metadata from captured screenshots and downloaded OSINT documents.
+- **New Scan Engine (Firewall & VPN)**: Dedicated Sophos Firewall and VPN scan engine with IKE and SSL scan capabilities.
+- **New Tool Integrations**: Integrated Chaos, TLSX, CTFR, Netlas, and Katana for broader and more efficient reconnaissance.
 - **Automatic Proxy Fetching and Validation**: Automatically sources and tests live proxies from multiple providers to ensure scan stability and stealth.
 - **Improved NMap Vulners Script Parsing**: Enhanced parsing of NMap vulnerability scan results for more accurate service and version identification.
 - **LLM-Powered Report Summaries and Conclusions**: Automatically generates Assessment Overviews, Executive Briefs, and Final Conclusions in PDF reports using OpenAI or local LLMs (Ollama).
+
+### Bug Fixes
+- **theHarvester Integration**: Fixed Docker installation and runtime issues for theHarvester OSINT tool.
 
 ## v2.2.0
 
