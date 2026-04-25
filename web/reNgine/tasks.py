@@ -3521,12 +3521,23 @@ def parse_nmap_results(xml_file, output_file=None):
 						vulns = parse_nmap_generic_vuln_output(script_id, script_output)
 						url_vulns.extend(vulns)
 					else:
-						# Generic vuln script handling
+						# Generic vuln script handling if script_id contains 'vuln'
 						if 'vuln' in script_id:
 							vulns = parse_nmap_generic_vuln_output(script_id, script_output)
 							url_vulns.extend(vulns)
 						else:
-							logger.warning(f'Script output parsing for script "{script_id}" is not supported yet.')
+							# Robust catch-all for any script output indicating a vulnerability
+							lower_output = script_output.lower()
+							if "vulnerable" in lower_output or "vulnerability" in lower_output or "account found" in lower_output:
+								vulns = parse_nmap_generic_vuln_output(script_id, script_output)
+								url_vulns.extend(vulns)
+							else:
+								# Support for specific non-'vuln' scripts that can still find issues
+								if any(s in script_id for s in ['csrf', 'xss', 'exec', 'exploit', 'injection', 'drown']):
+									vulns = parse_nmap_generic_vuln_output(script_id, script_output)
+									url_vulns.extend(vulns)
+								else:
+									logger.warning(f'Script output parsing for script "{script_id}" is not supported yet.')
 
 				# Add URL & source to vuln
 				for vuln in url_vulns:
@@ -5178,6 +5189,7 @@ def brute_force_scan(self, targets=[], ctx={}, description=None):
 		logger.error("No valid credentials found in wordlists. Skipping brute force.")
 		return False
 
+	total_found = 0
 	for target in targets:
 		logger.warning(f"Starting brute-force orchestration for {target} ({service})")
 		orchestrator = BruteForceOrchestrator(target, service, port, users, passwords)
@@ -5186,6 +5198,7 @@ def brute_force_scan(self, targets=[], ctx={}, description=None):
 		results = orchestrator.run(min_attempts=1, max_attempts=10, stop_on_success=True)
 		
 		for res in results:
+			total_found += 1
 			vuln_data = {
 				'name': f'Successful Brute-Force: {res["service"]}',
 				'severity': 4, # Critical
@@ -5198,4 +5211,5 @@ def brute_force_scan(self, targets=[], ctx={}, description=None):
 			}
 			save_vulnerability(target_domain=self.domain, scan_history=self.scan, **vuln_data)
 	
+	logger.info(f"Brute Force Scan completed. Targets: {len(targets)}, Credentials Found: {total_found}")
 	return True

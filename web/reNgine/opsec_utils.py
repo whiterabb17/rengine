@@ -1,5 +1,6 @@
 import os
 import random
+import logging
 import re
 import tempfile
 import subprocess
@@ -175,7 +176,7 @@ class ProxychainsWrapper:
 
     def _fetch_proxies(self):
         proxy_obj = Proxy.objects.first()
-        if not proxy_obj or not proxy_obj.proxies:
+        if not proxy_obj or not proxy_obj.use_proxy or not proxy_obj.proxies:
             return []
         
         # Clean and validate proxy list
@@ -184,12 +185,31 @@ class ProxychainsWrapper:
             line = line.strip()
             if not line or line.startswith('#'):
                 continue
-            # Support both "socks5 1.2.3.4 1080" and "1.2.3.4:1080" formats
-            if ' ' in line:
+            
+            # Format expected by proxychains: type host port [user pass]
+            # reNgine might store as protocol://host:port or host:port
+            
+            p_type = "socks5" # default
+            p_host = ""
+            p_port = ""
+            
+            if "://" in line:
+                p_type = line.split("://")[0].lower()
+                if p_type == "http" or p_type == "https":
+                    p_type = "http" # proxychains uses 'http' for both
+                line = line.split("://")[1]
+            
+            if ":" in line:
+                parts = line.split(":")
+                p_host = parts[0]
+                p_port = parts[1]
+                # If there are more parts, could be user:pass@host:port or host:port:user:pass
+                # But simple host:port is most common in reNgine
+                proxies.append(f"{p_type} {p_host} {p_port}")
+            elif " " in line:
+                # Already in type host port format
                 proxies.append(line)
-            elif ':' in line:
-                # Default to socks5 if not specified
-                proxies.append(f"socks5 {line.replace(':', ' ')}")
+                
         return proxies
 
     def get_random_proxy(self):
@@ -197,7 +217,8 @@ class ProxychainsWrapper:
 
     def write_temp_config(self, proxy_str):
         fd, path = tempfile.mkstemp(suffix=".conf", prefix="proxychains_")
-        with os.fdopen(fd, 'w') as f:
+        os.close(fd)
+        with open(path, 'w') as f:
             f.write("strict_chain\n")
             f.write("proxy_dns\n")
             f.write("tcp_read_time_out 15000\ntcp_connect_time_out 8000\n")
@@ -218,12 +239,15 @@ class BruteForceOrchestrator:
         self.passwords = passwords
         self.proxy_manager = ProxychainsWrapper()
         self.results = []
+        self.total_attempts = 0
+        self.total_success = 0
+        self.logger = logging.getLogger(__name__)
 
     def _generate_combos(self):
         combos = []
-        for u in self.users:
-            for p in self.passwords:
-                combos.append((u, p))
+        for user in self.users:
+            for password in self.passwords:
+                combos.append((user, password))
         random.shuffle(combos)
         return combos
 
@@ -238,9 +262,15 @@ class BruteForceOrchestrator:
 
             # Create temp combo file for Medusa
             fd, combo_file = tempfile.mkstemp(suffix=".txt", prefix="medusa_combo_")
-            with os.fdopen(fd, 'w') as f:
-                for user, password in batch:
-                    f.write(f"{user}:{password}\n")
+            os.close(fd)
+            # Clean target for Medusa (strip protocol and port if present)
+            clean_target = self.target.split("://")[-1].split(":")[0]
+            
+            # Medusa combo file format: host:user:pass
+            batch_data = [f"{clean_target}:{c[0]}:{c[1]}" for c in batch]
+            
+            with open(combo_file, 'w') as f:
+                f.write("\n".join(batch_data))
 
             # Setup proxy
             proxy = self.proxy_manager.get_random_proxy()
@@ -253,18 +283,23 @@ class BruteForceOrchestrator:
             # Build Medusa command
             # -h host, -n port, -M service, -C combo_file, -O output
             port_flag = f"-n {self.port}" if self.port else ""
-            output_file = f"/tmp/medusa_{self.target}_{random.randint(1000,9999)}.log"
+            ssl_flag = "-s" if (str(self.port) == "443" or self.target.startswith("https")) else ""
+            output_file = f"/tmp/medusa_{clean_target}_{random.randint(1000,9999)}.log"
             
-            medusa_cmd = f"{cmd_prefix}{MEDUSA_EXEC_PATH} -h {self.target} {port_flag} -M {self.service} -C {combo_file} -O {output_file}"
+            medusa_cmd = f"{cmd_prefix}{MEDUSA_EXEC_PATH} -h {clean_target} {port_flag} {ssl_flag} -M {self.service} -C {combo_file} -O {output_file}"
+            self.logger.info(f"Executing brute-force batch: {medusa_cmd}")
             
             try:
                 subprocess.run(medusa_cmd, shell=True, timeout=300)
+                self.total_attempts += len(batch)
+                
                 if os.path.exists(output_file):
                     with open(output_file, 'r') as f:
                         output = f.read()
                         # Medusa success pattern: "ACCOUNT FOUND"
                         if "ACCOUNT FOUND" in output:
                             found = re.findall(r"ACCOUNT FOUND: \[(.*?)\] User: \[(.*?)\] Password: \[(.*?)\]", output)
+                            batch_success = 0
                             for match in found:
                                 self.results.append({
                                     'user': match[1],
@@ -272,11 +307,22 @@ class BruteForceOrchestrator:
                                     'target': self.target,
                                     'service': self.service
                                 })
+                                batch_success += 1
+                                self.total_success += 1
+                            
+                            self.logger.info(f"Batch completed on {self.target}. Results: {batch_success} success, {len(batch) - batch_success} failed.")
+                            
                             if stop_on_success:
+                                self.logger.info(f"Success found. Stopping brute-force for {self.target}.")
                                 break
+                        else:
+                            self.logger.info(f"Batch completed on {self.target}. All {len(batch)} attempts failed.")
+            except Exception as e:
+                self.logger.error(f"Error during brute-force batch execution on {self.target}: {str(e)}")
             finally:
                 if os.path.exists(combo_file): os.remove(combo_file)
                 if conf_path and os.path.exists(conf_path): os.remove(conf_path)
                 if os.path.exists(output_file): os.remove(output_file)
 
+        self.logger.info(f"Brute-force scan finished for {self.target}. Total Attempts: {self.total_attempts}, Total Success: {self.total_success}")
         return self.results

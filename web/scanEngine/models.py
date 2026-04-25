@@ -34,9 +34,18 @@ class EngineType(models.Model):
 
     @hybrid_property
     def tasks(self):
-        if not self.yaml_configuration or not yaml.safe_load(self.yaml_configuration):
+        if not self.yaml_configuration:
             return []
-        return list(yaml.safe_load(self.yaml_configuration).keys())
+        try:
+            config = yaml.safe_load(self.yaml_configuration)
+            if isinstance(config, dict):
+                return list(config.keys())
+        except Exception:
+            return []
+        return []
+
+    def has_task(self, task_name):
+        return task_name in self.tasks
 
 class Wordlist(models.Model):
     id = models.AutoField(primary_key=True)
