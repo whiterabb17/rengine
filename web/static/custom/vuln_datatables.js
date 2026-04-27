@@ -99,7 +99,7 @@ function vulnerability_format_details(row) {
                     </h5>
                 </div>
                 <div id="collapseDesc_${row.id}" class="collapse show">
-                    <div class="card-body p-2 font-13 text-muted">${htmlEncode(row.description).replace(/\n/g, '<br />')}</div>
+                    <div class="card-body p-2 font-13 text-muted" style="white-space: pre-wrap;">${htmlEncode(row.description)}</div>
                 </div>
             </div>
         </div>`;
@@ -118,7 +118,7 @@ function vulnerability_format_details(row) {
                         </h5>
                     </div>
                     <div id="collapseImpact_${row.id}" class="collapse show">
-                        <div class="card-body p-2 font-13 text-muted">${htmlEncode(row.impact).replace(/\n/g, '<br />')}</div>
+                        <div class="card-body p-2 font-13 text-muted" style="white-space: pre-wrap;">${htmlEncode(row.impact)}</div>
                     </div>
                 </div>
             </div>`;
@@ -134,7 +134,7 @@ function vulnerability_format_details(row) {
                         </h5>
                     </div>
                     <div id="collapseRem_${row.id}" class="collapse show">
-                        <div class="card-body p-2 font-13 text-muted">${htmlEncode(row.remediation).replace(/\n/g, '<br />')}</div>
+                        <div class="card-body p-2 font-13 text-muted" style="white-space: pre-wrap;">${htmlEncode(row.remediation)}</div>
                     </div>
                 </div>
             </div>`;

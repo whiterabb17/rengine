@@ -1601,7 +1601,7 @@ def nmap(
 		if 'auth_portal' in v.get('tags', []):
 			auth_targets.append(v['http_url'])
 	
-	if auth_targets and self.yaml_configuration.get('brute_force_scan'):
+	if auth_targets and self.scan.tasks and 'brute_force_scan' in self.scan.tasks:
 		logger.warning(f'Detected Auth Portals on {host}. Triggering Brute Force Scan...')
 		# We use delay to run it asynchronously
 		from reNgine.tasks import brute_force_scan
@@ -5155,6 +5155,111 @@ def fetch_proxies_task(self):
     return "\n".join(final_list)
 
 
+
+def parse_sslscan_results(xml_file):
+	"""Parse results from sslscan XML output file.
+
+	Args:
+		xml_file (str): sslscan XML report file path.
+
+	Returns:
+		str: Formatted description of SSL/TLS findings.
+	"""
+	if not os.path.isfile(xml_file):
+		return "SSLScan XML report not found."
+
+	try:
+		with open(xml_file, 'r', encoding='utf8') as f:
+			content = f.read()
+		
+		data = xmltodict.parse(content) or {}
+		document = data.get('document') or {}
+		ssltest = document.get('ssltest') or {}
+		
+		if not ssltest:
+			return "No SSLScan results found in the report."
+		
+		host = ssltest.get('@host', '')
+		port = ssltest.get('@port', '')
+		
+		description = f"SSLScan Results for {host}:{port}\n\n"
+		
+		# Protocols
+		protocols = ssltest.get('protocol', [])
+		if protocols is None: protocols = []
+		if isinstance(protocols, dict):
+			protocols = [protocols]
+		
+		description += "Protocols:\n"
+		for proto in protocols:
+			if not proto: continue
+			status = "Enabled" if proto.get('@enabled') == '1' else "Disabled"
+			description += f"- {proto.get('@type', 'UNKNOWN').upper()} {proto.get('@version', '')}: {status}\n"
+		description += "\n"
+		
+		# Renegotiation
+		reneg = ssltest.get('renegotiation') or {}
+		if reneg:
+			supp = "Supported" if reneg.get('@supported') == '1' else "Not supported"
+			sec = "Secure" if reneg.get('@secure') == '1' else "Insecure"
+			description += f"Renegotiation: {supp} ({sec})\n\n"
+			
+		# Heartbleed
+		heartbleed = ssltest.get('heartbleed', [])
+		if heartbleed is None: heartbleed = []
+		if isinstance(heartbleed, dict):
+			heartbleed = [heartbleed]
+		
+		vulnerable_to_heartbleed = False
+		for hb in heartbleed:
+			if hb and hb.get('@vulnerable') == '1':
+				vulnerable_to_heartbleed = True
+				break
+		
+		description += f"Heartbleed: {'Vulnerable' if vulnerable_to_heartbleed else 'Not vulnerable'}\n\n"
+		
+		# Ciphers
+		ciphers = ssltest.get('cipher', [])
+		if ciphers is None: ciphers = []
+		if isinstance(ciphers, dict):
+			ciphers = [ciphers]
+		
+		preferred_ciphers = [c for c in ciphers if c and c.get('@status') == 'preferred']
+		if preferred_ciphers:
+			description += "Preferred Ciphers:\n"
+			for c in preferred_ciphers:
+				description += f"- {c.get('@sslversion', '')}: {c.get('@cipher', '')} ({c.get('@bits', '')} bits, {c.get('@strength', '')} strength)\n"
+			description += "\n"
+			
+		# Certificates
+		certificates_sec = ssltest.get('certificates') or {}
+		certs = certificates_sec.get('certificate', [])
+		if certs is None: certs = []
+		if isinstance(certs, dict):
+			certs = [certs]
+		
+		if certs:
+			description += "Certificate Information:\n"
+			for cert in certs:
+				if not cert: continue
+				description += f"- Subject: {cert.get('subject', 'N/A')}\n"
+				description += f"- Issuer: {cert.get('issuer', 'N/A')}\n"
+				description += f"- Signature Algorithm: {cert.get('signature-algorithm', 'N/A')}\n"
+				pk = cert.get('pk') or {}
+				description += f"- Key: {pk.get('@type', 'N/A')} {pk.get('@bits', 'N/A')} bits\n"
+				description += f"- Not Valid After: {cert.get('not-valid-after', 'N/A')}\n"
+				if cert.get('expired') == 'true':
+					description += "- Status: EXPIRED\n"
+				description += "\n"
+			description += "\n"
+			
+		return description
+
+	except Exception as e:
+		logger.exception(e)
+		return f"Error parsing SSLScan XML: {str(e)}"
+
+
 @app.task(name='firewall_vpn_scan', queue='main_scan_queue', base=RengineTask, bind=True)
 def firewall_vpn_scan(self, ctx={}, description=None):
 	"""
@@ -5213,14 +5318,14 @@ def firewall_vpn_scan(self, ctx={}, description=None):
 				vuln_data = {
 					'name': f'SSL/TLS Configuration Audit (Port {port})',
 					'severity': 0,
-					'description': f'SSLScan performed an audit of SSL/TLS configurations on port {port}. Check the results directory for detailed XML report.',
+					'description': parse_sslscan_results(ssl_output_file),
 					'http_url': f'https://{target}:{port}',
 					'type': 'SSL/TLS'
 				}
 				save_vulnerability(target_domain=self.domain, scan_history=self.scan, **vuln_data)
 	
 	# Automatic Trigger for Brute Force Scan on Sophos Portals
-	if run_sslscan and self.yaml_configuration.get('brute_force_scan'):
+	if run_sslscan and self.scan.tasks and 'brute_force_scan' in self.scan.tasks:
 		auth_targets = [f'https://{target}:{port}' for port in ssl_ports]
 		logger.warning(f'Triggering Brute Force Scan for potential Sophos Portals on {target}')
 		from reNgine.tasks import brute_force_scan

@@ -1,5 +1,14 @@
 # Changelog
 
+## v2.5.2
+
+### Bug Fixes
+- **SSLScan Parser**: Hardened the SSLScan XML parser against `NoneType` errors and missing elements in reports.
+- **UI Rendering**: Fixed a bug where newlines in vulnerability descriptions, impacts, and remediations were being lost due to aggressive HTML encoding. Added `white-space: pre-wrap` to correctly render multi-line text in the dashboard.
+- **Medusa Brute-Force Parser**: Fixed success identification logic for Medusa v2.2 by updating the result parsing regex to handle variations in output format, including optional Host fields and bracket styles.
+- **Selective Brute-Force Triggering**: Restricted automatic brute-force scan triggering to only occur if `brute_force_scan` is explicitly selected for the current scan or subscan, preventing unintended executions.
+
+
 ## v2.5.1
 
 ### Bug Fixes
