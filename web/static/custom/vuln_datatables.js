@@ -28,6 +28,10 @@ const vuln_datatable_columns = [
 	{'data': 'extracted_results', 'defaultContent': ''},
 	{'data': 'curl_command', 'defaultContent': ''},
 	{'data': 'matcher_name', 'defaultContent': ''},
+	{'data': 'request', 'defaultContent': ''},
+	{'data': 'response', 'defaultContent': ''},
+	{'data': 'template_id', 'defaultContent': ''},
+	{'data': 'template_url', 'defaultContent': ''},
 ];
 
 const vuln_datatable_page_length = 50;
@@ -39,7 +43,8 @@ function vulnerability_datatable_col_visibility(table){
 		'type', 'cvss_metrics', 'tags', 'hackerone_report_id', 
 		'cve_ids', 'cwe_ids', 'description', 'references', 
 		'discovered_date', 'exploit_url', 'validation_status',
-		'extracted_results', 'curl_command', 'matcher_name'
+		'extracted_results', 'curl_command', 'matcher_name',
+		'request', 'response', 'template_id', 'template_url'
 	];
 	
 	hidden_cols.forEach(col => {
@@ -66,50 +71,196 @@ function vulnerability_format_details(row) {
     let html = '<div class="card p-3 m-2 shadow-sm border-left-primary bg-light">';
     html += '<div class="row">';
     
-    // Left side: Meta & Description
-    html += '<div class="col-md-7 border-end">';
-    html += `<h5 class="text-primary"><i class="fe-info me-1"></i> Description</h5><p class="text-dark">${htmlEncode(row.description || 'No description available.')}</p>`;
-    if (row.references) {
-        html += '<h5 class="text-primary mt-3"><i class="fe-link me-1"></i> References</h5><ul class="ps-3">';
-        row.references.split('\n').forEach(ref => {
-            if (ref.trim()) html += `<li class="mb-1"><a href="${ref.trim()}" target="_blank" class="text-info text-break">${ref.trim()}</a></li>`;
-        });
-        html += '</ul>';
+    // Header section: ID, Discovered Date, URL
+    html += '<div class="col-12 mb-3">';
+    html += `<p class="text-muted mb-1 font-13"><strong>ID :</strong> <span class="ms-2">${row.id}</span></p>`;
+    html += `<p class="text-muted mb-1 font-13"><strong>Vulnerability URL :</strong> <span class="ms-2"><a href="${row.http_url}" target="_blank" class="text-info text-break">${row.http_url}</a></span></p>`;
+    html += `<p class="text-muted mb-1 font-13"><strong>Severity :</strong> <span class="ms-2 badge badge-soft-${row.severity === 'Critical' ? 'danger' : row.severity === 'High' ? 'danger' : row.severity === 'Medium' ? 'warning' : 'info'}">${row.severity}</span></p>`;
+    html += `<p class="text-muted mb-1 font-13"><strong>Vulnerability Type :</strong> <span class="ms-2">${row.type || 'N/A'}</span></p>`;
+    html += `<p class="text-muted mb-1 font-13"><strong>Template ID :</strong> <span class="ms-2">${row.template_id || 'N/A'}</span></p>`;
+    if (row.template_url) {
+        html += `<p class="text-muted mb-1 font-13"><strong>Template URL :</strong> <span class="ms-2"><a href="${row.template_url}" target="_blank" class="text-info text-break">${row.template_url}</a></span></p>`;
     }
-    if (row.cvss_metrics) {
-        html += `<div class="mt-3"><strong>CVSS Metrics:</strong> <code class="text-muted">${row.cvss_metrics}</code></div>`;
-    }
+    html += `<p class="text-muted mb-1 font-13"><strong>Vulnerability Source :</strong> <span class="ms-2">${row.source || 'N/A'}</span></p>`;
+    html += `<p class="text-muted mb-0 font-13"><strong>Discovered on :</strong> <span class="ms-2">${row.discovered_date || 'Unknown'}</span></p>`;
     html += '</div>';
 
-    // Right side: Technical Data & Exploits
-    html += '<div class="col-md-5">';
-    html += '<h5 class="text-primary"><i class="fe-cpu me-1"></i> Technical Details</h5>';
-    html += `<table class="table table-sm table-borderless mt-2">`;
-    html += `<tr><td><strong>Type:</strong></td><td>${row.type || 'N/A'}</td></tr>`;
-    html += `<tr><td><strong>Tags:</strong></td><td>${row.tags ? `<span class="badge badge-soft-info">${row.tags}</span>` : 'None'}</td></tr>`;
-    html += `<tr><td><strong>Discovered:</strong></td><td>${row.discovered_date || 'Unknown'}</td></tr>`;
-    if (row.cve_ids) html += `<tr><td><strong>CVE IDs:</strong></td><td><span class="text-danger">${row.cve_ids}</span></td></tr>`;
-    if (row.cwe_ids) html += `<tr><td><strong>CWE IDs:</strong></td><td><span class="text-warning">${row.cwe_ids}</span></td></tr>`;
-    html += `</table>`;
+    html += '<div class="col-12">';
     
-    if (row.exploit_url) {
-        html += `<div class="alert alert-soft-danger mt-3 border-danger shadow-sm">`;
-        html += `<div class="d-flex justify-content-between align-items-center mb-2">`;
-        html += `<span><i class="fe-zap text-danger me-1"></i> <strong>Potential Exploit Found</strong></span>`;
-        html += `<a href="${row.exploit_url}" target="_blank" class="btn btn-xs btn-danger"><i class="fe-external-link"></i> Source</a>`;
-        html += `</div>`;
-        html += `<p class="mb-2 text-dark small">Validation: <span class="badge badge-soft-dark">${row.validation_status || 'Unverified'}</span></p>`;
-        html += `<button class="btn btn-sm btn-outline-danger w-100" onclick="preview_exploit('${row.exploit_url}', ${row.id})"><i class="fe-eye me-1"></i> Preview Exploit Content</button>`;
-        html += `<div id="exploit-preview-${row.id}" class="mt-2" style="display:none;"><pre class="bg-dark text-white p-2 rounded" style="max-height:250px; overflow-y:auto; font-size: 11px;"></pre></div>`;
-        html += `</div>`;
+    // Description Accordion
+    if (row.description) {
+        html += `<div class="accordion custom-accordion mt-2" id="vuln_desc_acc_${row.id}">
+            <div class="card mb-1 shadow-none border">
+                <div class="card-header p-2" id="headingDesc_${row.id}">
+                    <h5 class="m-0 font-14">
+                        <a class="custom-accordion-title text-reset d-block" data-bs-toggle="collapse" href="#collapseDesc_${row.id}" aria-expanded="true">
+                            Vulnerability Description <i class="fe-chevron-down float-end"></i>
+                        </a>
+                    </h5>
+                </div>
+                <div id="collapseDesc_${row.id}" class="collapse show">
+                    <div class="card-body p-2 font-13 text-muted">${htmlEncode(row.description).replace(/\n/g, '<br />')}</div>
+                </div>
+            </div>
+        </div>`;
     }
 
-    if (row.curl_command) {
-        html += `<h5 class="text-primary mt-3"><i class="fe-terminal me-1"></i> CURL Command</h5><div class="position-relative"><pre class="bg-dark text-light p-2 rounded" style="font-size: 11px;"><code>${htmlEncode(row.curl_command)}</code></pre></div>`;
+    // Impact & Remediation
+    if (row.impact || row.remediation) {
+        if (row.impact) {
+            html += `<div class="accordion custom-accordion mt-2" id="vuln_impact_acc_${row.id}">
+                <div class="card mb-1 shadow-none border">
+                    <div class="card-header p-2">
+                        <h5 class="m-0 font-14">
+                            <a class="custom-accordion-title text-reset d-block" data-bs-toggle="collapse" href="#collapseImpact_${row.id}">
+                                Vulnerability Impact <i class="fe-chevron-down float-end"></i>
+                            </a>
+                        </h5>
+                    </div>
+                    <div id="collapseImpact_${row.id}" class="collapse show">
+                        <div class="card-body p-2 font-13 text-muted">${htmlEncode(row.impact).replace(/\n/g, '<br />')}</div>
+                    </div>
+                </div>
+            </div>`;
+        }
+        if (row.remediation) {
+            html += `<div class="accordion custom-accordion mt-2" id="vuln_rem_acc_${row.id}">
+                <div class="card mb-1 shadow-none border">
+                    <div class="card-header p-2">
+                        <h5 class="m-0 font-14">
+                            <a class="custom-accordion-title text-reset d-block" data-bs-toggle="collapse" href="#collapseRem_${row.id}">
+                                Remediation <i class="fe-chevron-down float-end"></i>
+                            </a>
+                        </h5>
+                    </div>
+                    <div id="collapseRem_${row.id}" class="collapse show">
+                        <div class="card-body p-2 font-13 text-muted">${htmlEncode(row.remediation).replace(/\n/g, '<br />')}</div>
+                    </div>
+                </div>
+            </div>`;
+        }
     }
-    
-    if (row.extracted_results) {
-        html += `<h5 class="text-primary mt-3"><i class="fe-search me-1"></i> Extracted Results</h5><pre class="bg-white p-2 border rounded" style="max-height:150px; font-size: 11px;"><code>${htmlEncode(row.extracted_results)}</code></pre>`;
+
+    // Classification Table Accordion
+    html += `<div class="accordion custom-accordion mt-2" id="vuln_class_acc_${row.id}">
+        <div class="card mb-1 shadow-none border">
+            <div class="card-header p-2">
+                <h5 class="m-0 font-14">
+                    <a class="custom-accordion-title text-reset d-block" data-bs-toggle="collapse" href="#collapseClass_${row.id}">
+                        Vulnerability Classification <i class="fe-chevron-down float-end"></i>
+                    </a>
+                </h5>
+            </div>
+            <div id="collapseClass_${row.id}" class="collapse show">
+                <div class="card-body p-2">
+                    <table class="table table-sm table-borderless mb-0 font-13 text-muted">`;
+                    if (row.cve_ids && row.cve_ids.length) {
+                        html += `<tr><td style="width:150px">CVE IDs</td><td>`;
+                        row.cve_ids.forEach(cve => {
+                            html += `<a href="#" onclick="get_and_render_cve_details('${cve.name.toUpperCase()}')" class="badge badge-outline-primary me-1 mt-1">${cve.name.toUpperCase()}</a>`;
+                        });
+                        html += `</td></tr>`;
+                    }
+                    if (row.cwe_ids && row.cwe_ids.length) {
+                        html += `<tr><td>CWE IDs</td><td>`;
+                        row.cwe_ids.forEach(cwe => {
+                            html += `<a href="#" onclick="get_and_render_cwe_details('${cwe.name.toUpperCase()}')" class="badge badge-outline-warning me-1 mt-1">${cwe.name.toUpperCase()}</a>`;
+                        });
+                        html += `</td></tr>`;
+                    }
+                    if (row.cvss_score) {
+                        html += `<tr><td>CVSS Score</td><td><span class="badge badge-outline-${row.cvss_score > 7 ? 'danger' : row.cvss_score > 4 ? 'warning' : 'info'}">${row.cvss_score}</span></td></tr>`;
+                    }
+                    if (row.cvss_metrics) {
+                        html += `<tr><td>CVSS Metrics</td><td><code>${row.cvss_metrics}</code></td></tr>`;
+                    }
+                    html += `</table>
+                </div>
+            </div>
+        </div>
+    </div>`;
+
+    // HTTP Request Accordion
+    if (row.request) {
+        html += `<div class="accordion custom-accordion mt-2" id="vuln_req_acc_${row.id}">
+            <div class="card mb-1 shadow-none border">
+                <div class="card-header p-2">
+                    <h5 class="m-0 font-14">
+                        <a class="custom-accordion-title text-reset d-block" data-bs-toggle="collapse" href="#collapseReq_${row.id}">
+                            HTTP Request <i class="fe-chevron-down float-end"></i>
+                        </a>
+                    </h5>
+                </div>
+                <div id="collapseReq_${row.id}" class="collapse show">
+                    <div class="card-body p-0"><pre class="bg-dark text-light p-2 mb-0" style="max-height:250px; overflow-y:auto; font-size: 11px;"><code>${htmlEncode(row.request)}</code></pre></div>
+                </div>
+            </div>
+        </div>`;
+    }
+
+    // HTTP Response Accordion
+    if (row.response) {
+        html += `<div class="accordion custom-accordion mt-2" id="vuln_res_acc_${row.id}">
+            <div class="card mb-1 shadow-none border">
+                <div class="card-header p-2">
+                    <h5 class="m-0 font-14">
+                        <a class="custom-accordion-title text-reset d-block" data-bs-toggle="collapse" href="#collapseRes_${row.id}">
+                            HTTP Response <i class="fe-chevron-down float-end"></i>
+                        </a>
+                    </h5>
+                </div>
+                <div id="collapseRes_${row.id}" class="collapse">
+                    <div class="card-body p-0"><pre class="bg-dark text-light p-2 mb-0" style="max-height:250px; overflow-y:auto; font-size: 11px;"><code>${htmlEncode(row.response)}</code></pre></div>
+                </div>
+            </div>
+        </div>`;
+    }
+
+    // References Accordion
+    if (row.references && typeof row.references === 'string') {
+        html += `<div class="accordion custom-accordion mt-2" id="vuln_ref_acc_${row.id}">
+            <div class="card mb-1 shadow-none border">
+                <div class="card-header p-2">
+                    <h5 class="m-0 font-14">
+                        <a class="custom-accordion-title text-reset d-block" data-bs-toggle="collapse" href="#collapseRef_${row.id}">
+                            References <i class="fe-chevron-down float-end"></i>
+                        </a>
+                    </h5>
+                </div>
+                <div id="collapseRef_${row.id}" class="collapse show">
+                    <div class="card-body p-2 font-13 text-muted"><ul class="mb-0 ps-3">`;
+                    row.references.split('\n').forEach(ref => {
+                        if (ref.trim()) html += `<li class="mb-1"><a href="${ref.trim()}" target="_blank" class="text-info text-break">${ref.trim()}</a></li>`;
+                    });
+                    html += `</ul></div>
+                </div>
+            </div>
+        </div>`;
+    }
+
+    // Exploit Preview
+    if (row.exploit_url) {
+        html += `<div class="alert alert-soft-danger mt-3 border-danger shadow-sm">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span><i class="fe-zap text-danger me-1"></i> <strong>Potential Exploit Found</strong></span>
+                <a href="${row.exploit_url}" target="_blank" class="btn btn-xs btn-danger"><i class="fe-external-link"></i> Source</a>
+            </div>
+            <p class="mb-2 text-muted small">Validation: <span class="badge badge-soft-dark">${row.validation_status || 'Unverified'}</span></p>
+            <button class="btn btn-sm btn-outline-danger w-100" onclick="preview_exploit('${row.exploit_url}', ${row.id})"><i class="fe-eye me-1"></i> Preview Exploit Content</button>
+            <div id="exploit-preview-${row.id}" class="mt-2" style="display:none;"><pre class="bg-dark text-white p-2 rounded" style="max-height:250px; overflow-y:auto; font-size: 11px;"></pre></div>
+        </div>`;
+    }
+
+    // Others: CURL, Extracted
+    if (row.curl_command || row.extracted_results) {
+        html += `<div class="mt-3">`;
+        if (row.curl_command) {
+            html += `<h5 class="text-primary mt-2 font-14"><i class="fe-terminal me-1"></i> CURL Command</h5><pre class="bg-dark text-light p-2 rounded" style="font-size: 11px;"><code>${htmlEncode(row.curl_command)}</code></pre>`;
+        }
+        if (row.extracted_results) {
+            html += `<h5 class="text-primary mt-2 font-14"><i class="fe-search me-1"></i> Extracted Results</h5><pre class="bg-white p-2 border rounded" style="max-height:150px; font-size: 11px;"><code>${htmlEncode(row.extracted_results)}</code></pre>`;
+        }
+        html += `</div>`;
     }
 
     html += '</div>';

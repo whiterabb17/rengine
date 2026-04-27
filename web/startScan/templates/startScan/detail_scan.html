@@ -1721,14 +1721,9 @@ $(document).ready(function() {
 					{"className": "text-center", "targets": []},
 					{
 						"render": function ( data, type, row ) {
-							if(row['open_status']){
-								return `<div class="form-check mb-2 form-check-primary"><input type="checkbox" name="targets_checkbox['+ row.id + ']" class="float-start form-check-input" onchange="vuln_status_change(this, `+data+`);">\n<span class="new-control-indicator"></span><span style="visibility:hidden">c</span></div>`;
-							}
-							else{
-								return `<div class="form-check mb-2 form-check-primary"><input type="checkbox" checked name="targets_checkbox['+ row.id + ']" class="float-start form-check-input" onchange="vuln_status_change(this, `+data+`);">\n<span class="new-control-indicator"></span><span style="visibility:hidden">c</span></div>`;
-							}
+							return `<div class="form-check mb-2 form-check-primary"><input type="checkbox" name="vulnerability_checkbox" class="float-start form-check-input vulnerability-checkbox" value="${row.id}" onchange="updateVulnerabilityCount()"></div>`;
 						},
-						"targets": 0,
+						"targets": 0
 					},
 					{
 						"render": function ( data, type, row ) {
@@ -1927,6 +1922,7 @@ $(document).ready(function() {
 					}, 1);
 				},
 				createdRow: function( row, data, dataIndex ) {
+					$(row).attr('id', 'vulnerability_results_row_' + data['id']);
 					if (!data['open_status']){
 						$(row).addClass('table-success text-strike');
 					}
@@ -2017,8 +2013,8 @@ $(document).ready(function() {
 				if ($(e.target).is('input[type="checkbox"]') || $(e.target).is('svg') || $(e.target).is('a')) {
 					return;
 				}
-				var data = vulnerability_table.row(this).data();
-				render_vuln_offcanvas(data);
+				// var data = vulnerability_table.row(this).data();
+				// render_vuln_offcanvas(data);
 			});
 		});
 	{% endif %}
@@ -2854,6 +2850,34 @@ $(document).ready(function() {
 		"pageLength": 50,
 	});
 
+
+});
+
+function mainVulnCheckBoxSelected(e) {
+	$(".vulnerability-checkbox").prop("checked", $(e).prop("checked"));
+	updateVulnerabilityCount();
+}
+
+function updateVulnerabilityCount() {
+	var count = $(".vulnerability-checkbox:checked").length;
+	if (count > 0) {
+		$("#delete_multiple_vulnerabilities_btn").removeClass("d-none");
+		$("#vulnerability_selected_count").removeClass("d-none").text(count + " Selected");
+	} else {
+		$("#delete_multiple_vulnerabilities_btn").addClass("d-none");
+		$("#vulnerability_selected_count").addClass("d-none");
+		$("#vulnerability_select_all_checkbox").prop("checked", false);
+	}
+}
+
+function uncheckVulnerabilities() {
+	$(".vulnerability-checkbox").prop("checked", false);
+	$("#vulnerability_select_all_checkbox").prop("checked", false);
+	updateVulnerabilityCount();
+}
+
+$(document).on('click', "#vulnerability_select_all_checkbox", function() {
+	mainVulnCheckBoxSelected(this);
 });
 </script>
 {% endblock page_level_script %}
