@@ -4,6 +4,8 @@
 
 ### Bug Fixes
 - **Monitoring Frequency**: Fixed a bug where monitoring frequency was stored as an integer, causing mismatch with the expected choice values in task scheduling.
+- **Nmap Parser**: Added validation logic to filter out common false positive alerts from Nmap script results (e.g., timeouts, failed executions, and "not vulnerable" messages).
+
 
 ### New Features
 - **Continuous Monitoring Engine**: Automated periodic discovery of new subdomains, directories, and login pages with real-time alerting and automated scan triggers.
