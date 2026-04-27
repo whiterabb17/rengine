@@ -6,7 +6,7 @@
   <h3>Unofficial Fork of reNgine: The Ultimate Web Reconnaissance & Vulnerability Scanner 🚀</h3>
 </p>
 
-<p align="center"><a href="https://github.com/yogeshojha/rengine/releases" target="_blank"><img src="https://img.shields.io/badge/version-v2.5.0-informational?&logo=none" alt="reNgine Latest Version" /></a>&nbsp;<a href="https://www.gnu.org/licenses/gpl-3.0" target="_blank"><img src="https://img.shields.io/badge/License-GPLv3-red.svg?&logo=none" alt="License" /></a>&nbsp;<a href="#" target="_blank"><img src="https://img.shields.io/badge/first--timers--only-friendly-blue.svg?&logo=none" alt="" /></a></p>
+<p align="center"><a href="https://github.com/whiterabb17/rengine/releases" target="_blank"><img src="https://img.shields.io/badge/version-v2.5.1-informational?&logo=none" alt="reNgine Latest Version" /></a>&nbsp;<a href="https://www.gnu.org/licenses/gpl-3.0" target="_blank"><img src="https://img.shields.io/badge/License-GPLv3-red.svg?&logo=none" alt="License" /></a>&nbsp;<a href="#" target="_blank"><img src="https://img.shields.io/badge/first--timers--only-friendly-blue.svg?&logo=none" alt="" /></a></p>
 
 <p align="center">
   <a href="https://www.youtube.com/watch?v=Xk_YH83IQgg" target="_blank"><img src="https://img.shields.io/badge/BlackHat--Arsenal--Asia-2023-blue.svg?logo=none" alt="" /></a>&nbsp;
@@ -19,7 +19,7 @@
 </p>
 
 <p align="center">
-<a href="https://github.com/yogeshojha/rengine/actions/workflows/codeql-analysis.yml" target="_blank"><img src="https://github.com/yogeshojha/rengine/actions/workflows/codeql-analysis.yml/badge.svg" alt="" /></a>&nbsp;<a href="https://github.com/yogeshojha/rengine/actions/workflows/build.yml" target="_blank"><img src="https://github.com/yogeshojha/rengine/actions/workflows/build.yml/badge.svg" alt="" /></a>&nbsp;
+<a href="https://github.com/whiterabb17/rengine/actions/workflows/codeql-analysis.yml" target="_blank"><img src="https://github.com/whiterabb17/rengine/actions/workflows/codeql-analysis.yml/badge.svg" alt="" /></a>&nbsp;<a href="https://github.com/whiterabb17/rengine/actions/workflows/build.yml" target="_blank"><img src="https://github.com/whiterabb17/rengine/actions/workflows/build.yml/badge.svg" alt="" /></a>&nbsp;
 </p>
 
 <p align="center">
@@ -30,7 +30,7 @@
 <a href="https://opensourcesecurityindex.io/" target="_blank" rel="noopener">
 <img style="width: 282px; height: 56px" src="https://opensourcesecurityindex.io/badge.svg" alt="Open Source Security Index - Fastest Growing Open Source Security Projects" width="282" height="56" /> </a>
 </p>
-<h4>reNgine 2.5.0 is released!</h4>
+<h4>reNgine 2.5.1 is released!</h4>
 <p>
   reNgine 2.5.0 introduces the <b>Continuous Monitoring Engine</b> for automated asset discovery, the <b>Auth Brute-Force Engine</b> (powered by Medusa) with advanced stealth proxy rotation, deep Nmap fingerprint parsing for hidden portals, and automated scan triggers. This version also includes comprehensive support for Nmap vuln scripts and real-time alerts for newly discovered assets.
 </p>
@@ -64,7 +64,7 @@ Detailed documentation available at [https://rengine.wiki](https://rengine.wiki)
 * [Installation Video](#installation-video-tutorial)
 * [Community-Curated Videos](#community-curated-videos)
 * [Screenshots](#screenshots)
-* [What's new in reNgine](https://github.com/yogeshojha/rengine/releases)
+* [What's new in reNgine](https://github.com/whiterabb17/rengine/releases)
 * [Contributing](#contributing)
 * [reNgine Support](#rengine-support)
 * [Support and Sponsoring](#support-and-sponsoring)
@@ -90,7 +90,7 @@ reNgine is not an ordinary reconnaissance suite; it's a game-changer! We've turb
 
 🔖&nbsp; &nbsp; Say Hello to Projects! reNgine 2.0 introduces a powerful addition that enables you to efficiently organize your web application reconnaissance efforts. With this feature, you can create distinct project spaces, each tailored to a specific purpose, such as personal bug bounty hunting, client engagements, or any other specialized recon task. Each projects will have separate dashboard and all the scan results will be separated from each project, while scan engines and configuration will be shared across all the projects.
 
-⚙️&nbsp; &nbsp; Roles and Permissions! In reNgine 2.0, we've taken your web application reconnaissance to a whole new level of control and security. Now, you can assign distinct roles to your team members—Sys Admin, Penetration Tester, and Auditor—each with precisely defined permissions to tailor their access and actions within the reNgine ecosystem.
+⚙&nbsp; &nbsp; Roles and Permissions! In reNgine 2.0, we've taken your web application reconnaissance to a whole new level of control and security. Now, you can assign distinct roles to your team members—Sys Admin, Penetration Tester, and Auditor—each with precisely defined permissions to tailor their access and actions within the reNgine ecosystem.
 
   - 🔐 Sys Admin: Sys Admin is a superuser that has permission to modify system and scan related configurations, scan engines, create new users, add new tools etc. Superuser can initiate scans and subscans effortlessly.
   - 🔍 Penetration Tester: Penetration Tester will be allowed to modify and initiate scans and subscans, add or update targets, etc. A penetration tester will not be allowed to modify system configurations.
@@ -107,7 +107,7 @@ reNgine is not an ordinary reconnaissance suite; it's a game-changer! We've turb
 
 ## Workflow
 
-<img src="https://github.com/yogeshojha/rengine/assets/17223002/10c475b8-b4a8-440d-9126-77fe2038a386">
+<img src="https://github.com/whiterabb17/rengine/assets/17223002/10c475b8-b4a8-440d-9126-77fe2038a386">
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/aqua.png)
 
@@ -199,7 +199,7 @@ You can also find the deep dive video on how to use and install reNgine from her
 1. Clone the repository
 
     ```bash
-    git clone https://github.com/yogeshojha/rengine && cd rengine
+    git clone https://github.com/whiterabb17/rengine && cd rengine
     ```
 
 1. Configure the environment
@@ -351,7 +351,7 @@ How you can contribute:
 To get started:
 
   1. Check our [Contributing Guide](.github/CONTRIBUTING.md)
-  2. Pick an [open issue](https://github.com/yogeshojha/rengine/issues) or propose a new one
+  2. Pick an [open issue](https://github.com/whiterabb17/rengine/issues) or propose a new one
   3. Fork the repository and create your branch
   4. Make your changes and submit a pull request
 
@@ -407,7 +407,7 @@ By providing this detailed information, you significantly help developers identi
 reNgine is an open-source project that welcomes contributors of all experience levels, including beginners. If you've never contributed to open source before, we encourage you to start here!
 
 * We're proud to support your first Pull Request (PR)
-* Check our [open issues](https://github.com/yogeshojha/rengine/issues) for starter-friendly tasks
+* Check our [open issues](https://github.com/whiterabb17/rengine/issues) for starter-friendly tasks
 * Don't hesitate to ask questions in our community channels
 
 Your contribution, no matter how small, is valuable to us.
@@ -438,7 +438,7 @@ Please note:
 
 reNgine is a passion project developed in my free time, alongside my day job. Your support helps keep this project alive and growing. Here's how you can contribute:
 
-* Add a [GitHub Star](https://github.com/yogeshojha/rengine) to the project.
+* Add a [GitHub Star](https://github.com/whiterabb17/rengine) to the project.
 * Share about reNgine on social media or in blog posts
 * Nominate me for [GitHub Stars?](https://stars.github.com/nominate/)
 * Use my [DigitalOcean referral link](https://m.do.co/c/e353502d19fc) to get $100 credit (I receive $25)
@@ -457,7 +457,7 @@ To report a security vulnerability, please follow these steps:
 
 1. **Do Not** disclose the vulnerability publicly on GitHub issues or any other public forum.
 
-2. Go to the [Security tab](https://github.com/yogeshojha/rengine/security) of the reNgine repository.
+2. Go to the [Security tab](https://github.com/whiterabb17/rengine/security) of the reNgine repository.
 
 3. Click on "Report a vulnerability" to open GitHub's private vulnerability reporting form.
 

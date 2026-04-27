@@ -1,6 +1,9 @@
 # Changelog
 
-## v2.5.0
+## v2.5.1
+
+### Bug Fixes
+- **Monitoring Frequency**: Fixed a bug where monitoring frequency was stored as an integer, causing mismatch with the expected choice values in task scheduling.
 
 ### New Features
 - **Continuous Monitoring Engine**: Automated periodic discovery of new subdomains, directories, and login pages with real-time alerting and automated scan triggers.
@@ -8,9 +11,11 @@
 - **Auth Brute-Force Engine**: Integrated Medusa for high-performance authentication testing across multiple services (HTTP, SSH, etc.).
 - **Stealth Brute-Force Orchestrator**: Advanced orchestrator with dynamic proxy rotation via Proxychains4, batched attempts (1-10 per proxy), and random delays to bypass account lockout and IP blacklisting.
 - **Deep Fingerprint Parsing**: Enhanced Nmap parsing to extract page titles even from 404, 401, and 403 responses by analyzing raw service fingerprint strings.
-- **Automated Auth Triggering**: New logic to automatically trigger brute-force scans when an authentication portal or VPN gateway is detected during port scanning or firewall auditing.
+- **Automated Auth Triggering**: New logic to automatically trigger brute-force scans when an authentication portal or VPN gateway is detected, provided the brute-force module is enabled in the selected scan engine.
 - **Curated Auth Wordlists**: Added specially curated "top/default" and "most common" wordlists for authentication testing, persisted in the `/usr/src/wordlist/auth/` volume.
 - **Nmap Vuln Script Support**: Added comprehensive parsing for Nmap `vuln` script outputs, integrating them directly into the vulnerability dashboard.
+- **Repository Migration**: Formally transitioned the project to `whiterabb17/rengine` as an unofficial fork.
+- **Enhanced Update Check**: Implemented a fallback mechanism that checks both GitHub Releases and the raw `.version` file in the master branch. If a newer version is detected in the repository root, the system directs users to the main repo instead of the releases page.
 
 ## v2.4.0
 

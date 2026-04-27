@@ -605,7 +605,7 @@ def target_summary(request, slug, id):
     context['monitoring_discoveries'] = (
         MonitoringDiscovery.objects
         .filter(domain__id=id)
-        .order_by('-discovery_date')
+        .order_by('-discovered_at')
     )
 
     return render(request, 'target/summary.html', context)

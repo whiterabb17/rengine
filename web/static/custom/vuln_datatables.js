@@ -1,33 +1,33 @@
 const vuln_datatable_columns = [
-	{'data': 'id'},
-	{'data': 'source'},
-	{'data': 'type'},
+	{'data': 'id', 'defaultContent': ''},
+	{'data': 'source', 'defaultContent': ''},
+	{'data': 'type', 'defaultContent': ''},
 
-	{'data': 'name'},
-	{'data': 'cvss_metrics'},
-	{'data': 'tags'},
-	{'data': 'hackerone_report_id'},
+	{'data': 'name', 'defaultContent': ''},
+	{'data': 'cvss_metrics', 'defaultContent': ''},
+	{'data': 'tags', 'defaultContent': ''},
+	{'data': 'hackerone_report_id', 'defaultContent': ''},
 
-	{'data': 'severity'},
-	{'data': 'cvss_score'},
-	{'data': 'cve_ids'},
-	{'data': 'cwe_ids'},
-	{'data': 'http_url'},
+	{'data': 'severity', 'defaultContent': ''},
+	{'data': 'cvss_score', 'defaultContent': ''},
+	{'data': 'cve_ids', 'defaultContent': ''},
+	{'data': 'cwe_ids', 'defaultContent': ''},
+	{'data': 'http_url', 'defaultContent': ''},
 
-	{'data': 'description'},
-	{'data': 'references'},
+	{'data': 'description', 'defaultContent': ''},
+	{'data': 'references', 'defaultContent': ''},
 
-	{'data': 'discovered_date'},
-	{'data': 'exploit_url'},
-	{'data': 'validation_status'},
+	{'data': 'discovered_date', 'defaultContent': ''},
+	{'data': 'exploit_url', 'defaultContent': ''},
+	{'data': 'validation_status', 'defaultContent': ''},
 
-	{'data': 'open_status'},
+	{'data': 'open_status', 'defaultContent': ''},
 
-	{'data': null}, // 18
+	{'data': null, 'defaultContent': ''}, // 18
 
-	{'data': 'extracted_results'},
-	{'data': 'curl_command'},
-	{'data': 'matcher_name'},
+	{'data': 'extracted_results', 'defaultContent': ''},
+	{'data': 'curl_command', 'defaultContent': ''},
+	{'data': 'matcher_name', 'defaultContent': ''},
 ];
 
 const vuln_datatable_page_length = 50;

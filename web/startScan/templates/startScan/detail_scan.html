@@ -1705,6 +1705,7 @@ $(document).ready(function() {
 						'url': vuln_ajax_url,
 				},
 				"rowGroup": {
+					"dataSrc": "name",
 					"startRender": function(rows, group) {
 						return group + ' (' + rows.count() + ' Vulnerabilities)';
 					}
@@ -1734,6 +1735,7 @@ $(document).ready(function() {
 							if (data) {
 								return `<span class="badge badge-outline-primary">&nbsp;&nbsp;${data.toUpperCase()}&nbsp;&nbsp;</span>`;
 							}
+							return '';
 						},
 						"targets": 1,
 					},

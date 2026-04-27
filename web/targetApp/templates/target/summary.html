@@ -763,7 +763,7 @@ Target Summary
 										<small class="ms-1 text-muted">{{ discovery.content.title|truncatechars:30 }}</small>
 										{% endif %}
 									</td>
-									<td>{{ discovery.discovery_date|naturaltime }}</td>
+									<td>{{ discovery.discovered_at|naturaltime }}</td>
 									<td>
 										<a href="{% url 'scan_history' current_project.slug discovery.scan_history.id %}" class="btn btn-xs btn-light"><i class="mdi mdi-eye"></i> View</a>
 									</td>

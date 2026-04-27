@@ -167,7 +167,11 @@ class Domain(models.Model):
 
 	# Monitoring Settings
 	is_monitored = models.BooleanField(default=False)
-	monitor_frequency = models.IntegerField(default=24, help_text='Monitoring frequency in hours')
+	monitor_frequency = models.CharField(
+		max_length=20,
+		choices=(('hourly', 'Hourly'), ('daily', 'Daily'), ('weekly', 'Weekly'), ('monthly', 'Monthly')),
+		default='daily'
+	)
 	monitor_engine = models.ForeignKey('scanEngine.EngineType', on_delete=models.SET_NULL, null=True, blank=True)
 	monitor_scan_scope = models.CharField(
 		max_length=20,

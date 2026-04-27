@@ -1591,7 +1591,7 @@ def nmap(
 		if 'auth_portal' in v.get('tags', []):
 			auth_targets.append(v['http_url'])
 	
-	if auth_targets:
+	if auth_targets and self.yaml_configuration.get('brute_force_scan'):
 		logger.warning(f'Detected Auth Portals on {host}. Triggering Brute Force Scan...')
 		# We use delay to run it asynchronously
 		from reNgine.tasks import brute_force_scan
@@ -3603,6 +3603,31 @@ def parse_nmap_http_title_output(script_output):
 
 
 def parse_nmap_generic_vuln_output(script_id, script_output):
+	if not script_output or not script_output.strip():
+		return []
+
+	lower_output = script_output.lower()
+
+	# List of common "negative" indicators in nmap script output
+	false_positive_indicators = [
+		"couldn't find",
+		"could not find",
+		"error: script execution failed",
+		"no reply from server",
+		"timeout",
+		"did not work",
+		"might not be vulnerable",
+		"not vulnerable",
+		"no findings",
+		"0 vulnerabilities found",
+		"no vulnerabilities found",
+		"vulnerabilities: 0",
+		"vulnerable: no",
+	]
+
+	if any(indicator in lower_output for indicator in false_positive_indicators):
+		return []
+
 	return [{
 		'name': f'Nmap Vuln Script: {script_id}',
 		'severity': 2, # Medium by default for vuln scripts
@@ -3610,6 +3635,7 @@ def parse_nmap_generic_vuln_output(script_id, script_output):
 		'type': 'Vulnerability',
 		'tags': ['auth_portal'] if any(x in script_output.lower() for x in ['login', 'auth', 'brute', 'password']) else []
 	}]
+
 
 
 def parse_nmap_http_csrf_output(script_output):
@@ -5134,7 +5160,7 @@ def firewall_vpn_scan(self, ctx={}, description=None):
 				save_vulnerability(target_domain=self.domain, scan_history=self.scan, **vuln_data)
 	
 	# Automatic Trigger for Brute Force Scan on Sophos Portals
-	if run_sslscan:
+	if run_sslscan and self.yaml_configuration.get('brute_force_scan'):
 		auth_targets = [f'https://{target}:{port}' for port in ssl_ports]
 		logger.warning(f'Triggering Brute Force Scan for potential Sophos Portals on {target}')
 		from reNgine.tasks import brute_force_scan

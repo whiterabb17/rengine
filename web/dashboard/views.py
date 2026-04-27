@@ -447,7 +447,7 @@ def monitoring_dashboard(request, slug):
         return HttpResponseRedirect(reverse('four_oh_four'))
     
     # Get all monitoring discoveries for this project
-    discoveries = MonitoringDiscovery.objects.filter(domain__project=project).order_by('-discovery_date')
+    discoveries = MonitoringDiscovery.objects.filter(domain__project=project).order_by('-discovered_at')
     
     # Statistics
     total_discoveries = discoveries.count()
