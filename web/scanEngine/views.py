@@ -572,6 +572,9 @@ def api_vault(request, slug):
         key_chaos = request.POST.get('key_chaos')
         key_hackerone = request.POST.get('key_hackerone')
         username_hackerone = request.POST.get('username_hackerone')
+        key_shodan = request.POST.get('key_shodan')
+        key_censys_id = request.POST.get('key_censys_id')
+        key_censys_secret = request.POST.get('key_censys_secret')
 
 
         if key_openai:
@@ -610,9 +613,31 @@ def api_vault(request, slug):
                     key=key_hackerone
                 )
 
+        if key_shodan:
+            shodan_api_key = ShodanAPIKey.objects.first()
+            if shodan_api_key:
+                shodan_api_key.key = key_shodan
+                shodan_api_key.save()
+            else:
+                ShodanAPIKey.objects.create(key=key_shodan)
+
+        if key_censys_id and key_censys_secret:
+            censys_api_key = CensysAPIKey.objects.first()
+            if censys_api_key:
+                censys_api_key.api_id = key_censys_id
+                censys_api_key.api_secret = key_censys_secret
+                censys_api_key.save()
+            else:
+                CensysAPIKey.objects.create(
+                    api_id=key_censys_id,
+                    api_secret=key_censys_secret
+                )
+
     openai_key = OpenAiAPIKey.objects.first()
     netlas_key = NetlasAPIKey.objects.first()
     chaos_key = ChaosAPIKey.objects.first()
+    shodan_key = ShodanAPIKey.objects.first()
+    censys_key = CensysAPIKey.objects.first()
     h1_key = HackerOneAPIKey.objects.first()
     if h1_key:
         hackerone_key = h1_key.key
@@ -626,6 +651,8 @@ def api_vault(request, slug):
     context['chaos_key'] = chaos_key
     context['hackerone_key'] = hackerone_key
     context['hackerone_username'] = hackerone_username
+    context['shodan_key'] = shodan_key
+    context['censys_key'] = censys_key
     
     return render(request, 'scanEngine/settings/api.html', context)
 

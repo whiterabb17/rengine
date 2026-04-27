@@ -33,6 +33,7 @@ from reNgine.settings import *
 from reNgine.llm import *
 from reNgine.utilities import *
 from reNgine.opsec_utils import OpSecManager, BruteForceOrchestrator
+from reNgine.waf_utils import OriginDiscoveryManager, WafBypassOrchestrator
 from scanEngine.models import (EngineType, InstalledExternalTool, Notification, Proxy, OpSec)
 from startScan.models import *
 from startScan.models import EndPoint, Subdomain, Vulnerability
@@ -190,7 +191,13 @@ def initiate_scan(
 		# osint								             	  vulnerability_scan
 		# osint								             	  dalfox xss scan
 		#						 	   		         	  	  screenshot
-		#													  waf_detection
+		# WAF Logic: If WAF Bypass is enabled, WAF Detection MUST also be enabled
+		tasks = engine.tasks
+		if 'waf_bypass' in tasks and 'waf_detection' not in tasks:
+			tasks.append('waf_detection')
+			scan.tasks = tasks
+			scan.save()
+
 		workflow = chain(
 			group(
 				subdomain_discovery.si(ctx=ctx, description='Subdomain discovery'),
@@ -202,7 +209,10 @@ def initiate_scan(
 				dir_file_fuzz.si(ctx=ctx, description='Directories & files fuzz'),
 				vulnerability_scan.si(ctx=ctx, description='Vulnerability scan'),
 				screenshot.si(ctx=ctx, description='Screenshot'),
-				waf_detection.si(ctx=ctx, description='WAF detection'),
+				chain(
+					waf_detection.si(ctx=ctx, description='WAF detection'),
+					waf_bypass.si(ctx=ctx, description='WAF bypass')
+				),
 				firewall_vpn_scan.si(ctx=ctx, description='Firewall & VPN scan')
 			)
 		)
@@ -1658,7 +1668,57 @@ def waf_detection(self, ctx={}, description=None):
 		subdomain_query, _ = Subdomain.objects.get_or_create(scan_history=self.scan, name=subdomain)
 		subdomain_query.waf.add(waf)
 		subdomain_query.save()
+
+		# Phase 2: Origin Discovery
+		# If WAF is detected and Origin Discovery is enabled (implied by WAF detection in this context)
+		# We check engine config for origin discovery specific settings
+		waf_config = config or {}
+		use_shodan = waf_config.get('use_shodan', True)
+		use_censys = waf_config.get('use_censys', True)
+		
+		logger.info(f"Starting Origin Discovery for {subdomain}")
+		origin_manager = OriginDiscoveryManager(subdomain_query)
+		origin_ips = origin_manager.find_origin(
+			use_shodan=use_shodan,
+			use_censys=use_censys
+		)
+		
+		if origin_ips:
+			# Store the first one as primary origin_ip
+			subdomain_query.origin_ip = origin_ips[0]
+			subdomain_query.save()
+			logger.info(f"Origin IP found for {subdomain}: {origin_ips[0]}")
+
 	return wafs
+
+
+@app.task(name='waf_bypass', queue='main_scan_queue', base=RengineTask, bind=True)
+def waf_bypass(self, ctx={}, description=None):
+	"""
+	Tests various WAF bypass techniques.
+	"""
+	if 'waf_bypass' not in self.scan.tasks:
+		return
+
+	config = self.yaml_configuration.get('waf_bypass') or {}
+	use_nuclei = config.get('use_nuclei', True)
+	use_benchmarking = config.get('use_benchmarking', True)
+
+	# Get all subdomains with WAFs in this scan
+	subdomains = Subdomain.objects.filter(scan_history=self.scan).exclude(waf=None)
+	
+	for subdomain in subdomains:
+		logger.info(f"Starting WAF Bypass tests for {subdomain.name}")
+		orchestrator = WafBypassOrchestrator(subdomain)
+		findings = orchestrator.run_all_tests(
+			use_nuclei=use_nuclei,
+			use_benchmarking=use_benchmarking
+		)
+		
+		if findings:
+			logger.info(f"Found {len(findings)} potential WAF bypasses for {subdomain.name}")
+	
+	return True
 
 
 @app.task(name='dir_file_fuzz', queue='main_scan_queue', base=RengineTask, bind=True)

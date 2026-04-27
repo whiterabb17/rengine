@@ -2405,10 +2405,20 @@ $(document).ready(function() {
 							}
 
 							if(Array.isArray(row['waf']) && row['waf'].length){
-								waf_badge = `<div><span class="pl-2 pr-2 my-1 badge badge-soft-danger" bs-tooltip" title="WAF Detected by wafw00f!""><i class="fe-cloud-lightning mx-1"></i>WAF Detected</span>`;
+								waf_badge = `<div><span class="pl-2 pr-2 my-1 badge badge-soft-danger bs-tooltip" title="WAF Detected by wafw00f!"><i class="fe-cloud-lightning mx-1"></i>WAF Detected</span>`;
 								for (var waf in row['waf']) {
 									var waf_object = row['waf'][waf];
-									waf_badge += `<span class="mx-1 my-1 badge badge-soft-danger" bs-tooltip" title="WAF Manufacturer: ${waf_object.manufacturer}">${waf_object.name}</span>`;
+									waf_badge += `<span class="mx-1 my-1 badge badge-soft-danger bs-tooltip" title="WAF Manufacturer: ${waf_object.manufacturer}">${waf_object.name}</span>`;
+								}
+								if (row['origin_ip']) {
+									waf_badge += `<div class="mt-1"><span class="badge badge-soft-success bs-tooltip" title="Real IP discovered via Origin Discovery"><i class="fe-target mx-1"></i>Origin IP: ${row['origin_ip']}</span></div>`;
+								}
+								if (row['waf_bypass_findings'] && row['waf_bypass_findings'].length) {
+									waf_badge += `<div class="mt-1">`;
+									row['waf_bypass_findings'].forEach(finding => {
+										waf_badge += `<span class="badge badge-soft-warning me-1 bs-tooltip" title="Bypass Technique: ${finding.technique}"><i class="fe-shield-off mx-1"></i>Bypass: ${finding.technique}</span>`;
+									});
+									waf_badge += `</div>`;
 								}
 								waf_badge += `</div>`;
 							}
