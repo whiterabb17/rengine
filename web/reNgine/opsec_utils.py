@@ -298,7 +298,10 @@ class BruteForceOrchestrator:
                         output = f.read()
                         # Medusa success pattern: "ACCOUNT FOUND"
                         if "ACCOUNT FOUND" in output:
-                            found = re.findall(r"ACCOUNT FOUND: \[(.*?)\] User: \[(.*?)\] Password: \[(.*?)\]", output)
+                            # Medusa output can vary. v2.2 format:
+                            # ACCOUNT FOUND: [http] Host: 155.93.231.106 User: cisco Password: apo-summicron [SUCCESS]
+                            # Older/Other format might have brackets: User: [user] Password: [pass]
+                            found = re.findall(r"ACCOUNT FOUND: \[(.*?)\](?: Host: .*?)? User: (?:\[)?(.*?)(?:\])? Password: (?:\[)?(.*?)(?:\])?(?: \[SUCCESS\]|$)", output)
                             batch_success = 0
                             for match in found:
                                 self.results.append({

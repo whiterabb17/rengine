@@ -340,6 +340,9 @@ def onboarding(request):
         key_chaos = request.POST.get('key_chaos')
         key_hackerone = request.POST.get('key_hackerone')
         username_hackerone = request.POST.get('username_hackerone')
+        key_shodan = request.POST.get('key_shodan')
+        key_censys_id = request.POST.get('key_censys_id')
+        key_censys_secret = request.POST.get('key_censys_secret')
         bug_bounty_mode = request.POST.get('bug_bounty_mode') == 'on'
 
         insert_date = timezone.now()
@@ -414,6 +417,26 @@ def onboarding(request):
                     key=key_hackerone
                 )
 
+        if key_shodan:
+            shodan_api_key = ShodanAPIKey.objects.first()
+            if shodan_api_key:
+                shodan_api_key.key = key_shodan
+                shodan_api_key.save()
+            else:
+                ShodanAPIKey.objects.create(key=key_shodan)
+
+        if key_censys_id and key_censys_secret:
+            censys_api_key = CensysAPIKey.objects.first()
+            if censys_api_key:
+                censys_api_key.api_id = key_censys_id
+                censys_api_key.api_secret = key_censys_secret
+                censys_api_key.save()
+            else:
+                CensysAPIKey.objects.create(
+                    api_id=key_censys_id,
+                    api_secret=key_censys_secret
+                )
+
     context['error'] = error
     
 
@@ -422,6 +445,8 @@ def onboarding(request):
     context['chaos_key'] = ChaosAPIKey.objects.first()
     context['hackerone_key'] = HackerOneAPIKey.objects.first().key if HackerOneAPIKey.objects.first() else ''
     context['hackerone_username'] = HackerOneAPIKey.objects.first().username if HackerOneAPIKey.objects.first() else ''
+    context['shodan_key'] = ShodanAPIKey.objects.first()
+    context['censys_key'] = CensysAPIKey.objects.first()
 
     context['user_preferences'], _ = UserPreferences.objects.get_or_create(
         user=request.user

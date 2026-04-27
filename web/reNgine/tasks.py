@@ -33,6 +33,7 @@ from reNgine.settings import *
 from reNgine.llm import *
 from reNgine.utilities import *
 from reNgine.opsec_utils import OpSecManager, BruteForceOrchestrator
+from reNgine.waf_utils import OriginDiscoveryManager, WafBypassOrchestrator
 from scanEngine.models import (EngineType, InstalledExternalTool, Notification, Proxy, OpSec)
 from startScan.models import *
 from startScan.models import EndPoint, Subdomain, Vulnerability
@@ -190,7 +191,13 @@ def initiate_scan(
 		# osint								             	  vulnerability_scan
 		# osint								             	  dalfox xss scan
 		#						 	   		         	  	  screenshot
-		#													  waf_detection
+		# WAF Logic: If WAF Bypass is enabled, WAF Detection MUST also be enabled
+		tasks = engine.tasks
+		if 'waf_bypass' in tasks and 'waf_detection' not in tasks:
+			tasks.append('waf_detection')
+			scan.tasks = tasks
+			scan.save()
+
 		workflow = chain(
 			group(
 				subdomain_discovery.si(ctx=ctx, description='Subdomain discovery'),
@@ -202,7 +209,10 @@ def initiate_scan(
 				dir_file_fuzz.si(ctx=ctx, description='Directories & files fuzz'),
 				vulnerability_scan.si(ctx=ctx, description='Vulnerability scan'),
 				screenshot.si(ctx=ctx, description='Screenshot'),
-				waf_detection.si(ctx=ctx, description='WAF detection'),
+				chain(
+					waf_detection.si(ctx=ctx, description='WAF detection'),
+					waf_bypass.si(ctx=ctx, description='WAF bypass')
+				),
 				firewall_vpn_scan.si(ctx=ctx, description='Firewall & VPN scan')
 			)
 		)
@@ -1591,7 +1601,7 @@ def nmap(
 		if 'auth_portal' in v.get('tags', []):
 			auth_targets.append(v['http_url'])
 	
-	if auth_targets and self.yaml_configuration.get('brute_force_scan'):
+	if auth_targets and self.scan.tasks and 'brute_force_scan' in self.scan.tasks:
 		logger.warning(f'Detected Auth Portals on {host}. Triggering Brute Force Scan...')
 		# We use delay to run it asynchronously
 		from reNgine.tasks import brute_force_scan
@@ -1658,7 +1668,57 @@ def waf_detection(self, ctx={}, description=None):
 		subdomain_query, _ = Subdomain.objects.get_or_create(scan_history=self.scan, name=subdomain)
 		subdomain_query.waf.add(waf)
 		subdomain_query.save()
+
+		# Phase 2: Origin Discovery
+		# If WAF is detected and Origin Discovery is enabled (implied by WAF detection in this context)
+		# We check engine config for origin discovery specific settings
+		waf_config = config or {}
+		use_shodan = waf_config.get('use_shodan', True)
+		use_censys = waf_config.get('use_censys', True)
+		
+		logger.info(f"Starting Origin Discovery for {subdomain}")
+		origin_manager = OriginDiscoveryManager(subdomain_query)
+		origin_ips = origin_manager.find_origin(
+			use_shodan=use_shodan,
+			use_censys=use_censys
+		)
+		
+		if origin_ips:
+			# Store the first one as primary origin_ip
+			subdomain_query.origin_ip = origin_ips[0]
+			subdomain_query.save()
+			logger.info(f"Origin IP found for {subdomain}: {origin_ips[0]}")
+
 	return wafs
+
+
+@app.task(name='waf_bypass', queue='main_scan_queue', base=RengineTask, bind=True)
+def waf_bypass(self, ctx={}, description=None):
+	"""
+	Tests various WAF bypass techniques.
+	"""
+	if 'waf_bypass' not in self.scan.tasks:
+		return
+
+	config = self.yaml_configuration.get('waf_bypass') or {}
+	use_nuclei = config.get('use_nuclei', True)
+	use_benchmarking = config.get('use_benchmarking', True)
+
+	# Get all subdomains with WAFs in this scan
+	subdomains = Subdomain.objects.filter(scan_history=self.scan).exclude(waf=None)
+	
+	for subdomain in subdomains:
+		logger.info(f"Starting WAF Bypass tests for {subdomain.name}")
+		orchestrator = WafBypassOrchestrator(subdomain)
+		findings = orchestrator.run_all_tests(
+			use_nuclei=use_nuclei,
+			use_benchmarking=use_benchmarking
+		)
+		
+		if findings:
+			logger.info(f"Found {len(findings)} potential WAF bypasses for {subdomain.name}")
+	
+	return True
 
 
 @app.task(name='dir_file_fuzz', queue='main_scan_queue', base=RengineTask, bind=True)
@@ -5095,6 +5155,111 @@ def fetch_proxies_task(self):
     return "\n".join(final_list)
 
 
+
+def parse_sslscan_results(xml_file):
+	"""Parse results from sslscan XML output file.
+
+	Args:
+		xml_file (str): sslscan XML report file path.
+
+	Returns:
+		str: Formatted description of SSL/TLS findings.
+	"""
+	if not os.path.isfile(xml_file):
+		return "SSLScan XML report not found."
+
+	try:
+		with open(xml_file, 'r', encoding='utf8') as f:
+			content = f.read()
+		
+		data = xmltodict.parse(content) or {}
+		document = data.get('document') or {}
+		ssltest = document.get('ssltest') or {}
+		
+		if not ssltest:
+			return "No SSLScan results found in the report."
+		
+		host = ssltest.get('@host', '')
+		port = ssltest.get('@port', '')
+		
+		description = f"SSLScan Results for {host}:{port}\n\n"
+		
+		# Protocols
+		protocols = ssltest.get('protocol', [])
+		if protocols is None: protocols = []
+		if isinstance(protocols, dict):
+			protocols = [protocols]
+		
+		description += "Protocols:\n"
+		for proto in protocols:
+			if not proto: continue
+			status = "Enabled" if proto.get('@enabled') == '1' else "Disabled"
+			description += f"- {proto.get('@type', 'UNKNOWN').upper()} {proto.get('@version', '')}: {status}\n"
+		description += "\n"
+		
+		# Renegotiation
+		reneg = ssltest.get('renegotiation') or {}
+		if reneg:
+			supp = "Supported" if reneg.get('@supported') == '1' else "Not supported"
+			sec = "Secure" if reneg.get('@secure') == '1' else "Insecure"
+			description += f"Renegotiation: {supp} ({sec})\n\n"
+			
+		# Heartbleed
+		heartbleed = ssltest.get('heartbleed', [])
+		if heartbleed is None: heartbleed = []
+		if isinstance(heartbleed, dict):
+			heartbleed = [heartbleed]
+		
+		vulnerable_to_heartbleed = False
+		for hb in heartbleed:
+			if hb and hb.get('@vulnerable') == '1':
+				vulnerable_to_heartbleed = True
+				break
+		
+		description += f"Heartbleed: {'Vulnerable' if vulnerable_to_heartbleed else 'Not vulnerable'}\n\n"
+		
+		# Ciphers
+		ciphers = ssltest.get('cipher', [])
+		if ciphers is None: ciphers = []
+		if isinstance(ciphers, dict):
+			ciphers = [ciphers]
+		
+		preferred_ciphers = [c for c in ciphers if c and c.get('@status') == 'preferred']
+		if preferred_ciphers:
+			description += "Preferred Ciphers:\n"
+			for c in preferred_ciphers:
+				description += f"- {c.get('@sslversion', '')}: {c.get('@cipher', '')} ({c.get('@bits', '')} bits, {c.get('@strength', '')} strength)\n"
+			description += "\n"
+			
+		# Certificates
+		certificates_sec = ssltest.get('certificates') or {}
+		certs = certificates_sec.get('certificate', [])
+		if certs is None: certs = []
+		if isinstance(certs, dict):
+			certs = [certs]
+		
+		if certs:
+			description += "Certificate Information:\n"
+			for cert in certs:
+				if not cert: continue
+				description += f"- Subject: {cert.get('subject', 'N/A')}\n"
+				description += f"- Issuer: {cert.get('issuer', 'N/A')}\n"
+				description += f"- Signature Algorithm: {cert.get('signature-algorithm', 'N/A')}\n"
+				pk = cert.get('pk') or {}
+				description += f"- Key: {pk.get('@type', 'N/A')} {pk.get('@bits', 'N/A')} bits\n"
+				description += f"- Not Valid After: {cert.get('not-valid-after', 'N/A')}\n"
+				if cert.get('expired') == 'true':
+					description += "- Status: EXPIRED\n"
+				description += "\n"
+			description += "\n"
+			
+		return description
+
+	except Exception as e:
+		logger.exception(e)
+		return f"Error parsing SSLScan XML: {str(e)}"
+
+
 @app.task(name='firewall_vpn_scan', queue='main_scan_queue', base=RengineTask, bind=True)
 def firewall_vpn_scan(self, ctx={}, description=None):
 	"""
@@ -5153,14 +5318,14 @@ def firewall_vpn_scan(self, ctx={}, description=None):
 				vuln_data = {
 					'name': f'SSL/TLS Configuration Audit (Port {port})',
 					'severity': 0,
-					'description': f'SSLScan performed an audit of SSL/TLS configurations on port {port}. Check the results directory for detailed XML report.',
+					'description': parse_sslscan_results(ssl_output_file),
 					'http_url': f'https://{target}:{port}',
 					'type': 'SSL/TLS'
 				}
 				save_vulnerability(target_domain=self.domain, scan_history=self.scan, **vuln_data)
 	
 	# Automatic Trigger for Brute Force Scan on Sophos Portals
-	if run_sslscan and self.yaml_configuration.get('brute_force_scan'):
+	if run_sslscan and self.scan.tasks and 'brute_force_scan' in self.scan.tasks:
 		auth_targets = [f'https://{target}:{port}' for port in ssl_ports]
 		logger.warning(f'Triggering Brute Force Scan for potential Sophos Portals on {target}')
 		from reNgine.tasks import brute_force_scan
