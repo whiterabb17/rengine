@@ -61,6 +61,18 @@ urlpatterns = [
         views.llm_toolkit_section,
         name='llm_toolkit'),
     path(
+        '<slug:slug>/update_llm_settings',
+        views.update_llm_settings,
+        name='update_llm_settings'),
+    path(
+        '<slug:slug>/fetch_llm_models',
+        views.fetch_llm_models,
+        name='fetch_llm_models'),
+    path(
+        '<slug:slug>/get_ollama_pull_status',
+        views.get_ollama_pull_status,
+        name='get_ollama_pull_status'),
+    path(
         '<slug:slug>/rengine_settings',
         views.rengine_settings,
         name='rengine_settings'),
