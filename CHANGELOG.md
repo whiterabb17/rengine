@@ -1,5 +1,21 @@
 # Changelog
 
+## v2.6.0
+
+### New Features
+- **Centralized AI Hub**: Introduced a unified AI management interface supporting multiple providers (OpenAI, Anthropic, Google Gemini, and Ollama).
+- **Multi-Provider LLM Support**: Added production-ready integration for Claude 3 (Anthropic) and Gemini (Google) via REST APIs, alongside existing OpenAI and Ollama support.
+- **Dynamic Model Fetching**: Implemented real-time model discovery for all supported providers, including hardware requirements and expertise insights for local models.
+- **On-Demand Model Loading**: Optimized the AI Hub by fetching available models only when the dropdown is clicked, reducing initial page load overhead.
+- **Legacy API Vault Sync**: Automatically migrates existing OpenAI keys from the legacy API Vault to the new AI Hub configuration.
+
+### Bug Fixes
+- **Scan Engine Task Mapping**: Fixed a critical bug in the "Full Scan" engine where malformed YAML configuration prevented modules from being correctly identified and displayed.
+- **Firewall/VPN Module Restoration**: Restored the missing Firewall/VPN module to the default Full Scan engine configuration.
+- **AI Hub UI Refinements**: Fixed layout issues in the AI Hub, including responsive grid adjustments for non-Ollama providers and improved vertical spacing of navigation elements.
+- **Notification Fixes**: Replaced the missing `toastr` library with reNgine's native SweetAlert2 to resolve console errors during LLM configuration saves.
+
+
 ## v2.5.2
 
 ### Bug Fixes

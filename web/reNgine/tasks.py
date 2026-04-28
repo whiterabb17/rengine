@@ -25,6 +25,7 @@ from django.shortcuts import get_object_or_404
 from pycvesearch import CVESearch
 from metafinder.extractor import extract_metadata_from_google_search
 
+from django.core.cache import cache
 from reNgine.celery import app
 from reNgine.celery_custom_task import RengineTask
 from reNgine.common_func import *
@@ -5404,3 +5405,51 @@ def brute_force_scan(self, targets=[], ctx={}, description=None):
 	
 	logger.info(f"Brute Force Scan completed. Targets: {len(targets)}, Credentials Found: {total_found}")
 	return True
+
+@app.task(name='pull_ollama_model', queue='main_scan_queue')
+def pull_ollama_model(model_name):
+    """
+    Pulls a model from Ollama and stores progress in cache for live terminal.
+    """
+    cache_key = f"ollama_pull_log_{model_name}"
+    cache.set(cache_key, f"[*] Starting download of {model_name}...\n", 3600)
+    
+    try:
+        url = f"{OLLAMA_INSTANCE}/api/pull"
+        payload = {"name": model_name, "stream": True}
+        
+        response = requests.post(url, json=payload, stream=True, timeout=None)
+        
+        for line in response.iter_lines():
+            if line:
+                data = json.loads(line)
+                status = data.get('status', '')
+                digest = data.get('digest', '')
+                total = data.get('total', 0)
+                completed = data.get('completed', 0)
+                
+                if total > 0:
+                    percent = round((completed / total) * 100, 2)
+                    progress_msg = f"[*] {status} {digest[:12]}... {percent}%\n"
+                else:
+                    progress_msg = f"[*] {status}\n"
+                
+                # Append to cache
+                current_log = cache.get(cache_key, "")
+                # Keep only last 50 lines to prevent cache bloat
+                log_lines = current_log.split('\n')[-50:]
+                log_lines.append(progress_msg.strip())
+                cache.set(cache_key, '\n'.join(log_lines) + '\n', 3600)
+                
+                if status == 'success':
+                    cache.set(f"ollama_pull_status_{model_name}", "success", 3600)
+                    return True
+                    
+    except Exception as e:
+        error_msg = f"[!] Error pulling model: {str(e)}\n"
+        current_log = cache.get(cache_key, "")
+        cache.set(cache_key, current_log + error_msg, 3600)
+        cache.set(f"ollama_pull_status_{model_name}", "failed", 3600)
+        return False
+    
+    return True

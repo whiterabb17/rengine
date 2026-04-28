@@ -459,6 +459,51 @@ FOUR_OH_FOUR_URL = '/404/'
 ###############################################################################
 # OLLAMA DEFINITIONS
 ###############################################################################
+
+# LLM Providers
+OLLAMA = 'ollama'
+OPENAI = 'openai'
+ANTHROPIC = 'anthropic'
+GEMINI = 'gemini'
+
+SUGGESTED_OLLAMA_MODELS = [
+    {
+        'name': 'llama3',
+        'expertise': 'General Summarization & Reasoning',
+        'size': '4.7GB',
+        'suggested_ram': '8GB+',
+        'description': 'Latest general purpose model from Meta, excellent for distilling complex security findings into summaries.'
+    },
+    {
+        'name': 'mistral',
+        'expertise': 'Efficient Context Analysis',
+        'size': '4.1GB',
+        'suggested_ram': '8GB+',
+        'description': 'Highly efficient model known for its performance-to-size ratio, great for fast report generation.'
+    },
+    {
+        'name': 'codellama',
+        'expertise': 'Code & Exploit Analysis',
+        'size': '3.8GB',
+        'suggested_ram': '8GB+',
+        'description': 'Optimized for code-related tasks; helps in explaining vulnerable code snippets and remediation steps.'
+    },
+    {
+        'name': 'phi3',
+        'expertise': 'Lightweight Summarization',
+        'size': '2.3GB',
+        'suggested_ram': '4GB+',
+        'description': 'Microsoft\'s lightweight model, perfect for environments with limited resources.'
+    },
+    {
+        'name': 'deepseek-coder',
+        'expertise': 'Vulnerability Pattern Matching',
+        'size': '4.5GB',
+        'suggested_ram': '8GB+',
+        'description': 'Trained on high-quality code, helpful for summarizing complex vulnerability patterns.'
+    }
+]
+
 OLLAMA_INSTANCE = 'http://ollama:11434'
 
 DEFAULT_GPT_MODELS = [
