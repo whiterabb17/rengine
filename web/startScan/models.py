@@ -408,6 +408,17 @@ class EndPoint(models.Model):
 		return self.http_status and (0 < self.http_status < 500) and self.http_status != 404
 
 
+class Parameter(models.Model):
+	id = models.AutoField(primary_key=True)
+	endpoint = models.ForeignKey(EndPoint, on_delete=models.CASCADE, related_name='parameters')
+	name = models.CharField(max_length=1000)
+	type = models.CharField(max_length=100, null=True, blank=True)
+	discovered_date = models.DateTimeField(auto_now_add=True)
+
+	def __str__(self):
+		return f"{self.name} ({self.type})"
+
+
 class VulnerabilityTags(models.Model):
 	id = models.AutoField(primary_key=True)
 	name = models.CharField(max_length=100)

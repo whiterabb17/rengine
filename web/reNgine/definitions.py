@@ -94,6 +94,9 @@ PROVIDERS = 'providers'
 FIREWALL_VPN_SCAN = 'firewall_vpn_scan'
 BRUTE_FORCE_SCAN = 'brute_force_scan'
 SPIDERFOOT_SCAN = 'spiderfoot_scan'
+WEB_API_DISCOVERY = 'web_api_discovery'
+KITERUNNER_WORDLIST = 'kiterunner_wordlist'
+SCAN_ONLY_ACTIVE = 'scan_only_active'
 
 ###############################################################################
 # Scan DEFAULTS

@@ -37,7 +37,7 @@ from reNgine.opsec_utils import OpSecManager, BruteForceOrchestrator
 from reNgine.waf_utils import OriginDiscoveryManager, WafBypassOrchestrator
 from scanEngine.models import (EngineType, InstalledExternalTool, Notification, Proxy, OpSec)
 from startScan.models import *
-from startScan.models import EndPoint, Subdomain, Vulnerability
+from startScan.models import EndPoint, Subdomain, Vulnerability, Parameter
 from targetApp.models import Domain
 from reNgine.monitor_tasks import *
 from reNgine.graph_utils import Neo4jManager

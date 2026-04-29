@@ -109,6 +109,10 @@ vulnerability_scan: {
 waf_detection: {
   'enable_http_crawl': true
 }
+waf_bypass: {
+  # NEEDS TO BE ADDED
+}
+# Firewall/VPN Configs need to be added
 screenshot: {
   'enable_http_crawl': true,
   'intensity': 'normal',

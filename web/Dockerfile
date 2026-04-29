@@ -123,6 +123,34 @@ RUN printf "\
     xargs -L1 go install -ldflags="-s -w" -v && \
     rm -rf /go/pkg/* && rm -rf /root/.cache/go-build
 
+# Install Arjun, InQL
+RUN pip3 install arjun inql
+
+# Clone LinkFinder, ParamSpider, JSParser
+RUN git clone https://github.com/GerbenJavado/LinkFinder.git /usr/src/github/LinkFinder && \
+    cd /usr/src/github/LinkFinder && pip3 install -r requirements.txt && python3 setup.py install
+
+RUN git clone https://github.com/devanshbatham/ParamSpider /usr/src/github/ParamSpider && \
+    cd /usr/src/github/ParamSpider && pip3 install .
+
+RUN git clone https://github.com/semgrep/semgrep /usr/src/github/semgrep && \
+    cd /usr/src/github/semgrep && pip3 install .
+
+RUN wget https://github.com/assetnote/kiterunner/releases/download/v1.0.2/kiterunner_1.0.2_linux_amd64.tar.gz && \
+    tar -xvf kiterunner_1.0.2_linux_amd64.tar.gz && \
+    mv kr /usr/local/bin/ && \
+    rm -rf kiterunner_1.0.2_linux_amd64.tar.gz
+
+# Download Kiterunner Wordlist
+RUN mkdir -p /usr/src/wordlist/kr && \
+    cd /usr/src/wordlist/kr && \
+    wget https://wordlists-cdn.assetnote.io/data/kiterunner/routes-large.kite.tar.gz -O routes-large.kite.tar.gz && \
+    tar -xvf routes-large.kite.tar.gz && \
+    rm -rf routes-large.kite.tar.gz && \
+    wget https://wordlists-cdn.assetnote.io/data/kiterunner/routes-small.kite.tar.gz -O routes-small.kite.tar.gz && \
+    tar -xvf routes-small.kite.tar.gz && \
+    rm -rf routes-small.kite.tar.gz
+
 # Install SpiderFoot
 RUN git clone https://github.com/smicallef/spiderfoot /usr/src/github/spiderfoot
 WORKDIR /usr/src/github/spiderfoot

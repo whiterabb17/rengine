@@ -115,7 +115,51 @@ def monitor_target_task(domain_id):
 							scan_history=scan_history
 						)
 
-		# 4. Notifications
+		# 4. Attack Surface Intelligence (SpiderFoot)
+		sf_output = f"{results_dir}/spiderfoot_monitor.json"
+		api_keys = get_spiderfoot_keys()
+		sf_config_path = f"{results_dir}/spiderfoot_monitor.cfg"
+		with open(sf_config_path, 'w') as f:
+			for module, key in api_keys.items():
+				f.write(f"module.{module}.api_key={key}\n")
+		
+		# Use a focused set of modules for monitoring efficiency
+		# Discovery modules + OSINT
+		sf_modules = "snovio,hunterio,emailrep,intelx,shodan,sublist3r,threatcrowd,crtsh"
+		sf_cmd = f"python3 /usr/src/github/spiderfoot/sf.py -s {domain.name} -m {sf_modules} -q -f -o json -c {sf_config_path} > {sf_output}"
+		
+		proxy = get_random_proxy()
+		if proxy:
+			sf_cmd = f"export HTTP_PROXY='{proxy}' HTTPS_PROXY='{proxy}' && {sf_cmd}"
+		
+		os.system(sf_cmd)
+		
+		if os.path.exists(sf_output):
+			try:
+				with open(sf_output, 'r') as f:
+					sf_data = json.load(f)
+					# Refresh existing subs to avoid duplicates from subfinder run
+					existing_subs = set(Subdomain.objects.filter(target_domain=domain).values_list('name', flat=True))
+					for event in sf_data:
+						# SF types for hostnames/subdomains
+						if event.get('type') in ['DNS_NAME', 'INTERNET_NAME', 'AFFILIATE_INTERNET_NAME']:
+							sub_name = event.get('data', '').lower()
+							if sub_name and sub_name.endswith(domain.name) and sub_name not in existing_subs:
+								from reNgine.tasks import save_subdomain
+								sub_obj, created = save_subdomain(sub_name, ctx=ctx)
+								if created:
+									new_discoveries.append(f"Subdomain (SpiderFoot): {sub_name}")
+									existing_subs.add(sub_name)
+									MonitoringDiscovery.objects.create(
+										domain=domain,
+										discovery_type='subdomain',
+										content={'name': sub_name, 'source': 'SpiderFoot'},
+										scan_history=scan_history
+									)
+			except Exception as e:
+				logger.error(f"Error parsing SpiderFoot monitoring results: {str(e)}")
+
+		# 5. Notifications
 		if new_discoveries:
 			message = f"🔍 Monitoring discovery for {domain.name}:\n" + "\n".join(new_discoveries[:10])
 			if len(new_discoveries) > 10:
@@ -133,7 +177,7 @@ def monitor_target_task(domain_id):
 				status='info'
 			)
 
-		# 5. Follow-up Scan
+		# 6. Follow-up Scan
 		if domain.monitor_scan_scope != 'none' and new_discoveries:
 			from reNgine.tasks import initiate_scan
 			if domain.monitor_scan_scope == 'targeted':
