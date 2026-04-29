@@ -67,6 +67,8 @@ def initiate_scan(
 		starting_point_path='',
 		excluded_paths=[],
 		custom_dorks=None,
+		api_discovery_tools=None,
+		kr_wordlist=None,
 	):
 	"""Initiate a new scan.
 
@@ -155,7 +157,9 @@ def initiate_scan(
 			'excluded_paths': excluded_paths,
 			'yaml_configuration': config,
 			'out_of_scope_subdomains': out_of_scope_subdomains,
-			'custom_dorks': custom_dorks
+			'custom_dorks': custom_dorks,
+			'api_discovery_tools': api_discovery_tools,
+			'kr_wordlist': kr_wordlist
 		}
 		ctx_str = json.dumps(ctx, indent=2)
 
@@ -226,6 +230,7 @@ def initiate_scan(
 			fetch_url.si(ctx=ctx, description='Fetch URL'),
 			group(
 				dir_file_fuzz.si(ctx=ctx, description='Directories & files fuzz'),
+				web_api_discovery.si(ctx=ctx, description='Web API Discovery'),
 				vulnerability_scan.si(ctx=ctx, description='Vulnerability scan'),
 				screenshot.si(ctx=ctx, description='Screenshot'),
 				chain(
@@ -1273,15 +1278,14 @@ def spiderfoot_scan(self, host=None, ctx={}, description=None):
 	config = self.yaml_configuration.get(SPIDERFOOT_SCAN) or {}
 	modules = config.get('modules', 'all')
 	
-	# Get API keys
-	api_keys = get_spiderfoot_keys()
-	
-	# Create SF config file
-	sf_config_path = f"{self.results_dir}/spiderfoot.cfg"
-	with open(sf_config_path, 'w') as f:
-		# Spiderfoot config format is module.modulename.keyname=keyvalue
-		for module, key in api_keys.items():
-			f.write(f"module.{module}.api_key={key}\n")
+	# Use global SF config if it exists, otherwise generate from DB
+	sf_config_path = "/root/.config/spiderfoot.cfg"
+	if not os.path.exists(sf_config_path):
+		sf_config_path = f"{self.results_dir}/spiderfoot.cfg"
+		api_keys = get_spiderfoot_keys()
+		with open(sf_config_path, 'w') as f:
+			for module, key in api_keys.items():
+				f.write(f"module.{module}.api_key={key}\n")
 	
 	output_file = f"{self.results_dir}/spiderfoot_results.json"
 	# Get proxy if enabled
@@ -2255,6 +2259,157 @@ def parse_curl_output(response):
 	return {
 		'http_status': http_status,
 	}
+def save_parameter(endpoint, name, param_type='unknown', impact='none', value=None):
+	"""Save a discovered parameter to the database."""
+	from startScan.models import Parameter
+	param, created = Parameter.objects.get_or_create(
+		endpoint=endpoint,
+		name=name,
+		defaults={'type': param_type, 'impact': impact, 'value': value}
+	)
+	if not created:
+		if param_type != 'unknown':
+			param.type = param_type
+		if value:
+			param.value = value
+		param.save()
+	return param, created
+
+
+@app.task(name='web_api_discovery', queue='main_scan_queue', base=RengineTask, bind=True)
+def web_api_discovery(self, urls=[], ctx={}, description=None):
+	"""Advanced Web App & API Discovery using Kiterunner, Arjun, LinkFinder, etc."""
+	logger.info('Running Web API Discovery Task')
+	config = self.yaml_configuration.get(WEB_API_DISCOVERY) or {}
+	uses_tools = ctx.get('api_discovery_tools') or config.get(USES_TOOLS, ['kiterunner', 'arjun', 'linkfinder', 'paramspider', 'inql', 'aquatone', 'semgrep'])
+	kr_wordlist = ctx.get('kr_wordlist') or config.get(KITERUNNER_WORDLIST, 'routes-large.kite')
+	scan_only_active = config.get(SCAN_ONLY_ACTIVE, True)
+	threads = config.get(THREADS) or self.yaml_configuration.get(THREADS, DEFAULT_THREADS)
+
+	# Get targets
+	if not urls:
+		urls = get_http_urls(
+			is_alive=scan_only_active,
+			write_filepath=None,
+			ctx=ctx
+		)
+
+	if not urls:
+		logger.warning('No targets found for Web API Discovery. Skipping.')
+		return
+
+	proxy = get_random_proxy()
+	results_dir = f"{self.results_dir}/web_api_discovery"
+	os.makedirs(results_dir, exist_ok=True)
+
+	for url in urls:
+		subdomain_name = get_subdomain_from_url(url)
+		subdomain = Subdomain.objects.filter(name=subdomain_name, scan_history=self.scan).first()
+		if not subdomain:
+			continue
+
+		# Arjun - Parameter discovery
+		if 'arjun' in uses_tools:
+			logger.info(f'Running Arjun on {url}')
+			arjun_output = f"{results_dir}/arjun_{subdomain_name}.json"
+			cmd = f"arjun -u {url} --passive -oJ {arjun_output}"
+			if proxy:
+				cmd += f" --proxy {proxy}"
+			run_command(cmd, shell=True, scan_id=self.scan_id, activity_id=self.activity_id)
+			if os.path.exists(arjun_output):
+				try:
+					with open(arjun_output, 'r') as f:
+						data = json.load(f)
+						for target_url, details in data.items():
+							endpoint, _ = save_endpoint(target_url, ctx=ctx, subdomain=subdomain)
+							if endpoint:
+								params = details.get('params', {})
+								for method, param_list in params.items():
+									for p in param_list:
+										save_parameter(endpoint, p, param_type=method)
+				except Exception as e:
+					logger.error(f"Error parsing Arjun output for {url}: {e}")
+
+		# Kiterunner - API/Route discovery
+		if 'kiterunner' in uses_tools:
+			logger.info(f'Running Kiterunner on {url}')
+			kr_output = f"{results_dir}/kr_{subdomain_name}.json"
+			# kr scan -w wordlist.kite -o json
+			cmd = f"kr scan {url} -w /usr/src/wordlist/kr/{kr_wordlist} --concurrency {threads} -o json > {kr_output}"
+			if proxy:
+				cmd = f"export HTTP_PROXY='{proxy}' HTTPS_PROXY='{proxy}' && {cmd}"
+			run_command(cmd, shell=True, scan_id=self.scan_id, activity_id=self.activity_id)
+			if os.path.exists(kr_output):
+				try:
+					with open(kr_output, 'r') as f:
+						for line in f:
+							if not line.strip(): continue
+							entry = json.loads(line)
+							found_path = entry.get('path', '')
+							if found_path:
+								parsed = urlparse(url)
+								full_url = f"{parsed.scheme}://{parsed.netloc}{found_path}"
+								save_endpoint(full_url, ctx=ctx, subdomain=subdomain, http_status=entry.get('status'))
+				except Exception as e:
+					logger.error(f"Error parsing Kiterunner output for {url}: {e}")
+
+		# ParamSpider
+		if 'paramspider' in uses_tools:
+			logger.info(f'Running ParamSpider on {subdomain_name}')
+			ps_output = f"{results_dir}/ps_{subdomain_name}.txt"
+			cmd = f"python3 /usr/src/github/ParamSpider/paramspider.py --domain {subdomain_name} --output {ps_output}"
+			if proxy:
+				cmd += f" --proxy {proxy}"
+			run_command(cmd, shell=True, scan_id=self.scan_id, activity_id=self.activity_id)
+			if os.path.exists(ps_output):
+				try:
+					with open(ps_output, 'r') as f:
+						for line in f:
+							line = line.strip()
+							if line and is_valid_url(line):
+								endpoint, _ = save_endpoint(line, ctx=ctx, subdomain=subdomain)
+								parsed = urlparse(line)
+								if parsed.query:
+									for q in parsed.query.split('&'):
+										if '=' in q:
+											p_name = q.split('=')[0]
+											save_parameter(endpoint, p_name, param_type='URL Query')
+				except Exception as e:
+					logger.error(f"Error parsing ParamSpider output for {subdomain_name}: {e}")
+
+		# LinkFinder
+		if 'linkfinder' in uses_tools:
+			logger.info(f'Running LinkFinder on {url}')
+			lf_output = f"{results_dir}/lf_{subdomain_name}.txt"
+			cmd = f"python3 /usr/src/github/LinkFinder/linkfinder.py -i {url} -o cli > {lf_output}"
+			run_command(cmd, shell=True, scan_id=self.scan_id, activity_id=self.activity_id)
+			if os.path.exists(lf_output):
+				try:
+					with open(lf_output, 'r') as f:
+						for line in f:
+							line = line.strip()
+							if line.startswith('/') or line.startswith('http'):
+								if line.startswith('/'):
+									parsed = urlparse(url)
+									full_url = f"{parsed.scheme}://{parsed.netloc}{line}"
+								else:
+									full_url = line
+								save_endpoint(full_url, ctx=ctx, subdomain=subdomain)
+				except Exception as e:
+					logger.error(f"Error parsing LinkFinder output for {url}: {e}")
+
+	# Semgrep - Post-discovery pattern matching
+	if 'semgrep' in uses_tools:
+		logger.info(f'Running Semgrep on discovery results')
+		semgrep_output = f"{results_dir}/semgrep_results.json"
+		cmd = f"semgrep scan --config auto --json --output {semgrep_output} {results_dir}"
+		run_command(cmd, shell=True, scan_id=self.scan_id, activity_id=self.activity_id)
+
+	# Sync to Graph
+	if Neo4jManager:
+		nm = Neo4jManager()
+		nm.sync_scan_results(self.scan_id)
+		nm.close()
 
 
 @app.task(name='vulnerability_scan', queue='main_scan_queue', bind=True, base=RengineTask)

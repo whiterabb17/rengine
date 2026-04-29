@@ -107,12 +107,37 @@ vulnerability_scan: {
   }
 }
 waf_detection: {
-  'enable_http_crawl': true
+  'enable_http_crawl': true,
+  'use_shodan': true,           # Use Shodan for Origin IP discovery
+  'use_censys': true,           # Use Censys for Origin IP discovery
+  # 'use_heuristics': true,      # Enable SSL serial and related subdomain heuristics
 }
 waf_bypass: {
-  # NEEDS TO BE ADDED
+  'enabled': true,
+  'use_benchmarking': true,       # Test HTTP header manipulation (X-Forwarded-For, etc.)
+  'use_nuclei': true,             # Use Nuclei bypass templates
+  # 'nuclei_templates': [],       # Optional: Specific Nuclei templates for bypass
+  # 'custom_headers': [],         # Optional: Additional headers to test for bypass
+  # 'timeout': 10,                # Timeout for bypass requests
+  # 'threads': 10                 # Higher concurrency for full scans
 }
-# Firewall/VPN Configs need to be added
+firewall_vpn_scan: {
+  'run_ike_scan': true,           # Identify IPSec VPN endpoints
+  'run_sslscan': true,            # Audit SSL/TLS on common firewall ports
+  'ports': [443, 4444, 8443, 10443, 5443], # Expanded port list for full scan
+}
+brute_force_scan: {
+  'users_wordlist': ['top-100-users', 'admin-users'], # Multiple wordlists
+  'pass_wordlist': ['top-100-pass', 'common-firewall-pass'],
+  'service': 'http',
+  # 'port': 443,
+  # 'stop_on_success': true,
+  # 'max_attempts_per_proxy': 5
+}
+spiderfoot_scan: {
+  'modules': 'all',               # SF modules to run
+  # 'use_api_keys': true,
+}
 screenshot: {
   'enable_http_crawl': true,
   'intensity': 'normal',

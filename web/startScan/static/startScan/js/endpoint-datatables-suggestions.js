@@ -11,7 +11,8 @@ var endpoint_col_suggestions = [
   "content_type",
   "content_length",
   "technology",
-  "webserver"
+  "webserver",
+  "parameter"
 ];
 
 var endpoint_condition_suggestions = [

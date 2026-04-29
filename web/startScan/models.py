@@ -412,7 +412,9 @@ class Parameter(models.Model):
 	id = models.AutoField(primary_key=True)
 	endpoint = models.ForeignKey(EndPoint, on_delete=models.CASCADE, related_name='parameters')
 	name = models.CharField(max_length=1000)
+	value = models.CharField(max_length=1000, null=True, blank=True)
 	type = models.CharField(max_length=100, null=True, blank=True)
+	impact = models.CharField(max_length=100, null=True, blank=True)
 	discovered_date = models.DateTimeField(auto_now_add=True)
 
 	def __str__(self):

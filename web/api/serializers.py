@@ -827,6 +827,12 @@ class TechnologySerializer(serializers.ModelSerializer):
 		fields = '__all__'
 
 
+class ParameterSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Parameter
+		fields = ['name', 'value', 'type']
+
+
 class PortSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Port
@@ -956,6 +962,7 @@ class SubdomainSerializer(serializers.ModelSerializer):
 class EndpointSerializer(serializers.ModelSerializer):
 
 	techs = TechnologySerializer(many=True)
+	parameters = ParameterSerializer(many=True, read_only=True)
 
 	class Meta:
 		model = EndPoint

@@ -117,11 +117,13 @@ def monitor_target_task(domain_id):
 
 		# 4. Attack Surface Intelligence (SpiderFoot)
 		sf_output = f"{results_dir}/spiderfoot_monitor.json"
-		api_keys = get_spiderfoot_keys()
-		sf_config_path = f"{results_dir}/spiderfoot_monitor.cfg"
-		with open(sf_config_path, 'w') as f:
-			for module, key in api_keys.items():
-				f.write(f"module.{module}.api_key={key}\n")
+		sf_config_path = "/root/.config/spiderfoot.cfg"
+		if not os.path.exists(sf_config_path):
+			sf_config_path = f"{results_dir}/spiderfoot_monitor.cfg"
+			api_keys = get_spiderfoot_keys()
+			with open(sf_config_path, 'w') as f:
+				for module, key in api_keys.items():
+					f.write(f"module.{module}.api_key={key}\n")
 		
 		# Use a focused set of modules for monitoring efficiency
 		# Discovery modules + OSINT

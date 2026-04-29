@@ -277,6 +277,9 @@ def start_scan_ui(request, slug, domain_id):
         if 'customDorkSwitch' in request.POST:
             custom_dorks = request.POST.get('customDorkTextarea', '').strip()
 
+        api_discovery_tools = request.POST.getlist('api_discovery_tools')
+        kr_wordlist = request.POST.get('kr_wordlist', 'routes-large.kite')
+
         # Get engine type
         engine_id = request.POST['scan_mode']
 
@@ -303,6 +306,8 @@ def start_scan_ui(request, slug, domain_id):
             'starting_point_path': starting_point_path,
             'excluded_paths': excluded_paths,
             'custom_dorks': custom_dorks,
+            'api_discovery_tools': api_discovery_tools,
+            'kr_wordlist': kr_wordlist,
             'initiated_by_id': request.user.id
         }
         initiate_scan.apply_async(kwargs=kwargs)

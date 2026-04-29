@@ -91,6 +91,50 @@
                 <b>Note: Use regex patterns carefully. While exclusions can speed up scans, be cautious not to exclude critical areas that may contain vulnerabilities. Test your patterns to ensure they match as intended.</b>
               </small>
             </div>
+
+            <div class="mb-3 mt-4">
+              <h4 class="text-info">Web App & API Discovery (Optional)</h4>
+              <p>Configure tools and wordlists for advanced API and route discovery.</p>
+              <div class="row mt-2">
+                <div class="col-md-6">
+                  <div class="form-check form-check-primary mb-2">
+                    <input class="form-check-input" type="checkbox" name="api_discovery_tools" id="kr_tool" value="kiterunner" checked>
+                    <label class="form-check-label" for="kr_tool">Kiterunner (API Scanning)</label>
+                  </div>
+                  <div class="form-check form-check-primary mb-2">
+                    <input class="form-check-input" type="checkbox" name="api_discovery_tools" id="arjun_tool" value="arjun" checked>
+                    <label class="form-check-label" for="arjun_tool">Arjun (Param Discovery)</label>
+                  </div>
+                  <div class="form-check form-check-primary mb-2">
+                    <input class="form-check-input" type="checkbox" name="api_discovery_tools" id="linkfinder_tool" value="linkfinder" checked>
+                    <label class="form-check-label" for="linkfinder_tool">LinkFinder (JS Endpoint Extraction)</label>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-check form-check-primary mb-2">
+                    <input class="form-check-input" type="checkbox" name="api_discovery_tools" id="paramspider_tool" value="paramspider" checked>
+                    <label class="form-check-label" for="paramspider_tool">ParamSpider (Passive Param Mining)</label>
+                  </div>
+                  <div class="form-check form-check-primary mb-2">
+                    <input class="form-check-input" type="checkbox" name="api_discovery_tools" id="semgrep_tool" value="semgrep" checked>
+                    <label class="form-check-label" for="semgrep_tool">Semgrep (JS Vulnerability Audit)</label>
+                  </div>
+                  <div class="form-check form-check-primary mb-2">
+                    <input class="form-check-input" type="checkbox" name="api_discovery_tools" id="inql_tool" value="inql" checked>
+                    <label class="form-check-label" for="inql_tool">InQL (GraphQL Introspection)</label>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-3">
+                <label for="kr_wordlist" class="form-label text-info">Kiterunner Wordlist Selection</label>
+                <select class="form-select" name="kr_wordlist" id="kr_wordlist">
+                  <option value="routes-large.kite" selected>routes-large.kite (Assetnote Comprehensive)</option>
+                  <option value="routes-small.kite">routes-small.kite (Assetnote Small)</option>
+                </select>
+                <small class="form-text text-muted">Select the wordlist for Kiterunner API discovery.</small>
+              </div>
+            </div>
+
             <div class="mb-3 mt-4">
               <h4 class="text-info">Custom Google Dork Generation (Optional)</h4>
               <div class="form-check form-switch mb-2">

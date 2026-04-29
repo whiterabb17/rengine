@@ -160,8 +160,24 @@ Settings, API Keys & Tool Settings
         <form method="post" enctype="multipart/form-data" id="theharvester-config-form">
           {% csrf_token %}
           <h4 class="header-title">Current theHarvester Configuration</h4>
-          <label for="naabu_config_text_area">Double click the configuration to edit.</label>
+          <label for="theharvester_config_text_area">Double click the configuration to edit.</label>
           <textarea class="form-control" id="theharvester_config_text_area" spellcheck="false" readonly="true" name="theharvester_config_text_area"></textarea>
+        </form>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h4 class="header-title">SpiderFoot</h4>
+        <p>
+          This section lets you modify <a href="https://github.com/smicallef/spiderfoot" class="text-primary" target="_blank">SpiderFoot</a> config file. You can configure all your module API keys here.<br>
+          <br>
+          <span class="text-danger">Please note that SpiderFoot config format is <code>module.modulename.keyname=keyvalue</code>.</span>
+        </p>
+        <form method="post" enctype="multipart/form-data" id="spiderfoot-config-form">
+          {% csrf_token %}
+          <h4 class="header-title">Current SpiderFoot Configuration</h4>
+          <label for="spiderfoot_config_text_area">Double click the configuration to edit. It will auto-save when you click away.</label>
+          <textarea class="form-control" id="spiderfoot_config_text_area" spellcheck="false" readonly="true" name="spiderfoot_config_text_area"></textarea>
         </form>
       </div>
     </div>

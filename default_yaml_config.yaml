@@ -107,7 +107,33 @@ vulnerability_scan: {
   }
 }
 waf_detection: {
-  'enable_http_crawl': true
+  'enable_http_crawl': true,
+  'use_shodan': true,           # Use Shodan for Origin IP discovery
+  'use_censys': true,           # Use Censys for Origin IP discovery
+  # 'use_heuristics': true,      # Enable SSL serial and related subdomain heuristics
+}
+waf_bypass: {
+  'enabled': true,
+  'use_benchmarking': true,       # Test HTTP header manipulation (X-Forwarded-For, etc.)
+  'use_nuclei': true,             # Use Nuclei bypass templates
+  # 'custom_headers': [],         # Optional: Additional headers to test
+  # 'timeout': 10,                # Timeout for bypass requests
+  # 'threads': 5                  # Threads for benchmarking
+}
+firewall_vpn_scan: {
+  'run_ike_scan': true,           # Identify IPSec VPN endpoints
+  'run_sslscan': true,            # Audit SSL/TLS on common firewall ports
+  'ports': [443, 4444, 8443],     # Ports to audit for VPN/Admin portals
+}
+brute_force_scan: {
+  'users_wordlist': ['top-100-users'], # Wordlist names from reNgine Vault
+  'pass_wordlist': ['top-100-pass'],
+  'service': 'http',              # Target service (http, ssh, etc.)
+  # 'port': 443                   # Optional: Specific port override
+}
+spiderfoot_scan: {
+  'modules': 'all',               # SF modules to run (comma separated or 'all')
+  # 'use_api_keys': true,         # Explicitly use API keys from SF config
 }
 screenshot: {
   'enable_http_crawl': true,
@@ -116,9 +142,9 @@ screenshot: {
   'threads': 40
 }
 web_api_discovery: {
-  'uses_tools': ['kiterunner', 'arjun', 'linkfinder', 'paramspider', 'inql', 'aquatone', 'jsparser'],
+  'uses_tools': ['kiterunner', 'arjun', 'linkfinder', 'paramspider', 'inql', 'aquatone', 'semgrep'],
   'scan_only_active': true,
   'threads': 30,
   'timeout': 5,
-  'kiterunner_wordlist': 'routes-large.kr'
+  'kiterunner_wordlist': 'routes-large.kite'
 }

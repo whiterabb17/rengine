@@ -22,6 +22,7 @@
     --cyber-accent: #00d2ff;
     --cyber-font: 'Inter', sans-serif;
     --cyber-noise-opacity: 0.02;
+    --cyber-hover: rgba(0, 210, 255, 0.1);
 }
 
 /* SCRIPT KIDDIE (Balanced Intensity) */
@@ -36,6 +37,7 @@
     --cyber-accent: #00ffff;
     --cyber-font: 'Inter', sans-serif;
     --cyber-noise-opacity: 0.05;
+    --cyber-hover: rgba(255, 0, 255, 0.15);
 }
 
 /* HACKER (High Intensity) */
@@ -50,6 +52,7 @@
     --cyber-accent: #ff0000;
     --cyber-font: 'JetBrains Mono', 'Courier New', monospace;
     --cyber-noise-opacity: 0.1;
+    --cyber-hover: rgba(57, 255, 20, 0.2);
 }
 
 /* --- CORE STYLES --- */
@@ -207,6 +210,11 @@
 [data-ui-version="v3"] table.dataTable {
     background-color: var(--cyber-bg) !important;
     border-color: var(--cyber-border) !important;
+}
+
+[data-ui-version="v3"] table.dataTable tbody tr:hover {
+    background-color: var(--cyber-hover) !important;
+    transition: background-color 0.2s ease;
 }
 
 [data-ui-version="v3"] table.dataTable thead th {

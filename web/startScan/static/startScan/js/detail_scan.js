@@ -69,6 +69,7 @@ function get_endpoints(project, scan_history_id=null, domain_id=null, gf_tags=nu
 		{'data': 'techs'},
 		{'data': 'webserver'},
 		{'data': 'response_time', 'searchable': false},
+		{'data': 'parameters'},
 	];
 	var endpoint_table = $('#endpoint_results').DataTable({
 		"destroy": true,
@@ -178,6 +179,26 @@ function get_endpoints(project, scan_history_id=null, domain_id=null, gf_tags=nu
 					return "";
 				},
 				"targets": 9,
+			},
+			{
+				"render": function ( data, type, row ) {
+					if (data && data.length > 0){
+						var param_html = '';
+						data.forEach(function(param){
+							var badge_class = 'badge-soft-info';
+							if (param.type === 'query') badge_class = 'badge-soft-primary';
+							else if (param.type === 'body') badge_class = 'badge-soft-warning';
+							
+							var param_text = param.name;
+							if (param.value) param_text += '=' + param.value;
+							
+							param_html += `<span class="m-1 badge ${badge_class}" data-toggle="tooltip" title="Type: ${param.type}">${param_text}</span>`;
+						});
+						return param_html;
+					}
+					return "";
+				},
+				"targets": 10,
 			},
 		],
 		"initComplete": function(settings, json) {

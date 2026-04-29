@@ -658,7 +658,8 @@ class UniversalSearch(APIView):
 
 		endpoint = EndPoint.objects.filter(
 			Q(http_url__icontains=query) |
-			Q(page_title__icontains=query)
+			Q(page_title__icontains=query) |
+			Q(parameters__name__icontains=query)
 		).distinct('http_url')
 		endpoint_data = EndpointSerializer(endpoint, many=True).data
 		response['results']['endpoints'] = endpoint_data
@@ -1708,6 +1709,17 @@ class GetFileContents(APIView):
 		if 'theharvester_config' in req.query_params:
 			path = "/usr/src/github/theHarvester/api-keys.yaml"
 			if not os.path.exists(path):
+				run_command(f'touch {path}')
+				response['message'] = 'File Created!'
+			f = open(path, "r")
+			response['status'] = True
+			response['content'] = f.read()
+			return Response(response)
+
+		if 'spiderfoot_config' in req.query_params:
+			path = "/root/.config/spiderfoot.cfg"
+			if not os.path.exists(path):
+				# Create a default config or just touch
 				run_command(f'touch {path}')
 				response['message'] = 'File Created!'
 			f = open(path, "r")
@@ -2771,6 +2783,7 @@ class EndPointViewSet(viewsets.ModelViewSet):
 								 Q(webserver__icontains=search_value) |
 								 Q(techs__name__icontains=search_value) |
 								 Q(content_type__icontains=search_value) |
+								 Q(parameters__name__icontains=search_value) |
 								 Q(matched_gf_patterns__icontains=search_value))
 
 	def special_lookup(self, search_value):
@@ -2815,6 +2828,11 @@ class EndPointViewSet(viewsets.ModelViewSet):
 					qs = self.queryset.filter(content_length=int_http_status)
 				except Exception as e:
 					print(e)
+			elif 'parameter' in lookup_title:
+				qs = (
+					self.queryset
+					.filter(parameters__name__icontains=lookup_content)
+				)
 		elif '>' in search_value:
 			search_param = search_value.split(">")
 			lookup_title = search_param[0].lower().strip()

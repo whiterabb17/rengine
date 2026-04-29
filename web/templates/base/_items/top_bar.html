@@ -115,6 +115,7 @@
         </div>
       </li>
       <li class="dropdown">
+        {% if user_preferences.ui_version == 'v2' %}
         <a class="nav-link dropdown-toggle waves-effect waves-light" href="#">
           <div class="">
             <i class="fe-sun"></i>
@@ -128,6 +129,52 @@
             <i class="fe-moon"></i>
           </div>
         </a>
+        {% elif user_preferences.ui_version == 'v3' %}
+        <a class="nav-link dropdown-toggle waves-effect waves-light" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+          <i class="fe-sliders noti-icon"></i>
+        </a>
+        <div class="dropdown-menu dropdown-menu-end p-3" style="min-width: 200px;">
+          <h6 class="dropdown-header px-0 mb-2">V3 Intensity</h6>
+          <div class="d-grid gap-2">
+            <button class="btn btn-sm btn-outline-info text-start" onclick="updateV3Intensity('clean')">
+              <i class="fe-shield me-1"></i> Clean
+            </button>
+            <button class="btn btn-sm btn-outline-secondary text-start" onclick="updateV3Intensity('script_kiddie')">
+              <i class="fe-zap me-1"></i> Script Kiddie
+            </button>
+            <button class="btn btn-sm btn-outline-success text-start" onclick="updateV3Intensity('hacker')">
+              <i class="fe-terminal me-1"></i> Hacker
+            </button>
+          </div>
+        </div>
+        <script>
+          function updateV3Intensity(intensity) {
+            fetch('/api/update-theme/', {
+              method: 'POST',
+              headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                ui_version: 'v3',
+                v3_intensity: intensity
+              })
+            })
+            .then(response => response.json())
+            .then(data => {
+              if (data.status) {
+                document.body.setAttribute('data-v3-theme', intensity);
+                localStorage.setItem('rengine-v3-theme', intensity);
+                Snackbar.show({
+                  text: 'Intensity switched to ' + intensity.replace('_', ' '),
+                  pos: 'top-right',
+                  duration: 1000
+                });
+              }
+            });
+          }
+        </script>
+        {% endif %}
       </li>
       <li class="dropdown notification-list">
         <a class="nav-link dropdown-toggle waves-effect waves-light arrow-none notification-a-icon" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">

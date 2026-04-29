@@ -40,16 +40,16 @@ OpSec Settings
                         <div class="col-md-4">
                             <div class="card border border-info cursor-pointer preset-card" data-preset="quiet">
                                 <div class="card-body text-center">
-                                    <h5 class="text-info"><i class="fe-wind"></i> Quiet</h5>
+                                    <h5 class="text-info"><i class="fe-wind"></i> QUIET</h5>
                                     <p class="small text-muted">Maximum stealth. Very slow. Random jitter (50%), long
                                         delays (5s), HTTP/2 only.</p>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="card border border-primary cursor-pointer preset-card" data-preset="balanced">
+                            <div class="card border border-success cursor-pointer preset-card" data-preset="balanced">
                                 <div class="card-body text-center">
-                                    <h5 class="text-primary"><i class="fe-activity"></i> Balanced</h5>
+                                    <h5 class="text-success"><i class="fe-activity"></i> BALANCED</h5>
                                     <p class="small text-muted">Optimized for reliability. 100ms delay, 10% jitter,
                                         random UA, WAF bypass.</p>
                                 </div>
@@ -58,7 +58,7 @@ OpSec Settings
                         <div class="col-md-4">
                             <div class="card border border-danger cursor-pointer preset-card" data-preset="aggressive">
                                 <div class="card-body text-center">
-                                    <h5 class="text-danger"><i class="fe-zap"></i> Aggressive</h5>
+                                    <h5 class="text-danger"><i class="fe-zap"></i> AGGRESSIVE</h5>
                                     <p class="small text-muted">Low stealth. Fast scans. Only random UA and basic WAF
                                         bypass enabled.</p>
                                 </div>
@@ -185,11 +185,23 @@ OpSec Settings
         $('.preset-card').click(function () {
             const preset = $(this).data('preset');
             applyPreset(preset);
+            
+            // Save selection to localStorage
+            localStorage.setItem('rengine-opsec-preset', preset);
 
             // Visual feedback
-            $('.preset-card').removeClass('border-4 shadow');
-            $(this).addClass('border-4 shadow');
+            $('.preset-card').removeClass('active shadow');
+            $(this).addClass('active shadow');
         });
+
+        // Restore preset from localStorage on load
+        const savedPreset = localStorage.getItem('rengine-opsec-preset');
+        if (savedPreset) {
+            $(`.preset-card[data-preset="${savedPreset}"]`).addClass('active shadow');
+            // We don't necessarily want to APPLY the preset automatically on load 
+            // if the user has custom settings saved in DB, but the requirement says 
+            // "opens with their selected preset highlighted"
+        }
 
         function applyPreset(type) {
             if (type === 'quiet') {
@@ -256,8 +268,23 @@ OpSec Settings
         transform: translateY(-5px);
     }
 
-    .border-4 {
+    .preset-card.active {
         border-width: 4px !important;
+    }
+
+    .preset-card.active[data-preset="quiet"] {
+        background-color: rgba(59, 175, 218, 0.1) !important;
+        border-color: #3bafda !important;
+    }
+
+    .preset-card.active[data-preset="balanced"] {
+        background-color: rgba(28, 187, 140, 0.1) !important;
+        border-color: #1abc9c !important;
+    }
+
+    .preset-card.active[data-preset="aggressive"] {
+        background-color: rgba(241, 85, 108, 0.1) !important;
+        border-color: #f1556c !important;
     }
 </style>
 {% endblock page_level_script %}

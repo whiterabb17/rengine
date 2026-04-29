@@ -269,6 +269,13 @@ def tool_specific_settings(request, slug):
             messages.add_message(request, messages.INFO, 'theHarvester config updated!')
             return http.HttpResponseRedirect(reverse('tool_settings', kwargs={'slug': slug}))
 
+        elif 'spiderfoot_config_text_area' in request.POST:
+            # Use /root/.config/spiderfoot.cfg as persistent config
+            with open('/root/.config/spiderfoot.cfg', "w") as fhandle:
+                fhandle.write(request.POST.get('spiderfoot_config_text_area'))
+            messages.add_message(request, messages.INFO, 'SpiderFoot config updated!')
+            return http.HttpResponseRedirect(reverse('tool_settings', kwargs={'slug': slug}))
+
     context['settings_nav_active'] = 'active'
     context['tool_settings_li'] = 'active'
     context['settings_ul_show'] = 'show'

@@ -140,6 +140,18 @@
                 {% endif %}
               </td>
             </tr>
+            <tr>
+              <td>
+                <p class="mr-2 mt-1">Web App & API Discovery</p>
+              </td>
+              <td>
+                {% if 'web_api_discovery' in engine.tasks %}
+                  {% include 'base/_items/green_tick.html' %}
+                {% else %}
+                  {% include 'base/_items/red_cross.html' %}
+                {% endif %}
+              </td>
+            </tr>
           </table>
           <div class="card">
             <a data-bs-toggle="collapse" class="card-header bg-primary py-3 text-light p-4" href="#cardCollpase{{engine.id}}" role="button" aria-expanded="false" aria-controls="cardCollpase2">

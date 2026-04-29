@@ -36,6 +36,16 @@ class Neo4jManager:
                 
                 session.execute_write(self._merge_assets, domain_name, subdomain_name, ip_address)
 
+            # Sync Endpoints and Parameters
+            endpoints = EndPoint.objects.filter(scan_history_id=scan_history_id)
+            for endpoint in endpoints:
+                session.execute_write(self._merge_endpoints, endpoint.subdomain.name, endpoint.http_url)
+                
+                # Sync Parameters
+                parameters = endpoint.parameters.all()
+                for param in parameters:
+                    session.execute_write(self._merge_parameters, endpoint.http_url, param.name, param.type)
+
     @staticmethod
     def _merge_assets(tx, domain_name, subdomain_name, ip_address):
         # Create Domain
@@ -61,6 +71,24 @@ class Neo4jManager:
                     MERGE (s)-[:RESOLVES_TO]->(i)
                 """, ip=ip, sub_name=subdomain_name)
 
+    @staticmethod
+    def _merge_endpoints(tx, subdomain_name, http_url):
+        tx.run("""
+            MERGE (e:Endpoint {url: $url})
+            WITH e
+            MATCH (s:Subdomain {name: $sub_name})
+            MERGE (s)-[:HAS_ENDPOINT]->(e)
+        """, url=http_url, sub_name=subdomain_name)
+
+    @staticmethod
+    def _merge_parameters(tx, endpoint_url, param_name, param_type):
+        tx.run("""
+            MERGE (p:Parameter {name: $name, type: $type})
+            WITH p
+            MATCH (e:Endpoint {url: $url})
+            MERGE (e)-[:HAS_PARAMETER]->(p)
+        """, name=param_name, type=param_type, url=endpoint_url)
+
     def get_cytoscape_json(self, scan_history_id):
         """Returns graph data in Cytoscape format."""
         if not self.driver:
@@ -74,7 +102,9 @@ class Neo4jManager:
             'Domain': '#3b82f6',      # Blue
             'Subdomain': '#10b981',   # Green
             'IPAddress': '#f59e0b',   # Orange
-            'Vulnerability': '#ef4444' # Red
+            'Vulnerability': '#ef4444', # Red
+            'Endpoint': '#8b5cf6',    # Purple
+            'Parameter': '#ec4899'    # Pink
         }
 
         with self.driver.session() as session:

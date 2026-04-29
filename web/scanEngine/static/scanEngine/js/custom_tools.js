@@ -146,3 +146,44 @@ $("#theharvester_config_text_area").dblclick(function() {
     $("#theharvester-config-form").append('<input type="submit" class="btn btn-primary mt-2 float-end" value="Save Changes" id="theharvester-config-submit">');
   }
 });
+
+// get spiderfoot config
+$.getJSON(`/api/getFileContents?spiderfoot_config&format=json`, function(data) {
+  $("#spiderfoot_config_text_area").attr("rows", 14);
+  $("textarea#spiderfoot_config_text_area").html(htmlEncode(data['content']));
+}).fail(function(){
+  $("#spiderfoot_config_text_area").removeAttr("readonly");
+  $("textarea#spiderfoot_config_text_area").html(`# SpiderFoot API Keys Config\n# Format: module.modulename.api_key=key\n\nmodule.shodan.api_key=\nmodule.hunterio.api_key=\nmodule.emailrep.api_key=\nmodule.intelx.api_key=\nmodule.snovio.api_key=`);
+});
+
+$("#spiderfoot_config_text_area").dblclick(function() {
+    $("#spiderfoot_config_text_area").removeAttr("readonly");
+    $("#spiderfoot_config_text_area").addClass("border-primary");
+});
+
+$("#spiderfoot_config_text_area").blur(function() {
+    if (!$("#spiderfoot_config_text_area").attr("readonly")) {
+        // Save changes via AJAX
+        var content = $("#spiderfoot_config_text_area").val();
+        $.post(window.location.href, {
+            'spiderfoot_config_text_area': content,
+            'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+        }, function(data) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Saved!',
+                text: 'SpiderFoot configuration updated successfully.',
+                timer: 1500,
+                showConfirmButton: false
+            });
+            $("#spiderfoot_config_text_area").attr("readonly", true);
+            $("#spiderfoot_config_text_area").removeClass("border-primary");
+        }).fail(function() {
+             Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Failed to save SpiderFoot configuration.'
+            });
+        });
+    }
+});
