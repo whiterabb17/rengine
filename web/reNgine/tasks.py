@@ -40,6 +40,7 @@ from startScan.models import *
 from startScan.models import EndPoint, Subdomain, Vulnerability
 from targetApp.models import Domain
 from reNgine.monitor_tasks import *
+from reNgine.graph_utils import Neo4jManager
 
 """
 Celery tasks.
@@ -65,6 +66,7 @@ def initiate_scan(
 		initiated_by_id=None,
 		starting_point_path='',
 		excluded_paths=[],
+		custom_dorks=None,
 	):
 	"""Initiate a new scan.
 
@@ -79,6 +81,7 @@ def initiate_scan(
 		starting_point_path (str): URL path. Default: '' Defined where to start the scan.
 		initiated_by (int): User ID initiating the scan.
 		excluded_paths (list): Excluded paths. Default: [], url paths to exclude from scan.
+		custom_dorks (str): Custom dorks to run. Default: None.
 	"""
 	logger.info('Initiating scan on celery')
 	scan = None
@@ -128,10 +131,19 @@ def initiate_scan(
 
 		if add_gf_patterns:
 			scan.used_gf_patterns = ','.join(gf_patterns)
+		
+		if custom_dorks:
+			scan.cfg_custom_dorks = custom_dorks
+
 		scan.save()
 
 		# Create scan results dir
 		os.makedirs(scan.results_dir)
+
+		# Save custom dorks to txt file if provided
+		if custom_dorks:
+			with open(f'{scan.results_dir}/custom_dorks.txt', 'w') as f:
+				f.write(custom_dorks)
 
 		# Build task context
 		ctx = {
@@ -142,7 +154,8 @@ def initiate_scan(
 			'starting_point_path': starting_point_path,
 			'excluded_paths': excluded_paths,
 			'yaml_configuration': config,
-			'out_of_scope_subdomains': out_of_scope_subdomains
+			'out_of_scope_subdomains': out_of_scope_subdomains,
+			'custom_dorks': custom_dorks
 		}
 		ctx_str = json.dumps(ctx, indent=2)
 
@@ -199,11 +212,16 @@ def initiate_scan(
 			scan.tasks = tasks
 			scan.save()
 
+		sub_discovery_group = [
+			subdomain_discovery.si(ctx=ctx, description='Subdomain discovery'),
+			osint.si(ctx=ctx, description='OS Intelligence')
+		]
+
+		if 'spiderfoot_scan' in tasks:
+			sub_discovery_group.append(spiderfoot_scan.si(ctx=ctx, description='Attack Surface Intelligence'))
+
 		workflow = chain(
-			group(
-				subdomain_discovery.si(ctx=ctx, description='Subdomain discovery'),
-				osint.si(ctx=ctx, description='OS Intelligence')
-			),
+			group(sub_discovery_group),
 			port_scan.si(ctx=ctx, description='Port scan'),
 			fetch_url.si(ctx=ctx, description='Fetch URL'),
 			group(
@@ -252,6 +270,7 @@ def initiate_subscan(
 		results_dir=RENGINE_RESULTS,
 		starting_point_path='',
 		excluded_paths=[],
+		custom_dorks=None,
 	):
 	"""Initiate a new subscan.
 
@@ -467,6 +486,8 @@ def subdomain_discovery(
 				use_amass_config = config.get(USE_AMASS_CONFIG, False)
 				cmd = f'amass enum -passive -d {host} -o {self.results_dir}/subdomains_amass.txt'
 				cmd += ' -config /root/.config/amass.ini' if use_amass_config else ''
+				if proxy:
+					cmd = f"export HTTP_PROXY='{proxy}' HTTPS_PROXY='{proxy}' && {cmd}"
 
 			elif tool == 'amass-active':
 				use_amass_config = config.get(USE_AMASS_CONFIG, False)
@@ -475,6 +496,8 @@ def subdomain_discovery(
 				cmd = f'amass enum -active -d {host} -o {self.results_dir}/subdomains_amass_active.txt'
 				cmd += ' -config /root/.config/amass.ini' if use_amass_config else ''
 				cmd += f' -brute -w {wordlist_path}'
+				if proxy:
+					cmd = f"export HTTP_PROXY='{proxy}' HTTPS_PROXY='{proxy}' && {cmd}"
 
 			elif tool == 'sublist3r':
 				cmd = f'python3 /usr/src/github/Sublist3r/sublist3r.py -d {host} -t {threads} -o {self.results_dir}/subdomains_sublister.txt'
@@ -676,12 +699,13 @@ def osint(self, host=None, ctx={}, description=None):
 		)
 		grouped_tasks.append(_task)
 
-	if OSINT_DORK in config or OSINT_CUSTOM_DORK in config:
+	if OSINT_DORK in config or OSINT_CUSTOM_DORK in config or self.scan.cfg_custom_dorks:
 		_task = dorking.si(
 			config=config,
 			host=self.scan.domain.name,
 			scan_history_id=self.scan.id,
-			results_dir=self.results_dir
+			results_dir=self.results_dir,
+			raw_dorks=self.scan.cfg_custom_dorks
 		)
 		grouped_tasks.append(_task)
 
@@ -785,7 +809,7 @@ def osint_discovery(config, host, scan_history_id, activity_id, results_dir, ctx
 
 
 @app.task(name='dorking', bind=False, queue='dorking_queue')
-def dorking(config, host, scan_history_id, results_dir):
+def dorking(config, host, scan_history_id, results_dir, raw_dorks=None):
 	"""Run Google dorks.
 
 	Args:
@@ -793,6 +817,7 @@ def dorking(config, host, scan_history_id, results_dir):
 		host (str): target name
 		scan_history_id (startScan.ScanHistory): Scan History ID
 		results_dir (str): Path to store scan results
+		raw_dorks (str): Raw custom dorks list (one per line)
 
 	Returns:
 		list: Dorking results for each dork ran.
@@ -826,6 +851,32 @@ def dorking(config, host, scan_history_id, results_dir):
 				)
 	except Exception as e:
 		logger.exception(e)
+
+	# Process raw custom dorks from UI/ScanHistory
+	if raw_dorks:
+		logger.info('Processing raw custom dorks...')
+		try:
+			custom_dork_list = raw_dorks.split('\n')
+			for dork_query in custom_dork_list:
+				dork_query = dork_query.strip()
+				if dork_query:
+					# We use the raw query as keywords for GooFuzz
+					# Note: If dork_query starts with site:{host}, we strip it.
+					query_to_run = dork_query
+					if dork_query.startswith(f'site:{host} '):
+						query_to_run = dork_query.replace(f'site:{host} ', '', 1)
+					elif dork_query.startswith(f'site:{host}'):
+						query_to_run = dork_query.replace(f'site:{host}', '', 1)
+					
+					get_and_save_dork_results(
+						lookup_target=host,
+						results_dir=results_dir,
+						type='custom_dork_ui',
+						lookup_keywords=query_to_run,
+						scan_history=scan_history
+					)
+		except Exception as e:
+			logger.exception(e)
 
 	# default dorking
 	try:
@@ -1210,6 +1261,54 @@ def h8mail(config, host, scan_history_id, activity_id, results_dir, ctx={}):
 		# if email:
 		# 	self.notify(fields={'Emails': f'• `{email.address}`'})
 	return creds
+
+
+@app.task(name='spiderfoot_scan', queue='spiderfoot_queue', base=RengineTask, bind=True)
+def spiderfoot_scan(self, host=None, ctx={}, description=None):
+	"""Run SpiderFoot scan on selected domain.
+	"""
+	if not host:
+		host = self.domain.name
+	
+	config = self.yaml_configuration.get(SPIDERFOOT_SCAN) or {}
+	modules = config.get('modules', 'all')
+	
+	# Get API keys
+	api_keys = get_spiderfoot_keys()
+	
+	# Create SF config file
+	sf_config_path = f"{self.results_dir}/spiderfoot.cfg"
+	with open(sf_config_path, 'w') as f:
+		# Spiderfoot config format is module.modulename.keyname=keyvalue
+		for module, key in api_keys.items():
+			f.write(f"module.{module}.api_key={key}\n")
+	
+	output_file = f"{self.results_dir}/spiderfoot_results.json"
+	# Get proxy if enabled
+	proxy = get_random_proxy()
+
+	# Spiderfoot CLI usage
+	# -s target, -m modules, -f (output format json), -o (output file), -q (quiet)
+	cmd = f"python3 /usr/src/github/spiderfoot/sf.py -s {host} -m {modules} -q -f -o json -c {sf_config_path} > {output_file}"
+	if proxy:
+		cmd = f"export HTTP_PROXY='{proxy}' HTTPS_PROXY='{proxy}' && {cmd}"
+	
+	try:
+		run_command(
+			cmd,
+			shell=True,
+			scan_id=self.scan_id,
+			activity_id=self.activity_id)
+		
+		# Post-process: sync to Neo4j
+		graph = Neo4jManager()
+		graph.sync_scan_results(self.scan_id)
+		graph.close()
+		
+		# Optionally parse spiderfoot_results.json and save to reNgine DB
+		# For now, we'll just sync to graph and let the user see the map
+	except Exception as e:
+		logger.error(f"SpiderFoot scan failed: {e}")
 
 
 @app.task(name='screenshot', queue='main_scan_queue', base=RengineTask, bind=True)
@@ -4701,6 +4800,21 @@ def save_vulnerability(**vuln_data):
 
 	exploit_url = vuln_data.pop('exploit_url', None)
 	validation_status = vuln_data.pop('validation_status', 'unverified')
+
+	# If subdomain is not provided, try to find it from http_url
+	subdomain = vuln_data.get('subdomain')
+	http_url = vuln_data.get('http_url')
+	scan_history = vuln_data.get('scan_history')
+	target_domain = vuln_data.get('target_domain')
+
+	if not subdomain and http_url and scan_history and target_domain:
+		subdomain_name = get_subdomain_from_url(http_url)
+		subdomain, _ = Subdomain.objects.get_or_create(
+			name=subdomain_name,
+			scan_history=scan_history,
+			target_domain=target_domain
+		)
+		vuln_data['subdomain'] = subdomain
 
 	# remove nulls
 	vuln_data = replace_nulls(vuln_data)

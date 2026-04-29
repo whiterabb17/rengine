@@ -2711,7 +2711,7 @@ function get_most_vulnerable_target(slug=null, scan_id=null, target_id=null, ign
 				</tr>
 				</thead>
 				<tbody id="most_vulnerable_target_tbody">
-				</tbody>²
+				</tbody>
 				</table>
 				`);
 

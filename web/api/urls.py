@@ -246,6 +246,11 @@ urlpatterns = [
         ToggleBugBountyModeView.as_view(), 
         name='toggle_bug_bounty_mode'
     ),
+    path(
+        'update-theme/',
+        UpdateThemeView.as_view(),
+        name='update_theme'
+    ),
 ]
 
 urlpatterns += router.urls

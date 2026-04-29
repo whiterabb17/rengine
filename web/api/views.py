@@ -53,6 +53,26 @@ class ToggleBugBountyModeView(APIView):
 		}, status=status.HTTP_200_OK)
 
 
+class UpdateThemeView(APIView):
+	"""
+		This class manages the user theme and intensity
+	"""
+	def post(self, request, *args, **kwargs):
+		user_preferences = get_object_or_404(UserPreferences, user=request.user)
+		ui_version = request.data.get('ui_version')
+		v3_intensity = request.data.get('v3_intensity')
+		if ui_version:
+			user_preferences.ui_version = ui_version
+		if v3_intensity:
+			user_preferences.v3_intensity = v3_intensity
+		user_preferences.save()
+		return Response({
+			'status': True,
+			'ui_version': user_preferences.ui_version,
+			'v3_intensity': user_preferences.v3_intensity
+		}, status=status.HTTP_200_OK)
+
+
 class HackerOneProgramViewSet(viewsets.ViewSet):
 	"""
 		This class manages the HackerOne Program model, 

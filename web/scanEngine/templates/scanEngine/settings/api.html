@@ -133,6 +133,38 @@ API Vault
                 </div>
                 <span class="text-muted float-end optional-text mt-2">This is optional. Get your API key from <a href="https://search.censys.io/account/api" target="_blank">https://search.censys.io/account/api</a></span>
               </div>
+              <hr>
+              <div class="mb-3">
+                <label class="form-label">SpiderFoot API Keys</label>
+                <p class="text-muted">Configure API keys for various SpiderFoot modules (e.g., hunterio, snovio, etc.)</p>
+                <div class="table-responsive">
+                  <table class="table table-sm table-bordered">
+                    <thead class="table-light">
+                      <tr>
+                        <th>Module Name</th>
+                        <th>API Key</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for key in spiderfoot_keys %}
+                      <tr>
+                        <td>{{ key.module_name }}</td>
+                        <td><code>*******{{ key.key_value|slice:"-4:" }}</code></td>
+                        <td>
+                          <button type="submit" name="delete_sf_key" value="{{ key.id }}" class="btn btn-sm btn-danger"><i class="fe-trash-2"></i></button>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                      <tr>
+                        <td><input type="text" name="spiderfoot_module" class="form-control form-control-sm" placeholder="Module (e.g. hunterio)"></td>
+                        <td><input type="text" name="spiderfoot_key" class="form-control form-control-sm" placeholder="API Key"></td>
+                        <td><button type="submit" class="btn btn-sm btn-success"><i class="fe-plus"></i></button></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
               </div>
               <div class="mb-0">
                 <button class="btn btn-primary float-sm-end my-4" type="submit"> Update API Keys</button>

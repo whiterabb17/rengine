@@ -273,6 +273,10 @@ def start_scan_ui(request, slug, domain_id):
         # split excluded paths by ,
         excluded_paths = [path.strip() for path in excluded_paths.split(',')]
 
+        custom_dorks = None
+        if 'customDorkSwitch' in request.POST:
+            custom_dorks = request.POST.get('customDorkTextarea', '').strip()
+
         # Get engine type
         engine_id = request.POST['scan_mode']
 
@@ -283,6 +287,9 @@ def start_scan_ui(request, slug, domain_id):
             initiated_by_id=request.user.id
         )
         scan = ScanHistory.objects.get(pk=scan_history_id)
+        if custom_dorks:
+            scan.cfg_custom_dorks = custom_dorks
+            scan.save()
 
         # Start the celery task
         kwargs = {
@@ -295,6 +302,7 @@ def start_scan_ui(request, slug, domain_id):
             'out_of_scope_subdomains': subdomains_out,
             'starting_point_path': starting_point_path,
             'excluded_paths': excluded_paths,
+            'custom_dorks': custom_dorks,
             'initiated_by_id': request.user.id
         }
         initiate_scan.apply_async(kwargs=kwargs)

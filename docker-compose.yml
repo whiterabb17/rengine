@@ -150,6 +150,19 @@ services:
     networks:
       - rengine_network
 
+  neo4j:
+    image: neo4j:5.12.0
+    restart: always
+    ports:
+      - "127.0.0.1:7474:7474"
+      - "127.0.0.1:7687:7687"
+    environment:
+      - NEO4J_AUTH=neo4j/${NEO4J_PASSWORD}
+    volumes:
+      - neo4j_data:/data
+    networks:
+      - rengine_network
+
 networks:
   rengine_network:
 
@@ -163,6 +176,7 @@ volumes:
   scan_results:
   static_volume:
   ollama_data:
+  neo4j_data:
 
 secrets:
   proxy.ca:

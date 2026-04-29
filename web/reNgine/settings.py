@@ -39,6 +39,11 @@ DEFAULT_RETRIES = env.int('DEFAULT_RETRIES', default=1)
 DEFAULT_THREADS = env.int('DEFAULT_THREADS', default=30)
 DEFAULT_GET_GPT_REPORT = env.bool('DEFAULT_GET_GPT_REPORT', default=True)
 
+# Neo4j Configurations
+NEO4J_URI = env('NEO4J_URI', default='bolt://neo4j:7687')
+NEO4J_USER = env('NEO4J_USER', default='neo4j')
+NEO4J_PASSWORD = env('NEO4J_PASSWORD', default='neo4jpassword')
+
 # Globals
 ALLOWED_HOSTS = ['*']
 SECRET_KEY = first_run(SECRET_FILE, BASE_DIR)

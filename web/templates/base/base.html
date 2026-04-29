@@ -17,6 +17,7 @@
     <link href="{% static 'plugins/sweetalert2/sweetalert2.min.css' %}" rel="stylesheet" type="text/css" />
     <link href="{% static 'plugins/switches/switches.min.css' %}" rel="stylesheet" type="text/css" />
     <link href="{% static 'custom/custom.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'custom/v3-theme.css' %}" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
     <link rel="stylesheet" type="text/css" href="{% static 'plugins/datatable/global.css' %}">
     <!-- <link rel="stylesheet" type="text/css" href="{% static 'plugins/datatable/custom.css' %}"> -->
@@ -57,7 +58,22 @@
     {% endblock custom_js_css_link %}
   </head>
 
-  <body class="loading" data-layout-mode="horizontal" data-rengine-version="{{ RENGINE_CURRENT_VERSION }}" data-current-project="{{ current_project.slug }}">
+  <body class="loading" 
+    data-layout-mode="horizontal" 
+    data-rengine-version="{{ RENGINE_CURRENT_VERSION }}" 
+    data-current-project="{{ current_project.slug }}"
+    data-ui-version="{{ user_preferences.ui_version }}"
+    data-v3-theme="{{ user_preferences.v3_intensity }}"
+  >
+    <script>
+      (function() {
+          // Sync server-side preferences to localStorage for pre-login persistence (e.g. login page)
+          const uiVersion = "{{ user_preferences.ui_version }}";
+          const v3Intensity = "{{ user_preferences.v3_intensity }}";
+          if (uiVersion) localStorage.setItem('rengine-ui-version', uiVersion);
+          if (v3Intensity) localStorage.setItem('rengine-v3-theme', v3Intensity);
+      })();
+    </script>
     <!-- Topbar begins -->
     {% include 'base/_items/top_bar.html' %}
     {# topbar ends #}

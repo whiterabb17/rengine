@@ -178,6 +178,9 @@ Quick Scan History
                       </button>
                       <div class="dropdown-menu" style="">
                         <a class="dropdown-item text-primary" href="javascript:show_scan_configuration('{{scan_history.cfg_starting_point_path}}', {{scan_history.cfg_out_of_scope_subdomains}}, {{scan_history.cfg_excluded_paths}}, {{scan_history.cfg_imported_subdomains}})"><i class="fe-settings"></i>&nbsp;Show Configurations</a>
+                        <a class="dropdown-item text-info" href="{% url 'attack_surface' slug=current_project.slug scan_id=scan_history.id %}">
+                          <i class="fe-share-2"></i>&nbsp;Attack Surface Map
+                        </a>
                         {% if user|can:'initiate_scans_subscans' %}
                           {% if scan_history.scan_status == 0 or scan_history.scan_status == 2 or scan_history.scan_status == 3 %}
                           <a class="dropdown-item text-primary" href="{% url 'start_scan' current_project.slug scan_history.domain.id %}?rescan=true&history_id={{ scan_history.id }}">

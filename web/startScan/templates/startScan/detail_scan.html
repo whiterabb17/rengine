@@ -95,6 +95,9 @@ Scan Findings
 				<li class="nav-item">
 					<a class="nav-link" id="pills-visualisation-tab" data-bs-toggle="tab" aria-expanded="false" class="nav-link" href="#visualisation-tab">Visualization</a>
 				</li>
+				<li class="nav-item">
+					<a class="nav-link" id="pills-attack-surface-tab" target="_blank" href="{% url 'attack_surface' slug=current_project.slug scan_id=scan_history_id %}">Attack Surface Map <i class="fe-external-link"></i></a>
+				</li>
 			</ul>
 		</div>
 	</div>

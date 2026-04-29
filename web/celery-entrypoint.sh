@@ -262,6 +262,7 @@ workers=(
     "h8mail_queue:10:h8mail_worker"
     "theHarvester_queue:10:theHarvester_worker"
     "send_scan_notif_queue:10:send_scan_notif_worker"
+    "spiderfoot_queue:1:spiderfoot_worker"
 )
 
 for worker in "${workers[@]}"; do

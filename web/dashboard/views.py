@@ -25,6 +25,7 @@ from startScan.models import *
 from targetApp.models import Domain
 from dashboard.models import *
 from reNgine.definitions import *
+from reNgine.graph_utils import Neo4jManager
 
 
 logger = logging.getLogger(__name__)
@@ -494,3 +495,21 @@ def monitoring_dashboard(request, slug):
     }
     
     return render(request, 'dashboard/monitoring.html', context)
+
+
+def attack_surface(request, slug, scan_id):
+    project = get_object_or_404(Project, slug=slug)
+    scan = get_object_or_404(ScanHistory, id=scan_id)
+    context = {
+        'project': project,
+        'scan': scan,
+        'attack_surface_active': 'active'
+    }
+    return render(request, 'dashboard/attack_surface.html', context)
+
+
+def get_graph_data(request, slug, scan_id):
+    graph = Neo4jManager()
+    data = graph.get_cytoscape_json(scan_id)
+    graph.close()
+    return JsonResponse(data)

@@ -69,7 +69,8 @@ RUN apt install -y --no-install-recommends \
     ike-scan \
     sslscan \
     medusa \
-    proxychains4
+    proxychains4 \
+    jq
 
 RUN add-apt-repository ppa:mozillateam/ppa
 
@@ -122,6 +123,12 @@ RUN printf "\
     xargs -L1 go install -ldflags="-s -w" -v && \
     rm -rf /go/pkg/* && rm -rf /root/.cache/go-build
 
+# Install SpiderFoot
+RUN git clone https://github.com/smicallef/spiderfoot /usr/src/github/spiderfoot
+WORKDIR /usr/src/github/spiderfoot
+RUN pip3 install -r requirements.txt
+WORKDIR /usr/src/app
+
 
 # Update Nuclei and Nuclei-Templates
 RUN nuclei -update-templates
@@ -131,7 +138,7 @@ RUN chaos -update
 
 # Copy requirements
 COPY ./requirements.txt /tmp/requirements.txt
-RUN pip3 install --upgrade setuptools==72.1.0
+RUN pip3 install --upgrade pip setuptools wheel
 RUN pip3 install -r /tmp/requirements.txt --no-cache-dir
 
 # install eyewitness

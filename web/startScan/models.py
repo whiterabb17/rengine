@@ -69,6 +69,7 @@ class ScanHistory(models.Model):
 		null=True,
 		default=list
 	)
+	cfg_custom_dorks = models.TextField(blank=True, null=True)
 
 
 	def __str__(self):

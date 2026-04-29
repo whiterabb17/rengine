@@ -21,6 +21,7 @@ from dashboard.models import LLMConfig
 from scanEngine.forms import *
 from scanEngine.forms import ConfigurationForm
 from scanEngine.models import *
+from dashboard.models import SpiderfootAPIKey
 
 
 def index(request, slug):
@@ -678,6 +679,18 @@ def api_vault(request, slug):
                     api_secret=key_censys_secret
                 )
 
+        spiderfoot_module = request.POST.get('spiderfoot_module')
+        spiderfoot_key = request.POST.get('spiderfoot_key')
+        if spiderfoot_module and spiderfoot_key:
+            SpiderfootAPIKey.objects.update_or_create(
+                module_name=spiderfoot_module,
+                defaults={'key_value': spiderfoot_key}
+            )
+
+        delete_sf_key = request.POST.get('delete_sf_key')
+        if delete_sf_key:
+            SpiderfootAPIKey.objects.filter(id=delete_sf_key).delete()
+
     openai_key = OpenAiAPIKey.objects.first()
     netlas_key = NetlasAPIKey.objects.first()
     chaos_key = ChaosAPIKey.objects.first()
@@ -698,6 +711,7 @@ def api_vault(request, slug):
     context['hackerone_username'] = hackerone_username
     context['shodan_key'] = shodan_key
     context['censys_key'] = censys_key
+    context['spiderfoot_keys'] = SpiderfootAPIKey.objects.all()
     
     return render(request, 'scanEngine/settings/api.html', context)
 

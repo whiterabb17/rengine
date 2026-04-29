@@ -91,6 +91,23 @@
                 <b>Note: Use regex patterns carefully. While exclusions can speed up scans, be cautious not to exclude critical areas that may contain vulnerabilities. Test your patterns to ensure they match as intended.</b>
               </small>
             </div>
+            <div class="mb-3 mt-4">
+              <h4 class="text-info">Custom Google Dork Generation (Optional)</h4>
+              <div class="form-check form-switch mb-2">
+                  <input class="form-check-input" type="checkbox" id="customDorkSwitch" name="customDorkSwitch">
+                  <label class="form-check-label" for="customDorkSwitch">Enable Custom Dork Generation</label>
+              </div>
+              <div id="customDorkComponent" style="display: none;">
+                  <p>Generate a comprehensive dork list for <strong id="targetDomainName">{{domain.name}}</strong>.</p>
+                  <button type="button" class="btn btn-primary btn-sm mb-2" id="btnGenerateDorks">
+                      <i class="fe-zap me-1"></i> Generate Dorks
+                  </button>
+                  <textarea class="form-control" id="customDorkTextarea" name="customDorkTextarea" rows="10" spellcheck="false" placeholder="Your custom dorks will appear here..."></textarea>
+                  <small class="form-text text-muted mt-2">
+                      Generated dorks can be edited or manually added. These will be saved and used during the scan.
+                  </small>
+              </div>
+            </div>
           </div>
           {% if domain_ids %}
           <input type="hidden" name="domain_ids" value="{{domain_ids}}">

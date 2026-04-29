@@ -48,4 +48,12 @@ urlpatterns = [
         '<slug:slug>/bountyhub/list/programs',
         views.list_bountyhub_programs,
         name='list_bountyhub_programs'),
+    path(
+        '<slug:slug>/attack_surface/<int:scan_id>/',
+        views.attack_surface,
+        name='attack_surface'),
+    path(
+        '<slug:slug>/api/graph/scan/<int:scan_id>/data/',
+        views.get_graph_data,
+        name='get_graph_data'),
 ]

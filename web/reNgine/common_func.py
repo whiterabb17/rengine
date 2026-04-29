@@ -502,6 +502,16 @@ def extract_path_from_url(url):
 #-------#
 
 
+def get_spiderfoot_keys():
+	"""Get Spiderfoot API keys from DB.
+
+	Returns:
+		dict: Dictionary of module_name: key_value.
+	"""
+	keys = SpiderfootAPIKey.objects.all()
+	return {k.module_name: k.key_value for k in keys}
+
+
 def get_random_proxy():
 	"""Get a random proxy from the list of proxies input by user in the UI.
 

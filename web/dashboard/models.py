@@ -107,9 +107,20 @@ class InAppNotification(models.Model):
 
 
 class UserPreferences(models.Model):
+	UI_VERSIONS = (
+		('v2', 'Version 2 (Default)'),
+		('v3', 'Version 3 (Cyberpunk)'),
+	)
+	V3_INTENSITIES = (
+		('clean', 'Clean'),
+		('script_kiddie', 'Script Kiddie'),
+		('hacker', 'Hacker'),
+	)
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	bug_bounty_mode = models.BooleanField(default=True)
-	
+	ui_version = models.CharField(max_length=2, choices=UI_VERSIONS, default='v2')
+	v3_intensity = models.CharField(max_length=20, choices=V3_INTENSITIES, default='clean')
+
 	def __str__(self):
 		return f"{self.user.username}'s preferences"
 
@@ -122,3 +133,13 @@ class LLMConfig(models.Model):
 
 	def __str__(self):
 		return f"{self.provider} - {self.selected_model}"
+
+
+class SpiderfootAPIKey(models.Model):
+	id = models.AutoField(primary_key=True)
+	module_name = models.CharField(max_length=200)
+	key_name = models.CharField(max_length=200, default='api_key')
+	key_value = models.CharField(max_length=500)
+
+	def __str__(self):
+		return f"{self.module_name} - {self.key_name}"

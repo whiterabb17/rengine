@@ -60,6 +60,25 @@ My Profile
             {% endif %}
             <input type="submit" class="btn btn-soft-primary float-end" value="Change Password">
           </form>
+          <h4 class="mt-4">Theme Settings</h4>
+          <div class="row">
+            <div class="col-6 mt-2">
+              <label class="form-label">UI Version</label>
+              <select class="form-select mb-4" id="ui_version_select">
+                <option value="v2" {% if user_preferences.ui_version == 'v2' %}selected{% endif %}>Version 2 (Legacy)</option>
+                <option value="v3" {% if user_preferences.ui_version == 'v3' %}selected{% endif %}>Version 3 (Cyberpunk)</option>
+              </select>
+            </div>
+            <div class="col-6 mt-2" id="v3_intensity_container" style="{% if user_preferences.ui_version == 'v2' %}display: none;{% endif %}">
+              <label class="form-label">Cyberpunk Intensity</label>
+              <select class="form-select mb-4" id="v3_intensity_select">
+                <option value="clean" {% if user_preferences.v3_intensity == 'clean' %}selected{% endif %}>Clean (Professional)</option>
+                <option value="script_kiddie" {% if user_preferences.v3_intensity == 'script_kiddie' %}selected{% endif %}>Script Kiddie (Synthwave)</option>
+                <option value="hacker" {% if user_preferences.v3_intensity == 'hacker' %}selected{% endif %}>Hacker (Matrix)</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn btn-soft-info float-end" onclick="saveThemeSettings()">Save Theme Settings</button>
         </div>
       </div>
     </div>
@@ -69,4 +88,59 @@ My Profile
 
 
 {% block page_level_script %}
+<script>
+function saveThemeSettings() {
+    const ui_version = $('#ui_version_select').val();
+    const v3_intensity = $('#v3_intensity_select').val();
+    
+    fetch('/api/update-theme/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            ui_version: ui_version,
+            v3_intensity: v3_intensity
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status) {
+            Snackbar.show({
+                text: 'Theme settings updated successfully!',
+                pos: 'top-right',
+                actionTextColor: '#42A5F5',
+                duration: 1400
+            });
+            // Update body attributes for real-time preview
+            $('body').attr('data-ui-version', data.ui_version);
+            $('body').attr('data-v3-theme', data.v3_intensity);
+
+            // Save to localStorage for pre-login persistence (e.g. login page)
+            localStorage.setItem('rengine-ui-version', data.ui_version);
+            localStorage.setItem('rengine-v3-theme', data.v3_intensity);
+            
+            if (data.ui_version === 'v3') {
+                $('#v3_intensity_container').show();
+            } else {
+                $('#v3_intensity_container').hide();
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+$(document).ready(function() {
+    $('#ui_version_select').on('change', function() {
+        if ($(this).val() === 'v3') {
+            $('#v3_intensity_container').fadeIn();
+        } else {
+            $('#v3_intensity_container').fadeOut();
+        }
+    });
+});
+</script>
 {% endblock page_level_script %}
