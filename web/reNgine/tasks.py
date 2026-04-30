@@ -69,6 +69,7 @@ def initiate_scan(
 		custom_dorks=None,
 		api_discovery_tools=None,
 		kr_wordlist=None,
+		enable_spiderfoot_scan=False,
 	):
 	"""Initiate a new scan.
 
@@ -213,6 +214,11 @@ def initiate_scan(
 		tasks = engine.tasks
 		if 'waf_bypass' in tasks and 'waf_detection' not in tasks:
 			tasks.append('waf_detection')
+			scan.tasks = tasks
+			scan.save()
+
+		if enable_spiderfoot_scan and 'spiderfoot_scan' not in tasks:
+			tasks.append('spiderfoot_scan')
 			scan.tasks = tasks
 			scan.save()
 
@@ -1277,6 +1283,22 @@ def spiderfoot_scan(self, host=None, ctx={}, description=None):
 	
 	config = self.yaml_configuration.get(SPIDERFOOT_SCAN) or {}
 	modules = config.get('modules', 'all')
+	threads = config.get('threads') or self.yaml_configuration.get('threads', 5)
+	intensity = config.get('intensity', 'normal') # normal, fast, deep
+
+	# Spiderfoot CLI intensity mapping (profiles)
+	# fast: footprint, normal: investigate, deep: all
+	profile_cmd = ""
+	if intensity == 'fast':
+		profile_cmd = "-p footprint"
+	elif intensity == 'deep':
+		profile_cmd = "-p all"
+	# if modules is set to 'all' and intensity is provided, we can use profiles
+	# otherwise if specific modules are provided, they take precedence
+	if modules != 'all':
+		profile_cmd = f"-m {modules}"
+	elif not profile_cmd:
+		profile_cmd = "-p investigate"
 	
 	# Use global SF config if it exists, otherwise generate from DB
 	sf_config_path = "/root/.config/spiderfoot.cfg"
@@ -1293,7 +1315,7 @@ def spiderfoot_scan(self, host=None, ctx={}, description=None):
 
 	# Spiderfoot CLI usage
 	# -s target, -m modules, -f (output format json), -o (output file), -q (quiet)
-	cmd = f"python3 /usr/src/github/spiderfoot/sf.py -s {host} -m {modules} -q -f -o json -c {sf_config_path} > {output_file}"
+	cmd = f"python3 /usr/src/github/spiderfoot/sf.py -s {host} {profile_cmd} -max-threads {threads} -q -f -o json -c {sf_config_path} > {output_file}"
 	if proxy:
 		cmd = f"export HTTP_PROXY='{proxy}' HTTPS_PROXY='{proxy}' && {cmd}"
 	
@@ -1304,13 +1326,29 @@ def spiderfoot_scan(self, host=None, ctx={}, description=None):
 			scan_id=self.scan_id,
 			activity_id=self.activity_id)
 		
-		# Post-process: sync to Neo4j
+		# Sync to Neo4j
 		graph = Neo4jManager()
 		graph.sync_scan_results(self.scan_id)
 		graph.close()
 		
-		# Optionally parse spiderfoot_results.json and save to reNgine DB
-		# For now, we'll just sync to graph and let the user see the map
+		# Parse spiderfoot_results.json and save to reNgine DB
+		if os.path.exists(output_file):
+			try:
+				with open(output_file, 'r') as f:
+					sf_data = json.load(f)
+					for event in sf_data:
+						# SF types for hostnames/subdomains
+						if event.get('type') in ['DNS_NAME', 'INTERNET_NAME', 'AFFILIATE_INTERNET_NAME']:
+							sub_name = event.get('data', '').lower()
+							if sub_name and sub_name.endswith(host):
+								save_subdomain(sub_name, ctx=ctx)
+						# SF types for URLs
+						elif event.get('type') in ['WEB_RESOURCE', 'URL_ALL', 'LINKED_URL_INTERNAL']:
+							url_data = event.get('data', '')
+							if url_data and is_valid_url(url_data):
+								save_endpoint(url_data, ctx=ctx)
+			except Exception as e:
+				logger.error(f"Error parsing SpiderFoot results: {str(e)}")
 	except Exception as e:
 		logger.error(f"SpiderFoot scan failed: {e}")
 
@@ -1350,7 +1388,7 @@ def screenshot(self, ctx={}, description=None):
 	send_output_file = notification.send_scan_output_file if notification else False
 
 	# Run cmd
-	cmd = f'python3 /usr/src/github/EyeWitness/Python/EyeWitness.py -f {alive_endpoints_file} -d {screenshots_path} --no-prompt'
+	cmd = f'/usr/src/github/EyeWitness/eyewitness-venv/bin/python /usr/src/github/EyeWitness/Python/EyeWitness.py -f {alive_endpoints_file} -d {screenshots_path} --no-prompt'
 	cmd += f' --timeout {timeout}' if timeout > 0 else ''
 	cmd += f' --threads {threads}' if threads > 0 else ''
 	run_command(
@@ -2398,11 +2436,37 @@ def web_api_discovery(self, urls=[], ctx={}, description=None):
 				except Exception as e:
 					logger.error(f"Error parsing LinkFinder output for {url}: {e}")
 
+		# InQL - GraphQL Discovery
+		if 'inql' in uses_tools:
+			logger.info(f'Running InQL on {url}')
+			inql_output = f"{results_dir}/inql_{subdomain_name}"
+			cmd = f"inql -t {url} -o {inql_output}"
+			if proxy:
+				cmd += f" -p {proxy}"
+			run_command(cmd, shell=True, scan_id=self.scan_id, activity_id=self.activity_id)
+
 	# Semgrep - Post-discovery pattern matching
 	if 'semgrep' in uses_tools:
 		logger.info(f'Running Semgrep on discovery results')
 		semgrep_output = f"{results_dir}/semgrep_results.json"
 		cmd = f"semgrep scan --config auto --json --output {semgrep_output} {results_dir}"
+		run_command(cmd, shell=True, scan_id=self.scan_id, activity_id=self.activity_id)
+
+	# Aquatone - Visual discovery
+	if 'aquatone' in uses_tools:
+		logger.info('Running Aquatone on discovery results')
+		aquatone_dir = f"{results_dir}/aquatone"
+		os.makedirs(aquatone_dir, exist_ok=True)
+		urls_file = f"{results_dir}/all_discovery_urls.txt"
+		# Get all endpoints discovered so far for this scan
+		all_endpoints = Endpoint.objects.filter(subdomain__scan_history=self.scan)
+		with open(urls_file, 'w') as f:
+			for ep in all_endpoints:
+				f.write(f"{ep.http_url}\n")
+		
+		cmd = f"cat {urls_file} | aquatone -out {aquatone_dir} -silent"
+		if proxy:
+			cmd += f" -proxy {proxy}"
 		run_command(cmd, shell=True, scan_id=self.scan_id, activity_id=self.activity_id)
 
 	# Sync to Graph

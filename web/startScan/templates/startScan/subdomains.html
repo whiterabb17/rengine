@@ -190,7 +190,7 @@ end_vuln_badge = '<div class="">' + subscan_count_badge + endpoint_count_badge +
 
 if (row['http_url']) {
 if (row['cname']) {
-cname_badge = `<div><span class="text-dark">CNAME<br><span class="text-warning"> ❯ </span>` + row['cname'].replace(',',
+cname_badge = `<div><span style="color:#fff !important">CNAME<br><span class="text-warning"> ❯ </span>` + row['cname'].replace(',',
 		'<br><span class="text-warning"> ❯ </span>') + `</div>`;
 return badges + `<div class="clipboard copy-txt"><a href="` + row['http_url'] + `" class="text-primary"
 		target="_blank"><span id='subdomain-${row[' id']}'>` + data + `${copy_icon} </span></a>` + `</div>` +

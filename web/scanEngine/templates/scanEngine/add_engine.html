@@ -204,6 +204,17 @@ brute_force_scan: {
   'stop_on_success': true
 }
 firewall_vpn_scan: {}
+spiderfoot_scan: {
+  'modules': 'all',
+  # 'intensity': 'normal',
+  # 'threads': 10
+}
+web_api_discovery: {
+  'uses_tools': ['kiterunner', 'arjun', 'linkfinder', 'paramspider', 'inql', 'aquatone', 'semgrep'],
+  'scan_only_active': true,
+  'threads': 30,
+  'kiterunner_wordlist': 'routes-large.kite'
+}
 #custom_headers: ['Foo: Bar', 'X-Forwarded-For: 127.0.0.1']
 `;
 });

@@ -6,7 +6,7 @@
   <h3>Unofficial Fork of reNgine: The Ultimate Web Reconnaissance & Vulnerability Scanner 🚀</h3>
 </p>
 
-<p align="center"><a href="https://github.com/whiterabb17/rengine/releases" target="_blank"><img src="https://img.shields.io/badge/version-v2.5.1-informational?&logo=none" alt="reNgine Latest Version" /></a>&nbsp;<a href="https://www.gnu.org/licenses/gpl-3.0" target="_blank"><img src="https://img.shields.io/badge/License-GPLv3-red.svg?&logo=none" alt="License" /></a>&nbsp;<a href="#" target="_blank"><img src="https://img.shields.io/badge/first--timers--only-friendly-blue.svg?&logo=none" alt="" /></a></p>
+<p align="center"><a href="https://github.com/whiterabb17/rengine/releases" target="_blank"><img src="https://img.shields.io/badge/version-v3.0.0-informational?&logo=none" alt="reNgine Latest Version" /></a>&nbsp;<a href="https://www.gnu.org/licenses/gpl-3.0" target="_blank"><img src="https://img.shields.io/badge/License-GPLv3-red.svg?&logo=none" alt="License" /></a>&nbsp;<a href="#" target="_blank"><img src="https://img.shields.io/badge/first--timers--only-friendly-blue.svg?&logo=none" alt="" /></a></p>
 
 <p align="center">
   <a href="https://www.youtube.com/watch?v=Xk_YH83IQgg" target="_blank"><img src="https://img.shields.io/badge/BlackHat--Arsenal--Asia-2023-blue.svg?logo=none" alt="" /></a>&nbsp;
@@ -23,27 +23,58 @@
 </p>
 
 <p align="center">
-<a href="https://discord.gg/H6WzebwX3H" target="_blank"><img src="https://img.shields.io/discord/880363103689277461" alt="" /></a>&nbsp;
-</p>
-
-<p align="center">
 <a href="https://opensourcesecurityindex.io/" target="_blank" rel="noopener">
 <img style="width: 282px; height: 56px" src="https://opensourcesecurityindex.io/badge.svg" alt="Open Source Security Index - Fastest Growing Open Source Security Projects" width="282" height="56" /> </a>
 </p>
-<h4>reNgine 2.5.1 is released!</h4>
+<h4>reNgine 3.0.0 is released!</h4>
 <p>
-  reNgine 2.5.0 introduces the <b>Continuous Monitoring Engine</b> for automated asset discovery, the <b>Auth Brute-Force Engine</b> (powered by Medusa) with advanced stealth proxy rotation, deep Nmap fingerprint parsing for hidden portals, and automated scan triggers. This version also includes comprehensive support for Nmap vuln scripts and real-time alerts for newly discovered assets.
+  reNgine 3.0.0 is a massive leap forward in automated reconnaissance, introducing the <b>Advanced Web App & API Discovery Pipeline</b>, full <b>Spiderfoot OSINT Integration</b>, and the stunning <b>Cyberpunk V3 Hacker Dashboard</b>. This version features a dedicated <b>LLM Toolkit</b> for AI-assisted vulnerability analysis, deep API reconnaissance powered by <b>Kiterunner, Arjun, ParamSpider, InQL, and Aquatone</b>, along with automated <b>Semgrep</b>-powered static analysis. With enhanced <b>OpSec controls</b>, <b>Stealth Brute-Force</b> engines, and <b>Dashboard Analytics</b>, v3 is built to handle the most complex modern attack surfaces.
 </p>
 
 <h4>What is reNgine?</h4>
-reNgine is your ultimate web application reconnaissance suite, designed to supercharge the recon process for security pros, pentesters, and bug bounty hunters. It is go-to web application reconnaissance suite that's designed to simplify and streamline the reconnaissance process for all the needs of security professionals, penetration testers, and bug bounty hunters. With its highly configurable engines, data correlation capabilities, continuous monitoring, database-backed reconnaissance data, and an intuitive user interface, reNgine redefines how you gather critical information about your target web applications.
+reNgine is your ultimate web application reconnaissance suite, designed to supercharge the recon process for security pros, pentesters, and bug bounty hunters. It is a highly configurable engine that simplifies and streamlines reconnaissance through data correlation, continuous monitoring, and an intuitive user interface. Whether you're a solo bug hunter or an enterprise security team, reNgine redefines how you gather critical information about your targets.
 
-Traditional reconnaissance tools often fall short in terms of configurability and efficiency. reNgine addresses these shortcomings and emerges as an excellent alternative to existing commercial tools.
+Traditional reconnaissance tools often fall short in terms of configurability and efficiency. reNgine addresses these shortcomings, emerging as a powerful alternative that surpasses many commercial offerings by providing end-to-end automation and deep tactical insights.
 
-reNgine was created to address the limitations of traditional reconnaissance tools and provide a better alternative, even surpassing some commercial offerings. Whether you're a bug bounty hunter, a penetration tester, or a corporate security team, reNgine is your go-to solution for automating and enhancing your information-gathering efforts.
-</p>
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/aqua.png)
 
-[Watch reNgine 2.0-jasper release trailer here!](https://youtu.be/VwkOWqiWW5g)
+## 🚀 Version 3.0: The Recon Revolution
+
+Version 3.0 represents a complete overhaul of reNgine, focusing on AI-driven intelligence, aesthetic excellence, and surgical discovery precision. Below are the core pillars of the v3 release:
+
+### 🎨 Cyberpunk V3 Hacker Dashboard
+A completely reimagined, glassmorphic UI designed for high-impact data visualization and aesthetic excellence.
+*   **Neon Aesthetic**: High-contrast, vibrant interface with neon accents for better visibility in dark environments.
+*   **Unified Tables**: Structurally optimized headers (including IP, Ports, and Status) for a seamless, professional look.
+*   **Interactive Analytics**: Dynamic reporting views with actionable insights and trend analysis.
+*   **Theme Management**:
+    *   **How to Switch**: Toggle the intensity (Neon/Glassmorphic) via the top navigation bar or select "Hacker" in your **User Profile Settings**.
+    *   **How to Revert**: To return to the classic look, simply visit your **User Profile Settings** and switch back to the "Default" or "Classic" theme.
+
+### 🤖 Dedicated LLM Toolkit
+Centralized AI management for smarter reconnaissance and automated reporting.
+*   **Centralized Configuration**: A dedicated settings page to manage AI providers and models.
+*   **Dual Provider Support**: Seamless integration with **OpenAI** (GPT-4/GPT-3.5) and local **Ollama** models.
+*   **Real-time Model Pulling**: Pull new Ollama models (Llama3, Mistral, etc.) directly from the UI with integrated progress logs.
+*   **AI-Assisted Recon**: Automated generation of vulnerability descriptions, remediation strategies, and attack surface assessments.
+
+### 🕵️ SpiderFoot Integration 2.0
+The SpiderFoot discovery engine has been completely re-engineered for v3.
+*   **Intensity Profiles**: Choose between `fast` (Footprint), `normal` (Investigate), and `deep` (All) to balance speed and depth.
+*   **Concurrency Management**: Manually adjust thread counts (`-max-threads`) to suit your infrastructure limits.
+*   **Surgical OSINT**: Selective module execution and profile-based discovery for targeted asset identification.
+
+### 🛡️ Advanced OpSec & Stealth
+*   **WAF Bypass Engine**: Sophisticated modules designed to identify and bypass Web Application Firewalls (WAFs) for deeper scan penetration.
+*   **Automated Proxy Management**: A new, fully automated pipeline to gather, validate, and rotate high-quality proxies, ensuring continuous scanning without rate-limiting or IP blocking.
+*   **API Discovery Pipeline**: Integrated **Arjun**, **Kiterunner**, and **ParamSpider** for deep hidden endpoint discovery.
+*   **Stealth Auth Brute-Force**: **Medusa** + **Proxychains4** integration with automated portal detection.
+*   **Custom Dorking**: A new **Dork Generator** to build complex queries for sensitive data discovery.
+*   **OpSec Presets**: User-agent rotation, rate limiting, and metadata stripping modules for stealthier operations.
+
+### 📊 Dashboard & Task Analytics
+*   **Task Management**: Enhanced task monitoring with granular status tracking and detailed logs.
+*   **Reporting Views**: New analytics dashboards providing a 360-degree view of your attack surface and vulnerability trends.
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/aqua.png)
 
@@ -75,7 +106,7 @@ Detailed documentation available at [https://rengine.wiki](https://rengine.wiki)
 
 ## About reNgine
 
-reNgine is not an ordinary reconnaissance suite; it's a game-changer! We've turbocharged the traditional workflow with groundbreaking features that is sure to ease your reconnaissance game. reNgine redefines the art of reconnaissance with highly configurable scan engines, recon data correlation, continuous monitoring, GPT powered Vulnerability Report, Project Management and role based access control etc.
+reNgine is not an ordinary reconnaissance suite; it's a game-changer! We've turbocharged the traditional workflow with groundbreaking features that ease your reconnaissance game. reNgine redefines the art of reconnaissance with highly configurable scan engines, recon data correlation, continuous monitoring, GPT powered Vulnerability Report, Project Management and role based access control etc.
 
 
 🦾&nbsp;&nbsp; reNgine has advanced reconnaissance capabilities, harnessing a range of open-source tools to deliver a comprehensive web application reconnaissance experience. With its intuitive User Interface, it excels in subdomain discovery, pinpointing IP addresses and open ports, collecting endpoints, conducting directory and file fuzzing, capturing screenshots, and performing vulnerability scans. To summarize, it does end-to-end reconnaissance. With WHOIS identification and WAF detection, it offers deep insights into target domains. Additionally, reNgine also identifies misconfigured S3 buckets and find interesting subdomains and URLS, based on specific keywords to helps you identify your next target, making it a go-to tool for efficient reconnaissance.
@@ -96,9 +127,9 @@ reNgine is not an ordinary reconnaissance suite; it's a game-changer! We've turb
   - 🔍 Penetration Tester: Penetration Tester will be allowed to modify and initiate scans and subscans, add or update targets, etc. A penetration tester will not be allowed to modify system configurations.
   - 📊 Auditor: Auditor can only view and download the report. An auditor can not change any system or scan related configurations nor can initiate any scans or subscans.
 
-🚀&nbsp;&nbsp; GPT/LLM-Powered Report Generation: Get ready for the future of penetration testing reports with reNgine's groundbreaking feature: "GPT-Powered Report Generation"! With the power of OpenAI's GPT or local LLMs (Ollama), reNgine now provides you with detailed vulnerability descriptions, remediation strategies, and impact assessments that read like they were written by a human security expert! **But that's not all!** reNgine now automatically generates Assessment Overviews, Executive Briefs, and Final Conclusions, giving you a complete report structure. Our GPT-driven reports go the extra mile by scouring the web for related news articles, blogs, and references, so you have a 360-degree view of the vulnerabilities you've uncovered. With reNgine 2.2.3 revolutionize your penetration testing game and impress your clients with reports that are not just informative but engaging and comprehensive with detailed analysis on impact assessment and remediation strategies.
+🚀&nbsp;&nbsp; GPT/LLM-Powered Report Generation: Get ready for the future of penetration testing reports with reNgine's groundbreaking feature: "GPT-Powered Report Generation"! With the power of OpenAI's GPT or local LLMs (Ollama), reNgine now provides you with detailed vulnerability descriptions, remediation strategies, and impact assessments that read like they were written by a human security expert! **But that's not all!** reNgine now automatically generates Assessment Overviews, Executive Briefs, and Final Conclusions, giving you a complete report structure. Our GPT-driven reports go the extra mile by scouring the web for related news articles, blogs, and references, so you have a 360-degree view of the vulnerabilities you've uncovered. With reNgine 3.0, revolutionize your penetration testing game and impress your clients with reports that are not just informative but engaging and comprehensive with detailed analysis on impact assessment and remediation strategies.
 
-🥷&nbsp;&nbsp; GPT-Powered Attack Surface Generation: With reNgine 2.0, reNgine seamlessly integrates with GPT to identify the attacks that you can likely perform on a subdomain. By making use of reconnaissance data such as page title, open ports, subdomain name etc. reNgine can advise you the attacks you could perform on a target. reNgine will also provide you the rationale on why the specific attack is likely to be successful.
+🥷&nbsp;&nbsp; GPT-Powered Attack Surface Generation: reNgine seamlessly integrates with GPT/LLM to identify the attacks that you can likely perform on a subdomain. By making use of reconnaissance data such as page title, open ports, subdomain name etc. reNgine can advise you the attacks you could perform on a target and provide the rationale behind it.
 
 🧭&nbsp;&nbsp;Continuous monitoring: Continuous monitoring is at the core of reNgine's mission, and it's robust continuous monitoring feature ensures that their targets are under constant scrutiny. With the flexibility to schedule scans at regular intervals, penetration testers can effortlessly stay informed about their targets. What sets reNgine apart is its seamless integration with popular notification channels such as Discord, Slack, and Telegram, delivering real-time alerts for newly discovered subdomains, vulnerabilities, or any changes in reconnaissance data.
 
@@ -132,43 +163,38 @@ reNgine is not an ordinary reconnaissance suite; it's a game-changer! We've turb
   * Employees Gathering
   * Email Address gathering
   * Google Dorking for sensitive info and urls
-* Projects, create distinct project spaces, each tailored to a specific purpose, such as personal bug bounty hunting, client engagements, or any other specialized recon task.
-* Perform Advanced Query lookup using natural language alike and, or, not operations
+  * **Spiderfoot Integration**: Full intensity control and profile-based OSINT.
+* Projects, create distinct project spaces, each tailored to a specific purpose.
+* Perform Advanced Query lookup using natural language alike operations
 * Highly configurable YAML-based Scan Engines
-* Support for Parallel Scans
-* Support for Subscans
-* Recon Data visualization
-* GPT-Powered Vulnerability Description, Impact, Remediation, and Report Summaries/Conclusions
+* Support for Parallel Scans and Subscans
+* Recon Data visualization and Dashboard Analytics
+* GPT/LLM-Powered Vulnerability Description, Impact, Remediation, and Report Summaries
 * GPT Attack Surface Generator
-* Multiple Roles and Permissions to cater a team's need
-* Customizable Alerts/Notifications on Slack, Discord, and Telegram
+* Multiple Roles and Permissions
+* Customizable Alerts/Notifications (Slack, Discord, Telegram, Lark)
 * Automatically report Vulnerabilities to HackerOne
 * Recon Notes and Todos
-* Clocked Scans (Run reconnaissance exactly at X Hours and Y minutes) and Periodic Scans (Runs reconnaissance every X minutes/- hours/days/week)
+* Clocked Scans and Periodic Scans
 * Proxy Support with Automatic Proxy Fetching and Validation
 * Screenshot Gallery with Filters
 * Powerful recon data filtering with autosuggestions
 * Recon Data changes, find new/removed subdomains/endpoints
 * Tag targets into the Organization
-* Smart Duplicate endpoint removal based on page title and content length to cleanup the reconnaissance data
+* Smart Duplicate endpoint removal
 * Identify Interesting Subdomains
 * Custom GF patterns and custom Nuclei Templates
-* Edit tool-related configuration files (Nuclei, Subfinder, Naabu, amass)
+* Edit tool-related configuration files (Nuclei, Subfinder, Naabu, amass, SpiderFoot)
 * Add external tools from GitHub/Go
 * Interoperable with other tools, Import/Export Subdomains/Endpoints
-* Import Targets via IP and/or CIDRs
 * Report Generation
-* Toolbox: Comes bundled with most commonly used tools during penetration testing such as whois lookup, CMS detector, CVE lookup, etc.
-* Identification of related domains and related TLDs for targets
-* Find actionable insights such as Most Common Vulnerability, Most Common CVE ID, Most Vulnerable Target/Subdomain, etc.
-* You can now use local LLMs for Attack surface identification and vulnerability description (NEW: reNgine 2.1.0)
-* BountyHub, a central hub to manage your hackerone targets
-* OpSec Settings (Stealth presets, UA rotation, rate limiting, WAF bypass, metadata stripping)
-* New Scan Engine: Firewall and VPN (Sophos) for perimeter security auditing
-* Integrated New Discovery Tools: Chaos, TLSX, CTFR, Netlas, and Katana
-* Stealth Auth Brute-Force Engine (Medusa + Proxychains4) with automated portal detection
-* Deep Fingerprint Parsing for hidden authentication portals (Nmap title extraction from raw strings)
-* **Continuous Monitoring Engine**: Automated periodic discovery of subdomains and endpoints with real-time alerts and dashboard visualization.
+* Toolbox: cms detector, CVE lookup, dork generator, etc.
+* **LLM Toolkit**: Dedicated settings for AI models and automated analysis.
+* **Cyberpunk V3 UI**: Glassmorphic Neon dashboard with improved readability.
+* **Advanced Web App & API Discovery Pipeline**: Integrated Arjun, Kiterunner, ParamSpider, LinkFinder, InQL.
+* **Semgrep-Powered Analysis**: Automated static analysis for JS and GraphQL.
+* **OpSec Settings**: UA rotation, stealth presets, and WAF bypass.
+* integrated tools: Chaos, TLSX, CTFR, Netlas, Katana, Medusa.
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/aqua.png)
 

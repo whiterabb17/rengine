@@ -40,21 +40,6 @@
     --cyber-hover: rgba(255, 0, 255, 0.15);
 }
 
-/* HACKER (High Intensity) */
-[data-v3-theme="hacker"] {
-    --cyber-primary: #39ff14; /* Matrix Green */
-    --cyber-secondary: #ff0000; /* Alert Red */
-    --cyber-bg: #000000;
-    --cyber-bg-alt: #050505;
-    --cyber-text: #39ff14;
-    --cyber-border: rgba(57, 255, 20, 0.6);
-    --cyber-glow: 0 0 12px rgba(57, 255, 20, 0.4);
-    --cyber-accent: #ff0000;
-    --cyber-font: 'JetBrains Mono', 'Courier New', monospace;
-    --cyber-noise-opacity: 0.1;
-    --cyber-hover: rgba(57, 255, 20, 0.2);
-}
-
 /* --- CORE STYLES --- */
 
 [data-ui-version="v3"] {
@@ -65,19 +50,6 @@
 
 [data-ui-version="v3"] body {
     background-color: var(--cyber-bg) !important;
-}
-
-/* Scanline Overlay for Hacker tier */
-[data-ui-version="v3"][data-v3-theme="hacker"]::after {
-    content: " ";
-    display: block;
-    position: fixed;
-    top: 0; left: 0; bottom: 0; right: 0;
-    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-    z-index: 9999;
-    background-size: 100% 2px, 3px 100%;
-    pointer-events: none;
-    opacity: 0.1;
 }
 
 /* Component Overrides */
@@ -132,6 +104,8 @@
 [data-ui-version="v3"] .nav-link:hover {
     color: var(--cyber-primary) !important;
     text-shadow: var(--cyber-glow);
+    background-color: #0c0a14bf;
+    
 }
 
 /* Navbar Fixes */
@@ -229,17 +203,4 @@
     color: var(--cyber-bg) !important;
 }
 
-/* Special Hacker Flickering */
-@keyframes cyber-flicker {
-    0% { opacity: 1; }
-    5% { opacity: 0.8; }
-    10% { opacity: 1; }
-    15% { opacity: 0.9; }
-    20% { opacity: 1; }
-    100% { opacity: 1; }
-}
 
-[data-v3-theme="hacker"] h1,
-[data-v3-theme="hacker"] .page-title {
-    animation: cyber-flicker 3s infinite;
-}

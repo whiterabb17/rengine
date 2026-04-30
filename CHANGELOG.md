@@ -1,6 +1,28 @@
 # Changelog
 
-## v2.6.0
+## v3.0.0
+ 
++### New Features
++- **Advanced Web App & API Discovery Pipeline**: Introduced a dedicated reconnaissance engine for deep API discovery, featuring:
++  - **Kiterunner**: High-performance API endpoint brute-forcing with custom `.kite` wordlists (`routes-large.kite` by default).
++  - **Arjun**: Automated HTTP parameter discovery for identifying hidden API inputs.
++  - **ParamSpider**: Advanced parameter extraction from web archives and live sources.
++  - **InQL**: Comprehensive GraphQL introspection and vulnerability analysis.
++  - **Aquatone**: Automated visual reconnaissance for discovered API endpoints.
++  - **LinkFinder**: Deep extraction of endpoints from JavaScript files.
++- **Spiderfoot OSINT Integration**: Fully integrated Spiderfoot as a standalone scan module, supporting:
++  - Dynamic module configuration via YAML scan engines.
++  - Automatic ingestion of discovered subdomains and URLs into the reNgine database.
++  - Full Neo4j graph synchronization for OSINT assets.
++- **Cyberpunk V3 "Neon" Dashboard**: Reimagined the entire UI with a premium glassmorphic theme, featuring:
++  - Unified dark/neon color palette for enhanced data visualization.
++  - Improved sorting and filtering UI for large subdomain datasets.
++  - Optimized sidebar and navigation for complex scan management.
++- **Semgrep-Powered Static Analysis**: Integrated Semgrep to automatically analyze discovered JavaScript and API endpoints for common security flaws (replacing legacy JSParser).
++- **Enhanced Proxy Orchestration**: Integrated rotating proxy support across all new discovery tools (Arjun, Kiterunner, etc.) to bypass rate-limiting and WAF blocks.
++- **Result Ingestion V3**: Overhauled the result ingestion pipeline to handle massive datasets from API discovery, ensuring database performance and graph integrity.
++
++## v2.6.0
 
 ### New Features
 - **Centralized AI Hub**: Introduced a unified AI management interface supporting multiple providers (OpenAI, Anthropic, Google Gemini, and Ollama).

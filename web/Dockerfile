@@ -157,6 +157,13 @@ WORKDIR /usr/src/github/spiderfoot
 RUN pip3 install -r requirements.txt
 WORKDIR /usr/src/app
 
+# Install Chromium
+RUN apt install chromium-driver -y
+
+# Setup Eyewitness
+RUN git clone https://github.com/RedSiege/EyeWitness /usr/src/github/EyeWitness && \
+    cd /usr/src/github/EyeWitness && \
+    bash setup/setup.sh
 
 # Update Nuclei and Nuclei-Templates
 RUN nuclei -update-templates

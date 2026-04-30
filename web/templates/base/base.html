@@ -18,6 +18,7 @@
     <link href="{% static 'plugins/switches/switches.min.css' %}" rel="stylesheet" type="text/css" />
     <link href="{% static 'custom/custom.css' %}" rel="stylesheet" type="text/css" />
     <link href="{% static 'custom/v3-theme.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'custom/neon-theme.css' %}?v=3.5" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
     <link rel="stylesheet" type="text/css" href="{% static 'plugins/datatable/global.css' %}">
     <!-- <link rel="stylesheet" type="text/css" href="{% static 'plugins/datatable/custom.css' %}"> -->
@@ -59,7 +60,8 @@
   </head>
 
   <body class="loading" 
-    data-layout-mode="horizontal" 
+    data-layout-mode="{% if user_preferences.ui_version == 'v3' and user_preferences.v3_intensity == 'hacker' %}vertical{% else %}horizontal{% endif %}" 
+    data-topbar-color="{% if user_preferences.v3_intensity == 'hacker' %}dark{% else %}light{% endif %}"
     data-rengine-version="{{ RENGINE_CURRENT_VERSION }}" 
     data-current-project="{{ current_project.slug }}"
     data-ui-version="{{ user_preferences.ui_version }}"
@@ -77,9 +79,15 @@
     <!-- Topbar begins -->
     {% include 'base/_items/top_bar.html' %}
     {# topbar ends #}
-    <div id="wrapper"></div>
+    <div id="wrapper">
+      {% if user_preferences.ui_version == 'v3' and user_preferences.v3_intensity == 'hacker' %}
+        {% include 'base/_items/neon_sidebar.html' %}
+      {% endif %}
+
       {# top nav begins #}
-      {% include 'base/_items/top_nav.html' %}
+      {% if user_preferences.v3_intensity != 'hacker' %}
+        {% include 'base/_items/top_nav.html' %}
+      {% endif %}
       {# top nav ends #}
       <input type="hidden" name="current_project" value="{{current_project.slug}}">
       <div class="content-page">

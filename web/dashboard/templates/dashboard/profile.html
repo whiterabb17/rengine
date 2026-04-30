@@ -126,6 +126,13 @@ function saveThemeSettings() {
             } else {
                 $('#v3_intensity_container').hide();
             }
+
+            // Force reload to ensure all changes take effect ONLY for V3
+            if (data.ui_version === 'v3') {
+                setTimeout(function() {
+                    location.reload();
+                }, 1000);
+            }
         }
     })
     .catch(error => {

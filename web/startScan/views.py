@@ -279,6 +279,7 @@ def start_scan_ui(request, slug, domain_id):
 
         api_discovery_tools = request.POST.getlist('api_discovery_tools')
         kr_wordlist = request.POST.get('kr_wordlist', 'routes-large.kite')
+        spiderfoot_scan = 'spiderfoot_scan' in request.POST
 
         # Get engine type
         engine_id = request.POST['scan_mode']
@@ -308,6 +309,7 @@ def start_scan_ui(request, slug, domain_id):
             'custom_dorks': custom_dorks,
             'api_discovery_tools': api_discovery_tools,
             'kr_wordlist': kr_wordlist,
+            'enable_spiderfoot_scan': spiderfoot_scan,
             'initiated_by_id': request.user.id
         }
         initiate_scan.apply_async(kwargs=kwargs)
@@ -380,6 +382,7 @@ def start_multiple_scan(request, slug):
             excluded_paths = request.POST['excludedPaths'] # string separated by ,
             # split excluded paths by ,
             excluded_paths = [path.strip() for path in excluded_paths.split(',')]
+            spiderfoot_scan = 'spiderfoot_scan' in request.POST
 
             grouped_scans = []
 
@@ -403,6 +406,7 @@ def start_multiple_scan(request, slug):
                     'out_of_scope_subdomains': subdomains_out,
                     'starting_point_path': starting_point_path,
                     'excluded_paths': excluded_paths,
+                    'enable_spiderfoot_scan': spiderfoot_scan,
                 }
 
                 _scan_task = initiate_scan.si(**kwargs)
@@ -645,6 +649,7 @@ def schedule_scan(request, host_id, slug):
                 'out_of_scope_subdomains': subdomains_out,
                 'starting_point_path': starting_point_path,
                 'excluded_paths': excluded_paths,
+                'enable_spiderfoot_scan': 'spiderfoot_scan' in request.POST,
                 'initiated_by_id': request.user.id
             }
             PeriodicTask.objects.create(
@@ -666,6 +671,7 @@ def schedule_scan(request, host_id, slug):
                 'out_of_scope_subdomains': subdomains_out,
                 'starting_point_path': starting_point_path,
                 'excluded_paths': excluded_paths,
+                'enable_spiderfoot_scan': 'spiderfoot_scan' in request.POST,
                 'initiated_by_id': request.user.id
             }
             PeriodicTask.objects.create(
@@ -875,6 +881,7 @@ def start_organization_scan(request, id, slug):
                 'out_of_scope_subdomains': subdomains_out,
                 'starting_point_path': starting_point_path,
                 'excluded_paths': excluded_paths,
+                'enable_spiderfoot_scan': 'spiderfoot_scan' in request.POST,
             }
             initiate_scan.apply_async(kwargs=kwargs)
             scan.save()
@@ -959,6 +966,7 @@ def schedule_organization_scan(request, slug, id):
                     'out_of_scope_subdomains': subdomains_out,
                     'starting_point_path': starting_point_path,
                     'excluded_paths': excluded_paths,
+                    'enable_spiderfoot_scan': 'spiderfoot_scan' in request.POST,
                 })
                 PeriodicTask.objects.create(
                     interval=schedule,
@@ -983,6 +991,7 @@ def schedule_organization_scan(request, slug, id):
                     'out_of_scope_subdomains': subdomains_out,
                     'starting_point_path': starting_point_path,
                     'excluded_paths': excluded_paths,
+                    'enable_spiderfoot_scan': 'spiderfoot_scan' in request.POST,
                 })
                 PeriodicTask.objects.create(clocked=clock,
                     one_off=True,

@@ -1,0 +1,1006 @@
+/* 
+   reNgine v3 - NEON HACKER THEME
+   Pixel-accurate Cyberpunk Redesign
+*/
+
+[data-v3-theme="hacker"] {
+    /* --- Root Variables --- */
+    --bg-primary: #050508;
+    --bg-secondary: rgba(10, 10, 15, 0.85);
+    --bg-glass: rgba(12, 10, 20, 0.75);
+    --border-glass: rgba(255, 255, 255, 0.04);
+
+    --neon-cyan: #00f0ff;
+    --neon-pink: #ff2bd6;
+    --neon-purple: #8a5cff;
+    --neon-blue: #3cf2ff;
+
+    --cyber-primary: var(--neon-cyan);
+    --cyber-secondary: var(--neon-pink);
+    --cyber-bg: var(--bg-primary);
+    --cyber-bg-alt: var(--bg-glass);
+    --cyber-text: #e6f1ff;
+    --cyber-border: var(--border-glass);
+    --cyber-glow: 0 0 10px rgba(0, 240, 255, 0.6), 0 0 20px rgba(0, 240, 255, 0.3);
+    --glow-cyan: 0 0 10px rgba(0, 240, 255, 0.6), 0 0 20px rgba(0, 240, 255, 0.3);
+    --glow-pink: 0 0 10px rgba(255, 43, 214, 0.6), 0 0 20px rgba(255, 43, 214, 0.3);
+    --glow-purple: 0 0 10px rgba(138, 92, 255, 0.6), 0 0 20px rgba(138, 92, 255, 0.3);
+    --cyber-accent: var(--neon-purple);
+    --cyber-font: 'Inter', 'Cerebri Sans', sans-serif;
+    --cyber-noise-opacity: 0.12;
+    --cyber-hover: rgba(138, 92, 255, 0.1);
+
+    --blur-glass: blur(14px);
+    --radius-lg: 18px;
+}
+
+/* --- CORE STYLES --- */
+
+body[data-v3-theme="hacker"] {
+    background: url("../img/neon_city.png") no-repeat center center fixed !important;
+    background-size: cover !important;
+    color: var(--cyber-text) !important;
+    font-family: var(--cyber-font) !important;
+    overflow-x: hidden;
+}
+
+/* --- OVERLAY SIDEBAR & NAVBAR (HACKER THEME) --- */
+
+html body[data-v3-theme="hacker"] #wrapper .neon-sidebar,
+html body[data-v3-theme="hacker"] .neon-sidebar {
+    width: 60px !important;
+    min-width: 60px !important;
+    max-width: 60px !important;
+    background: rgba(8, 8, 12, 0.96) !important;
+    backdrop-filter: var(--blur-glass) !important;
+    -webkit-backdrop-filter: var(--blur-glass) !important;
+    border: 1px solid var(--border-glass) !important;
+    border-radius: var(--radius-lg) !important;
+    position: fixed !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    bottom: auto !important;
+    height: auto !important;
+    max-height: calc(100vh - 120px) !important;
+    z-index: 1070 !important;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), max-width 0.3s !important;
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.02), 0 10px 40px rgba(0, 0, 0, 0.6) !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    padding: 20px 0 !important;
+    scrollbar-width: none;
+}
+
+html body[data-v3-theme="hacker"] .neon-sidebar::-webkit-scrollbar {
+    display: none;
+}
+
+html body[data-v3-theme="hacker"] #wrapper .neon-sidebar:hover,
+html body[data-v3-theme="hacker"] .neon-sidebar:hover {
+    width: 240px !important;
+    max-width: 240px !important;
+}
+
+html body[data-v3-theme="hacker"] .content-page {
+    margin-left: 80px !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    background: transparent !important;
+    width: calc(100% - 80px) !important;
+    transition: none !important;
+    margin-top: 0 !important;
+    padding-top: 100px !important;
+}
+
+html body[data-v3-theme="hacker"] .navbar-custom {
+    left: 20px !important;
+    margin-left: 0 !important;
+    width: calc(100% - 40px) !important;
+    height: 70px !important;
+    background: rgba(8, 8, 12, 0.96) !important;
+    background-color: rgba(8, 8, 12, 0.96) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid var(--border-glass) !important;
+    border-radius: var(--radius-lg) !important;
+    position: fixed !important;
+    top: 0 !important;
+    z-index: 1060 !important;
+    transition: none !important;
+    padding: 0 30px !important;
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.02), 0 10px 40px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Topbar inner transparent elements */
+html body[data-v3-theme="hacker"] .topnav,
+html body[data-v3-theme="hacker"] .topnav-menu,
+html body[data-v3-theme="hacker"] .topnav-menu-left,
+html body[data-v3-theme="hacker"] .logo-box {
+    background-color: transparent !important;
+    border: none !important;
+}
+
+/* Topbar right-side nav links — muted steel-blue matching neon_admin.png reference */
+body[data-v3-theme="hacker"] .navbar-custom .nav-link {
+    color: #8ba4c0 !important;
+}
+
+body[data-v3-theme="hacker"] .navbar-custom .logo-box .text-logo {
+    color: var(--neon-pink) !important;
+    text-shadow: 0 0 10px var(--neon-pink);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+body[data-v3-theme="hacker"] .navbar-custom .logo-box small {
+    font-size: 11px;
+    color: var(--neon-pink) !important;
+    opacity: 0.8;
+}
+
+/* All right-side nav links, text, and icons → unified subtle steel-blue (matches neon_admin.png) */
+body[data-v3-theme="hacker"] .navbar-custom .topnav-menu>li>a,
+body[data-v3-theme="hacker"] .navbar-custom .topnav-menu>li>a i,
+body[data-v3-theme="hacker"] .navbar-custom .topnav-menu>li>a i.noti-icon {
+    color: #8ba4c0 !important;
+    transition: color 0.2s ease, filter 0.2s ease;
+}
+
+/* Hover: brighten to near-white with a soft glow */
+body[data-v3-theme="hacker"] .navbar-custom .topnav-menu>li>a:hover,
+body[data-v3-theme="hacker"] .navbar-custom .topnav-menu>li>a:hover i {
+    color: #c8ddf0 !important;
+    filter: drop-shadow(0 0 5px rgba(138, 200, 240, 0.5));
+}
+
+/* User avatar SVG — subtle cyan ring to match reference */
+body[data-v3-theme="hacker"] .navbar-custom .nav-user svg {
+    border-radius: 50%;
+    outline: 2px solid rgba(139, 164, 192, 0.5);
+    outline-offset: 2px;
+}
+
+/* Version badge — neon pink pill (branded, intentionally different) */
+body[data-v3-theme="hacker"] .neon-version-badge {
+    font-size: 10px !important;
+    font-family: 'Orbitron', sans-serif !important;
+    letter-spacing: 0.5px;
+    color: var(--neon-pink) !important;
+    background: rgba(255, 43, 214, 0.08) !important;
+    border: 1px solid rgba(255, 43, 214, 0.5) !important;
+    border-radius: 20px !important;
+    padding: 2px 8px !important;
+    box-shadow: 0 0 8px rgba(255, 43, 214, 0.3), inset 0 0 8px rgba(255, 43, 214, 0.05) !important;
+    margin-top: 4px;
+    display: inline-block;
+    vertical-align: middle;
+    text-shadow: 0 0 6px rgba(255, 43, 214, 0.6);
+}
+
+body[data-v3-theme="hacker"] .topnav-menu-left {
+    display: flex !important;
+    align-items: center !important;
+    height: 100% !important;
+}
+
+body[data-v3-theme="hacker"] .navbar-custom .nav-link h3 {
+    margin: 0 !important;
+    color: var(--neon-pink) !important;
+    text-shadow: 0 0 15px rgba(0, 240, 255, 0.8) !important;
+    font-family: 'Orbitron', sans-serif !important;
+    font-weight: 800 !important;
+    letter-spacing: 5px !important;
+    font-size: 22px !important;
+}
+
+body[data-v3-theme="hacker"] .button-menu-mobile {
+    color: var(--neon-pink) !important;
+    font-size: 26px !important;
+    margin-right: 20px !important;
+}
+
+html body[data-v3-theme="hacker"] .page-title-box {
+    margin-bottom: 15px !important;
+    padding-top: 0 !important;
+}
+
+html body[data-v3-theme="hacker"] .page-title {
+    font-family: 'Orbitron', sans-serif !important;
+    letter-spacing: 2px !important;
+    color: var(--neon-purple) !important;
+    text-shadow: var(--glow-purple) !important;
+    margin: 0 !important;
+    line-height: 1.2 !important;
+}
+
+/* Sidebar Menu Tweaks for Overlay */
+body[data-v3-theme="hacker"] .logo-box {
+    display: none !important;
+}
+
+/* Sidebar Menu Links */
+body[data-v3-theme="hacker"] #sidebar-menu ul li a {
+    color: rgba(255, 255, 255, 0.7) !important;
+    background: transparent !important;
+    white-space: nowrap !important;
+    padding: 15px 15px !important;
+    display: flex;
+    align-items: center;
+    border-left: 3px solid transparent;
+    transition: 0.3s;
+    width: 240px;
+    /* Ensure links stay wide enough for text */
+}
+
+body[data-v3-theme="hacker"] #sidebar-menu ul li a span,
+body[data-v3-theme="hacker"] .menu-title,
+body[data-v3-theme="hacker"] .menu-arrow {
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    margin-left: 10px;
+}
+
+body[data-v3-theme="hacker"] .neon-sidebar:hover #sidebar-menu ul li a span,
+body[data-v3-theme="hacker"] .neon-sidebar:hover .menu-title,
+body[data-v3-theme="hacker"] .neon-sidebar:hover .menu-arrow {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+body[data-v3-theme="hacker"] #sidebar-menu ul li a i {
+    font-size: 1.3rem !important;
+    min-width: 24px;
+    color: var(--neon-cyan);
+    filter: drop-shadow(0 0 5px var(--neon-cyan));
+    margin-right: 0px;
+    /* Reset margin, spacing handled by link padding */
+}
+
+body[data-v3-theme="hacker"] .neon-sidebar:hover #sidebar-menu ul li a i {
+    margin-right: 15px;
+}
+
+
+body[data-v3-theme="hacker"] #sidebar-menu ul li a:hover {
+    background: rgba(0, 240, 255, 0.1) !important;
+    color: var(--neon-cyan) !important;
+    border-left-color: var(--neon-cyan) !important;
+}
+
+body[data-v3-theme="hacker"] #sidebar-menu ul li a.active {
+    background: rgba(138, 92, 255, 0.15) !important;
+    color: var(--neon-purple) !important;
+    border-left-color: var(--neon-purple) !important;
+    text-shadow: 0 0 10px var(--neon-purple);
+}
+
+body[data-v3-theme="hacker"] #sidebar-menu ul li a.active i {
+    color: var(--neon-purple) !important;
+    filter: drop-shadow(0 0 5px var(--neon-purple)) !important;
+}
+
+body[data-v3-theme="hacker"] .menu-title {
+    color: var(--neon-pink) !important;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    padding: 20px 28px 10px;
+}
+
+body[data-v3-theme="hacker"] .nav-second-level {
+    background: rgba(10, 15, 30, 0.5) !important;
+    backdrop-filter: blur(10px) !important;
+}
+
+/* Sub-level visibility on hover */
+body[data-v3-theme="hacker"] .nav-second-level {
+    display: none;
+}
+
+body[data-v3-theme="hacker"] .neon-sidebar:hover .nav-second-level {
+    display: block;
+}
+
+/* Collapsed Sidebar Override */
+body[data-layout-mode="vertical"][data-v3-theme="hacker"].enlarged #wrapper .neon-sidebar,
+body[data-layout-mode="vertical"][data-v3-theme="hacker"].enlarged .neon-sidebar {
+    width: 60px !important;
+}
+
+body[data-layout-mode="vertical"][data-v3-theme="hacker"].enlarged .content-page,
+body[data-layout-mode="vertical"][data-v3-theme="hacker"].enlarged .navbar-custom {
+    margin-left: 0 !important;
+    /* Managed by fixed position */
+}
+
+
+
+
+
+/* Animated Scanlines Overlay */
+body[data-v3-theme="hacker"]::after {
+    content: " ";
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background:
+        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%),
+        url("https://grainy-gradients.vercel.app/noise.svg");
+    background-size: 100% 3px, 200px 200px;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0.12;
+    animation: scanline-move 10s linear infinite;
+}
+
+@keyframes scanline-move {
+    0% {
+        background-position: 0 0;
+    }
+
+    100% {
+        background-position: 0 100%;
+    }
+}
+
+/* Faint Particle Movement Background */
+body[data-v3-theme="hacker"]::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        radial-gradient(1px 1px at 10% 10%, #fff, transparent),
+        radial-gradient(1px 1px at 20% 50%, #fff, transparent),
+        radial-gradient(2px 2px at 40% 80%, #fff, transparent),
+        radial-gradient(1px 1px at 60% 20%, #fff, transparent),
+        radial-gradient(2px 2px at 80% 40%, #fff, transparent),
+        radial-gradient(1px 1px at 90% 90%, #fff, transparent);
+    background-size: 300px 300px;
+    opacity: 0.05;
+    z-index: -1;
+    animation: particles-drift 60s linear infinite;
+}
+
+body[data-v3-theme="hacker"] .modal-content {
+    background: linear-gradient(135deg, rgba(20, 15, 30, 0.7) 0%, rgba(10, 10, 15, 0.9) 100%) !important;
+    backdrop-filter: blur(25px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    border-radius: var(--radius-lg) !important;
+    box-shadow:
+        inset 0 0 30px rgba(0, 0, 0, 0.5),
+        0 15px 35px rgba(0, 0, 0, 0.8) !important;
+    overflow: hidden;
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes particles-drift {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-300px);
+    }
+}
+
+/* --- Components Redesign --- */
+
+/* GLASSMORPHISM CARDS */
+body[data-v3-theme="hacker"] .card {
+    background: linear-gradient(135deg, rgba(20, 15, 30, 0.7) 0%, rgba(10, 10, 15, 0.9) 100%) !important;
+    backdrop-filter: blur(25px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    border-radius: var(--radius-lg) !important;
+    box-shadow:
+        inset 0 0 30px rgba(0, 0, 0, 0.5),
+        0 15px 35px rgba(0, 0, 0, 0.8) !important;
+    overflow: hidden;
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Card Glow Accent - Magenta Top-Left, Cyan Bottom-Right as per mockup */
+body[data-v3-theme="hacker"] .card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(255, 43, 214, 0.15), transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(0, 240, 255, 0.1), transparent 50%);
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Card Hover Effects: Lift + Glow + Light Sweep */
+body[data-v3-theme="hacker"] .card:hover {
+    transform: translateY(-6px) scale(1.005) !important;
+    box-shadow: var(--glow-cyan) !important;
+    border-color: rgba(0, 240, 255, 0.4) !important;
+}
+
+/* Light Sweep Animation on Hover */
+body[data-v3-theme="hacker"] .card::after {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg,
+            transparent,
+            rgba(255, 255, 255, 0.05),
+            transparent);
+    transform: rotate(45deg);
+    transition: 0.6s;
+    opacity: 0;
+    pointer-events: none;
+}
+
+body[data-v3-theme="hacker"] .card:hover::after {
+    left: 120%;
+    opacity: 1;
+}
+
+/* Metric Card Specifics */
+body[data-v3-theme="hacker"] .card-body h2 {
+    color: var(--neon-pink) !important;
+    text-shadow: var(--glow-pink) !important;
+    font-weight: 700;
+}
+
+/* Severity Colors */
+body[data-v3-theme="hacker"] .text-critical {
+    color: #ff003c !important;
+    text-shadow: 0 0 10px rgba(255, 0, 60, 0.5) !important;
+}
+
+body[data-v3-theme="hacker"] .text-danger {
+    color: #ff4d4d !important;
+    text-shadow: 0 0 10px rgba(255, 77, 77, 0.5) !important;
+}
+
+body[data-v3-theme="hacker"] .text-warning {
+    color: #ff9900 !important;
+    text-shadow: 0 0 10px rgba(255, 153, 0, 0.5) !important;
+}
+
+body[data-v3-theme="hacker"] .text-low,
+body[data-v3-theme="hacker"] .text-yellow {
+    color: #ffff00 !important;
+    text-shadow: 0 0 10px rgba(255, 255, 0, 0.5) !important;
+}
+
+body[data-v3-theme="hacker"] .text-primary {
+    color: #00a2ff !important;
+    text-shadow: 0 0 10px rgba(0, 162, 255, 0.5) !important;
+}
+
+body[data-v3-theme="hacker"] .text-info {
+    color: #00f0ff !important;
+    text-shadow: 0 0 10px rgba(0, 240, 255, 0.5) !important;
+}
+
+/* Headings & Text */
+body[data-v3-theme="hacker"] .page-title,
+body[data-v3-theme="hacker"] h1,
+body[data-v3-theme="hacker"] h2,
+body[data-v3-theme="hacker"] h3,
+body[data-v3-theme="hacker"] h4,
+body[data-v3-theme="hacker"] h5 {
+    color: #8ba4c0;
+    /* var(--neon-pink) !important; */
+    text-shadow: var(--glow-pink) !important;
+}
+
+/* Chromatic Aberration on Hover for Headings */
+body[data-v3-theme="hacker"] h1:hover,
+body[data-v3-theme="hacker"] .page-title:hover {
+    text-shadow:
+        2px 0 #ff00ff,
+        -2px 0 #00ffff;
+    animation: chromatic-glitch 0.2s infinite;
+}
+
+@keyframes chromatic-glitch {
+    0% {
+        text-shadow: 2px 0 #ff00ff, -2px 0 #00ffff;
+    }
+
+    50% {
+        text-shadow: -2px 0 #ff00ff, 2px 0 #00ffff;
+    }
+
+    100% {
+        text-shadow: 2px 0 #ff00ff, -2px 0 #00ffff;
+    }
+}
+
+/* Search Bar */
+body[data-v3-theme="hacker"] .app-search .form-control {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-right: none !important;
+    border-radius: 20px 0 0 20px !important;
+    color: #fff !important;
+    padding: 8px 20px !important;
+}
+
+body[data-v3-theme="hacker"] .app-search .form-control:focus {
+    border-color: var(--neon-pink) !important;
+    box-shadow: 0 0 5px rgba(255, 43, 214, 0.2) !important;
+}
+
+body[data-v3-theme="hacker"] .app-search .input-group-text {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-left: none !important;
+    border-radius: 0 20px 20px 0 !important;
+    color: var(--neon-pink) !important;
+    margin-left: 0 !important;
+}
+
+body[data-v3-theme="hacker"] .app-search .input-group-text:hover {
+    background: rgba(255, 43, 214, 0.1) !important;
+    color: var(--neon-pink) !important;
+}
+
+/* Dashboard component titles */
+body[data-v3-theme="hacker"] .card-body h4.header-title,
+body[data-v3-theme="hacker"] .card-body h5 {
+    color: var(--neon-pink) !important;
+    text-shadow: var(--glow-pink) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    font-family: 'Orbitron', sans-serif !important;
+}
+
+/* Activity Feed */
+body[data-v3-theme="hacker"] .track-order-list .d-flex {
+    padding: 12px;
+    border-left: 2px solid var(--neon-cyan);
+    margin-bottom: 10px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 8px;
+    transition: 0.2s;
+}
+
+body[data-v3-theme="hacker"] .track-order-list .d-flex:hover {
+    background: rgba(0, 240, 255, 0.05);
+}
+
+/* ============================================================
+   NEON GEOMAP - Geographical Distribution of Assets
+   Matches neon_admin.png reference design
+   ============================================================ */
+
+/* Map Container Wrapper */
+body[data-v3-theme="hacker"] #world_map {
+    filter:
+        drop-shadow(0 0 18px rgba(0, 240, 255, 0.35)) drop-shadow(0 0 4px rgba(0, 200, 255, 0.25));
+    background: transparent !important;
+    position: relative;
+}
+
+/* jVectorMap SVG - enforce dark background */
+body[data-v3-theme="hacker"] #world_map .jvectormap-container {
+    background: transparent !important;
+}
+
+body[data-v3-theme="hacker"] #world_map svg {
+    filter: drop-shadow(0 0 2px rgba(0, 240, 255, 0.15));
+}
+
+/* jVectorMap zoom controls - neon style */
+body[data-v3-theme="hacker"] .jvectormap-zoomin,
+body[data-v3-theme="hacker"] .jvectormap-zoomout {
+    background: rgba(0, 240, 255, 0.08) !important;
+    border: 1px solid rgba(0, 240, 255, 0.3) !important;
+    color: var(--neon-cyan) !important;
+    border-radius: 4px !important;
+    box-shadow: 0 0 8px rgba(0, 240, 255, 0.2) !important;
+    font-size: 16px !important;
+    line-height: 1 !important;
+    padding: 3px 8px !important;
+    transition: all 0.2s ease;
+}
+
+body[data-v3-theme="hacker"] .jvectormap-zoomin:hover,
+body[data-v3-theme="hacker"] .jvectormap-zoomout:hover {
+    background: rgba(0, 240, 255, 0.2) !important;
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.4) !important;
+    color: #fff !important;
+}
+
+/* jVectorMap Tooltip */
+body[data-v3-theme="hacker"] .jvectormap-tip {
+    background: rgba(10, 10, 20, 0.92) !important;
+    border: 1px solid var(--neon-cyan) !important;
+    color: var(--neon-cyan) !important;
+    border-radius: 6px !important;
+    padding: 6px 12px !important;
+    font-family: 'Orbitron', sans-serif !important;
+    font-size: 11px !important;
+    letter-spacing: 0.5px !important;
+    box-shadow: 0 0 12px rgba(0, 240, 255, 0.4) !important;
+    backdrop-filter: blur(10px) !important;
+}
+
+/* ============================================================
+   COUNTRY TABLE - Asset Distribution Table
+   ============================================================ */
+
+/* The country table section header */
+body[data-v3-theme="hacker"] .card-body h4.header-title.geo-title {
+    font-family: 'Orbitron', sans-serif !important;
+    color: var(--neon-pink) !important;
+    text-shadow: var(--glow-pink) !important;
+    font-size: 0.8rem !important;
+    letter-spacing: 2px !important;
+    text-transform: uppercase !important;
+    margin-bottom: 8px !important;
+}
+
+/* Country/Assets table - thead */
+body[data-v3-theme="hacker"] #world_map~* th,
+body[data-v3-theme="hacker"] .geo-country-table thead th {
+    color: var(--neon-purple) !important;
+    text-shadow: var(--glow-purple) !important;
+    border-bottom: 1px solid rgba(138, 92, 255, 0.4) !important;
+    background: transparent !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1.5px !important;
+    font-size: 0.78rem !important;
+    font-family: 'Orbitron', sans-serif !important;
+    font-weight: 600 !important;
+    padding: 10px 8px !important;
+}
+
+/* Country table rows */
+body[data-v3-theme="hacker"] .geo-country-table tbody tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    transition: background 0.2s ease;
+}
+
+body[data-v3-theme="hacker"] .geo-country-table tbody tr:hover {
+    background: rgba(0, 240, 255, 0.04) !important;
+}
+
+body[data-v3-theme="hacker"] .geo-country-table tbody td {
+    color: var(--cyber-text) !important;
+    border: none !important;
+    padding: 8px 8px !important;
+    vertical-align: middle !important;
+    font-size: 0.88rem !important;
+}
+
+/* Assets count column - make it pop */
+body[data-v3-theme="hacker"] .geo-country-table tbody td:last-child {
+    color: var(--neon-cyan) !important;
+    font-weight: 700 !important;
+    text-shadow: 0 0 6px rgba(0, 240, 255, 0.5) !important;
+    font-family: 'Orbitron', sans-serif !important;
+}
+
+/* Flag icon styling */
+body[data-v3-theme="hacker"] .geo-country-table .fi {
+    border-radius: 2px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+    width: 20px;
+    height: 14px;
+    display: inline-block;
+}
+
+/* Tables */
+body[data-v3-theme="hacker"] .table {
+    color: var(--cyber-text) !important;
+    background: transparent !important;
+}
+
+body[data-v3-theme="hacker"] .table-light {
+    background-color: rgba(255, 255, 255, 0.03) !important;
+}
+
+body[data-v3-theme="hacker"] .table thead th,
+body[data-v3-theme="hacker"] table.dataTable thead th,
+body[data-v3-theme="hacker"] .table > thead > tr > th,
+body[data-v3-theme="hacker"] thead th,
+body[data-v3-theme="hacker"] .checkbox-column {
+    border-bottom: 2px solid var(--neon-purple) !important;
+    text-shadow: var(--glow-purple) !important;
+    background: #0c0a14bf !important; /* Exact color requested by user */
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    font-weight: 700 !important;
+    font-size: 0.85rem !important;
+    padding: 12px 15px !important;
+}
+
+/* Force same background for ALL states: sorting, non-sorting, centered, etc. */
+body[data-v3-theme="hacker"] thead th.checkbox-column,
+body[data-v3-theme="hacker"] thead th.text-center,
+body[data-v3-theme="hacker"] thead th.sorting,
+body[data-v3-theme="hacker"] thead th.sorting_asc,
+body[data-v3-theme="hacker"] thead th.sorting_desc,
+body[data-v3-theme="hacker"] thead th:not(.sorting) {
+    background: #0c0a14bf !important;
+}
+
+/* Readability for subdomain descriptions, CNAMEs, and secondary text */
+body[data-v3-theme="hacker"] #subdomain_scan_results .text-muted,
+body[data-v3-theme="hacker"] #subdomain_scan_results small.text-muted,
+body[data-v3-theme="hacker"] #subdomain_scan_results .text-dark,
+body[data-v3-theme="hacker"] .table .text-dark,
+body[data-v3-theme="hacker"] .table .text-muted {
+    color: rgba(230, 241, 255, 0.9) !important;
+    opacity: 1 !important;
+}
+
+/* Status Badge Styling - Darker backgrounds with neon text */
+body[data-v3-theme="hacker"] .badge.bg-success {
+    background-color: rgba(0, 100, 60, 0.45) !important;
+    color: #00ff88 !important;
+    border: 1px solid rgba(0, 255, 136, 0.3) !important;
+    text-shadow: 0 0 5px rgba(0, 255, 136, 0.5);
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.1);
+}
+
+body[data-v3-theme="hacker"] .badge.bg-danger {
+    background-color: rgba(120, 20, 30, 0.45) !important;
+    color: #ff4444 !important;
+    border: 1px solid rgba(255, 68, 68, 0.3) !important;
+    text-shadow: 0 0 5px rgba(255, 68, 68, 0.5);
+    box-shadow: 0 0 10px rgba(255, 68, 68, 0.1);
+}
+
+body[data-v3-theme="hacker"] .badge.bg-warning {
+    background-color: rgba(120, 80, 0, 0.45) !important;
+    color: #ffaa00 !important;
+    border: 1px solid rgba(255, 170, 0, 0.3) !important;
+    text-shadow: 0 0 5px rgba(255, 170, 0, 0.5);
+    box-shadow: 0 0 10px rgba(255, 170, 0, 0.1);
+}
+
+body[data-v3-theme="hacker"] .badge.bg-info,
+body[data-v3-theme="hacker"] .badge.badge-soft-info {
+    background-color: rgba(0, 80, 120, 0.45) !important;
+    color: #00bfff !important;
+    border: 1px solid rgba(0, 191, 255, 0.3) !important;
+    text-shadow: 0 0 5px rgba(0, 191, 255, 0.5);
+}
+
+/* Charts Glow */
+body[data-v3-theme="hacker"] .apexcharts-series path {
+    filter: drop-shadow(0 0 4px var(--neon-cyan));
+}
+
+body[data-v3-theme="hacker"] .apexcharts-tooltip {
+    background: rgba(8, 8, 16, 0.95) !important;
+    backdrop-filter: blur(16px) !important;
+    border: 1px solid rgba(0, 240, 255, 0.5) !important;
+    border-radius: 8px !important;
+    color: var(--cyber-text) !important;
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.2) !important;
+}
+
+/* Tooltip title/header row — was white/grey, now neon-styled */
+body[data-v3-theme="hacker"] .apexcharts-tooltip-title {
+    background: rgba(0, 240, 255, 0.08) !important;
+    border-bottom: 1px solid rgba(0, 240, 255, 0.35) !important;
+    color: var(--neon-cyan) !important;
+    font-family: 'Orbitron', sans-serif !important;
+    font-size: 0.72rem !important;
+    letter-spacing: 0.5px !important;
+    padding: 6px 10px !important;
+}
+
+/* Tooltip series row */
+body[data-v3-theme="hacker"] .apexcharts-tooltip-series-group {
+    background: transparent !important;
+    padding: 5px 10px !important;
+}
+
+body[data-v3-theme="hacker"] .apexcharts-tooltip-series-group.apexcharts-active,
+body[data-v3-theme="hacker"] .apexcharts-tooltip-series-group:last-child {
+    padding-bottom: 5px !important;
+}
+
+/* Tooltip value text */
+body[data-v3-theme="hacker"] .apexcharts-tooltip-text-y-value,
+body[data-v3-theme="hacker"] .apexcharts-tooltip-text-goals-value,
+body[data-v3-theme="hacker"] .apexcharts-tooltip-text-z-value {
+    color: var(--neon-cyan) !important;
+    font-weight: 700 !important;
+}
+
+body[data-v3-theme="hacker"] .apexcharts-tooltip-text-y-label {
+    color: rgba(230, 241, 255, 0.75) !important;
+}
+
+/* X-axis crosshair tooltip */
+body[data-v3-theme="hacker"] .apexcharts-xaxistooltip {
+    background: rgba(8, 8, 16, 0.92) !important;
+    border: 1px solid rgba(0, 240, 255, 0.4) !important;
+    border-radius: 6px !important;
+    color: var(--neon-cyan) !important;
+    box-shadow: 0 0 12px rgba(0, 240, 255, 0.2) !important;
+}
+
+body[data-v3-theme="hacker"] .apexcharts-xaxistooltip-bottom::before,
+body[data-v3-theme="hacker"] .apexcharts-xaxistooltip-bottom::after {
+    border-bottom-color: rgba(0, 240, 255, 0.4) !important;
+}
+
+/* Y-axis tooltip */
+body[data-v3-theme="hacker"] .apexcharts-yaxistooltip {
+    background: rgba(8, 8, 16, 0.92) !important;
+    border: 1px solid rgba(0, 240, 255, 0.4) !important;
+    color: var(--neon-cyan) !important;
+}
+
+/* Marker dot in tooltip */
+body[data-v3-theme="hacker"] .apexcharts-tooltip-marker {
+    border-radius: 50%;
+    box-shadow: 0 0 6px currentColor;
+}
+
+/* Chart legend text */
+body[data-v3-theme="hacker"] .apexcharts-legend-text {
+    color: var(--cyber-text) !important;
+}
+
+/* ============================================================
+   STAT CARD ICONS — Top 4 Dashboard Metric Cards
+   ============================================================ */
+
+body[data-v3-theme="hacker"] .stat-card-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Orbitron', sans-serif !important;
+    font-size: 0.78rem !important;
+    letter-spacing: 1.5px !important;
+    text-transform: uppercase !important;
+}
+
+body[data-v3-theme="hacker"] .stat-card-icon {
+    font-size: 1.4rem !important;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+body[data-v3-theme="hacker"] .stat-card-icon--cyan {
+    color: var(--neon-cyan) !important;
+    filter: drop-shadow(0 0 6px rgba(0, 240, 255, 0.8));
+}
+
+body[data-v3-theme="hacker"] .stat-card-icon--pink {
+    color: var(--neon-pink) !important;
+    filter: drop-shadow(0 0 6px rgba(255, 43, 214, 0.8));
+}
+
+/* Buttons */
+body[data-v3-theme="hacker"] .btn-primary {
+    background: rgba(0, 240, 255, 0.1) !important;
+    border: 1px solid var(--neon-cyan) !important;
+    color: var(--neon-cyan) !important;
+    backdrop-filter: blur(5px);
+    transition: 0.3s;
+    text-transform: uppercase;
+    font-weight: bold;
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+}
+
+body[data-v3-theme="hacker"] .btn-primary:hover {
+    background: var(--neon-cyan) !important;
+    color: var(--bg-primary) !important;
+    box-shadow: 0 0 20px var(--neon-cyan);
+}
+
+/* --- LOGIN PAGE STYLES --- */
+body[data-v3-theme="hacker"].authentication-bg {
+    background: url('/staticfiles/img/neon_city.png') no-repeat center center fixed !important;
+    background-size: cover !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 100vh !important;
+    position: relative !important;
+}
+
+body[data-v3-theme="hacker"].authentication-bg::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle, transparent 20%, rgba(0, 0, 0, 0.4) 100%) !important;
+    pointer-events: none;
+    z-index: 0;
+}
+
+body[data-v3-theme="hacker"] .account-pages {
+    width: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+body[data-v3-theme="hacker"] .authentication-bg .card {
+    background: rgba(10, 10, 15, 0.8) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(0, 240, 255, 0.2) !important;
+    border-radius: 15px !important;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 240, 255, 0.1) !important;
+}
+
+body[data-v3-theme="hacker"] .authentication-bg .card-body h3 {
+    font-family: 'Orbitron', sans-serif !important;
+    color: var(--neon-pink) !important;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: var(--glow-pink);
+}
+
+body[data-v3-theme="hacker"] .authentication-bg .form-label {
+    color: var(--neon-pink) !important;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+}
+
+body[data-v3-theme="hacker"] .authentication-bg .form-control {
+    background: rgba(0, 0, 0, 0.4) !important;
+    border: 1px solid rgba(0, 240, 255, 0.2) !important;
+    color: #fff !important;
+    border-radius: 5px !important;
+}
+
+body[data-v3-theme="hacker"] .authentication-bg .form-control:focus {
+    border-color: var(--neon-cyan) !important;
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.3) !important;
+}
+
+body[data-v3-theme="hacker"] .authentication-bg .input-group-text {
+    background: rgba(0, 240, 255, 0.1) !important;
+    border: 1px solid rgba(0, 240, 255, 0.2) !important;
+    color: var(--neon-cyan) !important;
+}
+
+body[data-v3-theme="hacker"] .authentication-bg .btn-primary {
+    background: linear-gradient(45deg, var(--neon-purple), var(--neon-pink)) !important;
+    border: none !important;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: 0.3s;
+    box-shadow: 0 0 15px rgba(255, 43, 214, 0.3) !important;
+}
+
+body[data-v3-theme="hacker"] .authentication-bg .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 25px rgba(255, 43, 214, 0.5) !important;
+}
+
+body[data-v3-theme="hacker"] .authentication-bg .alert-primary {
+    background: rgba(0, 240, 255, 0.05) !important;
+    border: 1px dashed rgba(0, 240, 255, 0.3) !important;
+    color: var(--neon-cyan) !important;
+}
+
+body[data-v3-theme="hacker"] .authentication-bg .alert-primary a {
+    color: var(--neon-cyan) !important;
+    text-decoration: underline;
+}

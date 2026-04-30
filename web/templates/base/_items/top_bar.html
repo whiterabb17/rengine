@@ -170,6 +170,10 @@
                   pos: 'top-right',
                   duration: 1000
                 });
+                // Force reload to ensure all changes take effect
+                setTimeout(function() {
+                    location.reload();
+                }, 1000);
               }
             });
           }
@@ -249,6 +253,31 @@
         </div>
       </li>
     </ul>
+    <ul class="list-unstyled topnav-menu topnav-menu-left m-0">
+      <li class="d-none">
+        <button class="button-menu-mobile waves-effect waves-light">
+          <i class="fe-menu"></i>
+        </button>
+      </li>
+      {% if user_preferences.v3_intensity == 'hacker' %}
+      <li class="d-none d-lg-flex align-items-center" style="height: 70px; padding-left: 15px;">
+        <h3 class="text-logo m-0" style="color: var(--neon-pink) !important; text-shadow: 0px 0px 15px var(--neon-cyan) !important; letter-spacing: 2px; margin-top: 4px !important; line-height: 1;">RENGINE</h3>
+        <span class="badge neon-version-badge ms-2">{{RENGINE_CURRENT_VERSION}}</span>
+      </li>
+      {% endif %}
+
+      <li>
+        <a class="navbar-toggle nav-link" data-bs-toggle="collapse" data-bs-target="#topnav-menu-content">
+          <div class="lines">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </a>
+      </li>
+    </ul>
+
+    {% if user_preferences.v3_intensity != 'hacker' %}
     <div class="logo-box">
       <a href="{% url 'dashboardIndex' current_project.slug %}" class="logo logo-dark text-center">
         <span class="logo-sm">
@@ -267,22 +296,8 @@
         </span>
       </a>
     </div>
-    <ul class="list-unstyled topnav-menu topnav-menu-left m-0">
-      <li>
-        <button class="button-menu-mobile waves-effect waves-light">
-          <i class="fe-menu"></i>
-        </button>
-      </li>
-      <li>
-        <a class="navbar-toggle nav-link" data-bs-toggle="collapse" data-bs-target="#topnav-menu-content">
-          <div class="lines">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-        </a>
-      </li>
-    </ul>
+    {% endif %}
+
     <div class="clearfix"></div>
   </div>
 </div>

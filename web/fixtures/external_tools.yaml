@@ -378,3 +378,122 @@
     is_github_cloned: false
     github_clone_path: null
     subdomain_gathering_command: null
+- model: scanEngine.installedexternaltool
+  pk: 22
+  fields:
+    logo_url: https://raw.githubusercontent.com/assetnote/kiterunner/master/static/logo.png
+    name: kiterunner
+    description: Kiterunner is a tool that is capable of performing content discovery, which includes API enumeration.
+    github_url: https://github.com/assetnote/kiterunner
+    license_url: https://github.com/assetnote/kiterunner/blob/master/LICENSE
+    version_lookup_command: kr version
+    update_command: go install -v github.com/assetnote/kiterunner/cmd/kr@latest
+    install_command: go install -v github.com/assetnote/kiterunner/cmd/kr@latest
+    version_match_regex: (\d+\.)?(\d+\.)?(\*|\d+)
+    is_default: true
+    is_subdomain_gathering: false
+    is_github_cloned: false
+    github_clone_path: null
+    subdomain_gathering_command: null
+- model: scanEngine.installedexternaltool
+  pk: 23
+  fields:
+    logo_url: null
+    name: arjun
+    description: Arjun can find query parameters for HTTP endpoints. It can find 10-20 parameters in a single request in less than 10 seconds.
+    github_url: https://github.com/s0md3v/Arjun
+    license_url: https://github.com/s0md3v/Arjun/blob/master/LICENSE
+    version_lookup_command: arjun --version
+    update_command: pip3 install arjun --upgrade
+    install_command: pip3 install arjun
+    version_match_regex: (\d+\.)?(\d+\.)?(\*|\d+)
+    is_default: true
+    is_subdomain_gathering: false
+    is_github_cloned: false
+    github_clone_path: null
+    subdomain_gathering_command: null
+- model: scanEngine.installedexternaltool
+  pk: 24
+  fields:
+    logo_url: null
+    name: LinkFinder
+    description: LinkFinder is a python script written to discover endpoints and their parameters in JavaScript files.
+    github_url: https://github.com/GerbenJavado/LinkFinder
+    license_url: https://github.com/GerbenJavado/LinkFinder/blob/master/LICENSE
+    version_lookup_command: python3 /usr/src/github/LinkFinder/linkfinder.py --help
+    update_command: git pull
+    install_command: git clone https://github.com/GerbenJavado/LinkFinder.git
+    version_match_regex: (\d+\.)?(\d+\.)?(\*|\d+)
+    is_default: true
+    is_subdomain_gathering: false
+    is_github_cloned: true
+    github_clone_path: /usr/src/github/LinkFinder
+    subdomain_gathering_command: null
+- model: scanEngine.installedexternaltool
+  pk: 25
+  fields:
+    logo_url: null
+    name: ParamSpider
+    description: Mining parameters from dark corners of Web Archives.
+    github_url: https://github.com/devanshbatham/ParamSpider
+    license_url: https://github.com/devanshbatham/ParamSpider/blob/master/LICENSE
+    version_lookup_command: python3 /usr/src/github/ParamSpider/paramspider.py --help
+    update_command: git pull
+    install_command: git clone https://github.com/devanshbatham/ParamSpider.git
+    version_match_regex: (\d+\.)?(\d+\.)?(\*|\d+)
+    is_default: true
+    is_subdomain_gathering: false
+    is_github_cloned: true
+    github_clone_path: /usr/src/github/ParamSpider
+    subdomain_gathering_command: null
+- model: scanEngine.installedexternaltool
+  pk: 26
+  fields:
+    logo_url: https://semgrep.dev/semgrep-logo.png
+    name: semgrep
+    description: Semgrep is a fast, open-source, static analysis tool for searching code, helping developers and security researchers find bugs and enforce code standards.
+    github_url: https://github.com/semgrep/semgrep
+    license_url: https://github.com/semgrep/semgrep/blob/main/LICENSE
+    version_lookup_command: semgrep --version
+    update_command: pip3 install semgrep --upgrade
+    install_command: pip3 install semgrep
+    version_match_regex: (\d+\.)?(\d+\.)?(\*|\d+)
+    is_default: true
+    is_subdomain_gathering: false
+    is_github_cloned: false
+    github_clone_path: null
+    subdomain_gathering_command: null
+- model: scanEngine.installedexternaltool
+  pk: 27
+  fields:
+    logo_url: null
+    name: inql
+    description: InQL is a tool to facilitate GraphQL security auditing.
+    github_url: https://github.com/doyensec/inql
+    license_url: https://github.com/doyensec/inql/blob/master/LICENSE
+    version_lookup_command: inql --version
+    update_command: pip3 install inql --upgrade
+    install_command: pip3 install inql
+    version_match_regex: (\d+\.)?(\d+\.)?(\*|\d+)
+    is_default: true
+    is_subdomain_gathering: false
+    is_github_cloned: false
+    github_clone_path: null
+    subdomain_gathering_command: null
+- model: scanEngine.installedexternaltool
+  pk: 28
+  fields:
+    logo_url: https://raw.githubusercontent.com/michenriksen/aquatone/master/static/aquatone-logo.png
+    name: aquatone
+    description: Aquatone is a tool for visual inspection of websites across a large amount of hosts and is convenient for quickly gaining an overview of HTTP-based attack surfaces.
+    github_url: https://github.com/michenriksen/aquatone
+    license_url: https://github.com/michenriksen/aquatone/blob/master/LICENSE.txt
+    version_lookup_command: aquatone -version
+    update_command: go install github.com/michenriksen/aquatone@latest
+    install_command: go install github.com/michenriksen/aquatone@latest
+    version_match_regex: (\d+\.)?(\d+\.)?(\*|\d+)
+    is_default: true
+    is_subdomain_gathering: false
+    is_github_cloned: false
+    github_clone_path: null
+    subdomain_gathering_command: null

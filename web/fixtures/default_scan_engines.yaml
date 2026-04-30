@@ -31,7 +31,7 @@
       \ ['top_default_usernames.txt', 'most_common_usernames.txt'],\n  'pass_wordlist':\
       \ ['top_default_passwords.txt', 'most_common_passwords.txt'],\n  'service':\
       \ 'http',\n  'stop_on_success': true\n}\nfirewall_vpn_scan: {\n  'run_ike_scan':\
-      \ true,\n  'threads': 20\n}"
+      \ true,\n  'threads': 20\n}\nspiderfoot_scan: {\n  'modules': 'all',\n  # 'intensity': 'normal',\n  # 'threads': 10\n}\nweb_api_discovery: {\n  'uses_tools': ['kiterunner', 'arjun', 'linkfinder', 'paramspider', 'inql', 'aquatone', 'semgrep'],\n  'scan_only_active': true,\n  'threads': 30,\n  'kiterunner_wordlist': 'routes-large.kite'\n}"
   model: scanEngine.enginetype
   pk: 1
 - fields:
@@ -40,7 +40,7 @@
     yaml_configuration: "subdomain_discovery: {\n  'uses_tools': [\n    'subfinder',\
       \ \n    'ctfr', \n    'sublist3r', \n    'tlsx', \n    'oneforall',\
       \ \n    'netlas', \n    'chaos'\n  ],\n  'enable_http_crawl': true,
-      \n  'threads': 30,\n  'timeout': 5,\n}\nhttp_crawl: {}"
+      \n  'threads': 30,\n  'timeout': 5,\n}\nhttp_crawl: {}\nspiderfoot_scan: {\n  'modules': 'all',\n  # 'intensity': 'normal',\n  # 'threads': 10\n}"
   model: scanEngine.enginetype
   pk: 2
 - fields:
@@ -53,7 +53,7 @@
       \    'jenkins',\n    'wordpress_files',\n    'php_error',\n    'exposed_documents',
       \n    'db_files',\n    'git_exposed'\n  ],\n  'custom_dorks': [\n  \
       \  {'lookup_site': '_target_', 'lookup_extensions': 'php'}\n  ],\n  'intensity':\
-      \ 'normal',\n  'documents_limit': 50\n}"
+      \ 'normal',\n  'documents_limit': 50\n}\nspiderfoot_scan: {\n  'modules': 'all',\n  # 'intensity': 'normal',\n  # 'threads': 10\n}"
   model: scanEngine.enginetype
   pk: 3
 - fields:
@@ -73,7 +73,7 @@
       \ true,\n  'concurrency': 50,\n  'intensity': 'normal',\n  'rate_limit':\
       \ 150,\n  'retries': 1,\n  'timeout': 5,\n  'fetch_gpt_report': false,
       \n  'nuclei': {\n    'use_nuclei_config': false,\n    'severities': ['unknown',\
-      \ 'info', 'low', 'medium', 'high', 'critical']\n  }\n}"
+      \ 'info', 'low', 'medium', 'high', 'critical']\n  }\n}\nspiderfoot_scan: {\n  'modules': 'all',\n  # 'intensity': 'normal',\n  # 'threads': 10\n}"
   model: scanEngine.enginetype
   pk: 4
 - fields:
@@ -84,7 +84,7 @@
       \ [],\n  'ports': ['top-100'],\n  'rate_limit': 150,\n  'threads': 30,
       \n  'passive': false,\n  # 'use_naabu_config': false,\n  # 'enable_nmap':\
       \ true,\n  # 'nmap_cmd': '',\n  # 'nmap_script': '',\n  # 'nmap_script_args':\
-      \ ''\n}"
+      \ ''\n}\nspiderfoot_scan: {\n  'modules': 'all',\n  # 'intensity': 'normal',\n  # 'threads': 10\n}"
   model: scanEngine.enginetype
   pk: 5
 - fields:
@@ -103,7 +103,7 @@
       \n  'nuclei': {\n    'use_nuclei_config': false,\n    'severities': ['low',\
       \ 'medium', 'high', 'critical']\n  }\n}\nwaf_detection: {\n  'use_shodan':\
       \ true,\n  'use_censys': true\n}\nwaf_bypass: {\n  'use_nuclei': true,
-      \n  'use_benchmarking': true\n}"
+      \n  'use_benchmarking': true\n}\nspiderfoot_scan: {\n  'modules': 'all',\n  # 'intensity': 'normal',\n  # 'threads': 10\n}"
   model: scanEngine.enginetype
   pk: 6
 - fields:
@@ -125,6 +125,12 @@
       \ true,\n  'ports': [443, 4444, 8443]\n}\n\nbrute_force_scan: {\n\
       \  'users_wordlist': ['top_default_usernames.txt', 'most_common_usernames.txt'],
       \n  'pass_wordlist': ['top_default_passwords.txt', 'most_common_passwords.txt'],
-      \n  'service': 'http',\n  'stop_on_success': true\n}"
+      \n  'service': 'http',\n  'stop_on_success': true\n}\nspiderfoot_scan: {\n  'modules': 'all',\n  # 'intensity': 'normal',\n  # 'threads': 10\n}"
   model: scanEngine.enginetype
   pk: 7
+- fields:
+    default_engine: true
+    engine_name: Web App & API Discovery
+    yaml_configuration: "web_api_discovery: {\n  'uses_tools': ['kiterunner', 'arjun', 'linkfinder', 'paramspider', 'inql', 'aquatone', 'semgrep'],\n  'scan_only_active': true,\n  'threads': 30,\n  'kiterunner_wordlist': 'routes-large.kite'\n}\nspiderfoot_scan: {\n  'modules': 'all',\n  # 'intensity': 'normal',\n  # 'threads': 10\n}"
+  model: scanEngine.enginetype
+  pk: 8
