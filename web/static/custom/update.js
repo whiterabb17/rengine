@@ -25,7 +25,8 @@ function check_rengine_update() {
     window.localStorage.getItem("update_available") === "true"
   ) {
     // redirect to the link provided by api or default to releases
-    const redirectLink = window.localStorage.getItem("update_redirect_link") || "https://github.com/whiterabb17/rengine/releases";
+    // defaults to raw version file in the v3 repo location
+    const redirectLink = window.localStorage.getItem("update_redirect_link") || "https://raw.githubusercontent.com/whiterabb17/r3ngine/refs/heads/main/web/.version";
     window.open(redirectLink, "_blank");
   } else {
     Swal.fire({
