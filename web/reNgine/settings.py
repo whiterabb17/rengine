@@ -4,6 +4,7 @@ env = environ.FileAwareEnv()
 
 import mimetypes
 import os
+import reNgine.patches
 
 from reNgine.init import first_run
 from reNgine.utilities import RengineTaskFormatter
@@ -144,6 +145,10 @@ REST_FRAMEWORK = {
     ),
     'PAGE_SIZE': 500,
 }
+
+SWAGGER_SETTINGS = {
+    'DEFAULT_INFO': 'reNgine.openapi_info.info',
+}
 WSGI_APPLICATION = 'reNgine.wsgi.application'
 
 # Password validation
@@ -192,6 +197,8 @@ FIXTURE_DIRS = [
 
 LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
     'login',
+    'logout',
+    'onboarding',
 ]
 
 LOGIN_URL = 'login'

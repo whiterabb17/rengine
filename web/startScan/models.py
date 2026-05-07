@@ -724,6 +724,28 @@ class S3Bucket(models.Model):
 	num_objects = models.IntegerField(default=0)
 	size = models.IntegerField(default=0)
 
+class SecretLeak(models.Model):
+	id = models.AutoField(primary_key=True)
+	scan_history = models.ForeignKey(ScanHistory, on_delete=models.CASCADE)
+	subdomain = models.ForeignKey(Subdomain, on_delete=models.CASCADE, null=True, blank=True)
+
+	tool_name = models.CharField(max_length=100) # TruffleHog, GitLeaks, LeakLookup
+	secret_type = models.CharField(max_length=200) # AWS Key, Stripe API, Password
+	source_url = models.CharField(max_length=5000) # URL of JS file or Repo
+	match_content = models.TextField() # The actual masked secret found
+
+	LEAK_STATUS_CHOICES = (
+		('unverified', 'Unverified'),
+		('verified', 'Verified'),
+		('false_positive', 'False Positive'),
+	)
+	status = models.CharField(max_length=20, choices=LEAK_STATUS_CHOICES, default='unverified')
+	discovered_date = models.DateTimeField(auto_now_add=True)
+
+	def __str__(self):
+		return f"{self.secret_type} found by {self.tool_name}"
+
+
 class MonitoringDiscovery(models.Model):
 	id = models.AutoField(primary_key=True)
 	domain = models.ForeignKey(Domain, on_delete=models.CASCADE)

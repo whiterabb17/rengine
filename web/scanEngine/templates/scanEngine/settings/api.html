@@ -133,6 +133,21 @@ API Vault
                 </div>
                 <span class="text-muted float-end optional-text mt-2">This is optional. Get your API key from <a href="https://search.censys.io/account/api" target="_blank">https://search.censys.io/account/api</a></span>
               </div>
+              <div class="mb-3">
+                <label for="key_leaklookup" class="form-label">LeakLookup</label>
+                <p class="text-muted">LeakLookup keys will be used to search for leaked credentials and data breaches for the target domain.</p>
+                <div class="flex-grow-1 position-relative">
+                {% if leaklookup_key %}
+                  <input class="form-control" type="password" id="key_leaklookup" name="key_leaklookup" placeholder="Enter LeakLookup Key" value="{{leaklookup_key.key}}">
+                {% else %}
+                  <input class="form-control" type="text" id="key_leaklookup" name="key_leaklookup" placeholder="Enter LeakLookup Key">
+                {% endif %}
+                  <div class="position-absolute top-50 end-0 translate-middle-y pe-2" style="cursor: pointer;" data-password="false">
+                    <span class="password-eye"></span>
+                  </div>
+                </div>
+                <span class="text-muted float-end optional-text mt-2">This is optional. Get your API key from <a href="https://leak-lookup.com" target="_blank">https://leak-lookup.com</a></span>
+              </div>
               <hr>
               <div class="mb-3">
                 <label class="form-label">SpiderFoot API Keys</label>

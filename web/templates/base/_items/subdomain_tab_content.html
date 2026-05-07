@@ -48,7 +48,7 @@
 							<button class="btn btn-soft-primary dropdown-toggle ms-1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" data-placement="left" title="Filter Columns">
 								<i class="fe-filter"></i>
 							</button>
-							<div class="dropdown-menu" style="">
+							<div class="dropdown-menu">
 								<div class="dropdown-item">
 									<div class="form-check">
 										<input type="checkbox" class="form-check-input" id="sub_http_status_filter_checkbox" name="sub_http_status_filter_checkbox" checked>
@@ -104,7 +104,7 @@
 							<button class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" data-placement="left" title="Download Subdomains">
 								<i class="fe-download"></i>
 							</button>
-							<div class="dropdown-menu" style="">
+							<div class="dropdown-menu">
 								{% if detail_scan %}
 									<a class="dropdown-item" href="javascript:download_subdomains(scan_id={{scan_history_id}}, domain_id=null, domain_name='{{history.domain.name}}')">Download All Subdomains</a>
 									<a class="dropdown-item" href="javascript:download_interesting_subdomains(scan_id={{scan_history_id}}, domain_id=null, domain_name='{{history.domain.name}}');">Download Interesting Subdomains</a>
@@ -129,7 +129,7 @@
 							<button class="btn btn-soft-info dropdown-toggle ms-1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" data-placement="left" title="Subdomain Grouping">
 								<i class="fe-layout"></i>
 							</button>
-							<div class="dropdown-menu" style="">
+							<div class="dropdown-menu">
 								<div class="dropdown-item">
 									<div class="form-check">
 										<input type="radio" id="subdomain_page_title_grouping" name="grouping_subd_row" class="form-check-input" value="page_title">

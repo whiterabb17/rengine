@@ -93,6 +93,9 @@ Scan Findings
 				</li>
 				{% endif %}
 				<li class="nav-item">
+					<a class="nav-link" id="pills-leaks-tab" data-bs-toggle="tab" aria-expanded="false" class="nav-link" href="#leaks-tab">Leaks & Secrets {% if secret_leaks_count > 0 %}<span class="badge badge-soft-danger ms-1">{{secret_leaks_count}}</span>{% endif %}</a>
+				</li>
+				<li class="nav-item">
 					<a class="nav-link" id="pills-visualisation-tab" data-bs-toggle="tab" aria-expanded="false" class="nav-link" href="#visualisation-tab">Visualization</a>
 				</li>
 				<li class="nav-item">
@@ -1232,6 +1235,69 @@ Scan Findings
 		</div>
 	</div>
 	{% endif %}
+	{# Leaks & Secrets Section #}
+	<div class="tab-pane" id="leaks-tab">
+		<div class="row">
+			<div class="col-12">
+				<div class="card">
+					<div class="card-body">
+						<h4 class="header-title mb-4">Credential & Leak Intelligence Findings</h4>
+						<div class="table-responsive">
+							<table class="table table-centered table-nowrap mb-0" id="leaks-table">
+								<thead class="table-light">
+									<tr>
+										<th>Tool</th>
+										<th>Secret Type</th>
+										<th>Source</th>
+										<th>Match (Masked)</th>
+										<th>Status</th>
+										<th>Discovered</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for leak in secret_leaks %}
+									<tr>
+										<td>
+											{% if leak.tool_name == 'LeakLookup' %}
+												<span class="badge badge-soft-info">{{leak.tool_name}}</span>
+											{% elif leak.tool_name == 'GitLeaks' %}
+												<span class="badge badge-soft-warning">{{leak.tool_name}}</span>
+											{% elif leak.tool_name == 'TruffleHog' %}
+												<span class="badge badge-soft-danger">{{leak.tool_name}}</span>
+											{% else %}
+												<span class="badge badge-soft-secondary">{{leak.tool_name}}</span>
+											{% endif %}
+										</td>
+										<td><strong>{{leak.secret_type}}</strong></td>
+										<td>
+											<a href="{{leak.source_url}}" target="_blank" class="text-muted" title="{{leak.source_url}}">
+												{{leak.source_url|truncatechars:50}} <i class="fe-external-link"></i>
+											</a>
+										</td>
+										<td><code>{{leak.match_content}}</code></td>
+										<td>
+											<select class="form-select form-select-sm leak-status-select" data-leak-id="{{leak.id}}">
+												<option value="unverified" {% if leak.status == 'unverified' %}selected{% endif %}>Unverified</option>
+												<option value="verified" {% if leak.status == 'verified' %}selected{% endif %}>Verified</option>
+												<option value="false_positive" {% if leak.status == 'false_positive' %}selected{% endif %}>False Positive</option>
+											</select>
+										</td>
+										<td>{{leak.discovered_date|naturaltime}}</td>
+										<td>
+											<button class="btn btn-sm btn-danger delete-leak-btn" data-leak-id="{{leak.id}}"><i class="fe-trash-2"></i></button>
+										</td>
+									</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
 
 	{# visualisation section #}
 	<div class="tab-pane" id="visualisation-tab">
@@ -2853,6 +2919,79 @@ $(document).ready(function() {
 		"pageLength": 50,
 	});
 
+	// Leaks Status Update
+	$('.leak-status-select').on('change', function() {
+		var leak_id = $(this).data('leak-id');
+		var status = $(this).val();
+		$.ajax({
+			url: '/startScan/update/leak_status/' + leak_id,
+			type: 'POST',
+			data: {
+				'status': status,
+				'csrfmiddlewaretoken': '{{ csrf_token }}'
+			},
+			success: function(response) {
+				if (response.status) {
+					$.toast({
+						text: "Leak status updated successfully",
+						position: 'top-right',
+						loaderBg: '#5ba035',
+						icon: 'success',
+						hideAfter: 3000,
+						stack: 1
+					});
+				}
+			}
+		});
+	});
+
+	// Leak Deletion
+	$('.delete-leak-btn').on('click', function() {
+		var leak_id = $(this).data('leak-id');
+		var row = $(this).closest('tr');
+		if (confirm('Are you sure you want to delete this finding?')) {
+			$.ajax({
+				url: '/startScan/delete/leak/' + leak_id,
+				type: 'POST',
+				data: {
+					'csrfmiddlewaretoken': '{{ csrf_token }}'
+				},
+				success: function(response) {
+					if (response.status) {
+						row.fadeOut(300, function() {
+							$(this).remove();
+						});
+						$.toast({
+							text: "Leak finding deleted",
+							position: 'top-right',
+							loaderBg: '#f44336',
+							icon: 'error',
+							hideAfter: 3000,
+							stack: 1
+						});
+					}
+				}
+			});
+		}
+	});
+
+	// Leaks datatable
+	$('#leaks-table').DataTable({
+		"order": [[5, 'desc']],
+		"dom": "<'dt--top-section'<'row'<'col-12 mb-3 mb-sm-0 col-sm-4 col-md-3 col-lg-4 d-flex justify-content-sm-start justify-content-center'l><'dt--pages-count col-12 col-sm-6 col-md-4 col-lg-4 d-flex justify-content-sm-middle justify-content-center'i><'dt--pagination col-12 col-sm-2 col-md-5 col-lg-4 d-flex justify-content-sm-end justify-content-center'p>>>" +
+			"<'table-responsive'tr>" +
+			"<'dt--bottom-section'<'row'<'col-12 mb-3 mb-sm-0 col-sm-4 col-md-3 col-lg-4 d-flex justify-content-sm-start justify-content-center'l><'dt--pages-count col-12 col-sm-6 col-md-4 col-lg-4 d-flex justify-content-sm-middle justify-content-center'i><'dt--pagination col-12 col-sm-2 col-md-5 col-lg-4 d-flex justify-content-sm-end justify-content-center'p>>>",
+		"oLanguage": {
+			"oPaginate": { "sPrevious": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>', "sNext": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>' },
+			"sInfo": "Showing page _PAGE_ of _PAGES_",
+			"sSearch": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
+			"sSearchPlaceholder": "Search...",
+			"sLengthMenu": "Results :  _MENU_",
+		},
+		"stripeClasses": [],
+		"lengthMenu": [[10, 25, 50, -1], [10, 25, 50, 'All']],
+		"pageLength": 10,
+	});
 
 });
 

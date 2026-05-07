@@ -97,6 +97,10 @@ SPIDERFOOT_SCAN = 'spiderfoot_scan'
 WEB_API_DISCOVERY = 'web_api_discovery'
 KITERUNNER_WORDLIST = 'kiterunner_wordlist'
 SCAN_ONLY_ACTIVE = 'scan_only_active'
+LEAKS_AND_SECRETS = 'leaks_and_secrets'
+LEAKLOOKUP = 'leaklookup'
+GITLEAKS = 'gitleaks'
+TRUFFLEHOG = 'trufflehog'
 
 ###############################################################################
 # Scan DEFAULTS
@@ -189,7 +193,12 @@ OSINT_DEFAULT_DORKS = [
 ]
 OSINT_DEFAULT_CONFIG = {
     'discover': OSINT_DEFAULT_LOOKUPS,
-    'dork': OSINT_DEFAULT_DORKS
+    'dork': OSINT_DEFAULT_DORKS,
+    'leaks_and_secrets': {
+        'leaklookup': True,
+        'gitleaks': True,
+        'trufflehog': True,
+    }
 }
 
 # subdomain scan

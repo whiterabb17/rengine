@@ -686,6 +686,15 @@ def api_vault(request, slug):
                     api_secret=key_censys_secret
                 )
 
+        key_leaklookup = request.POST.get('key_leaklookup')
+        if key_leaklookup:
+            leaklookup_key = LeakLookupAPIKey.objects.first()
+            if leaklookup_key:
+                leaklookup_key.key = key_leaklookup
+                leaklookup_key.save()
+            else:
+                LeakLookupAPIKey.objects.create(key=key_leaklookup)
+
         spiderfoot_module = request.POST.get('spiderfoot_module')
         spiderfoot_key = request.POST.get('spiderfoot_key')
         if spiderfoot_module and spiderfoot_key:
@@ -718,6 +727,7 @@ def api_vault(request, slug):
     context['hackerone_username'] = hackerone_username
     context['shodan_key'] = shodan_key
     context['censys_key'] = censys_key
+    context['leaklookup_key'] = LeakLookupAPIKey.objects.first()
     context['spiderfoot_keys'] = SpiderfootAPIKey.objects.all()
     
     return render(request, 'scanEngine/settings/api.html', context)

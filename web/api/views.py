@@ -1,4 +1,7 @@
 import re
+import os
+import json
+import shutil
 import socket
 import logging
 import requests
@@ -1255,63 +1258,117 @@ class ListInterestingKeywords(APIView):
 class RengineUpdateCheck(APIView):
 	def get(self, request):
 		req = self.request
-		github_api = \
-			'https://api.github.com/repos/whiterabb17/rengine/releases'
-		
+		current_version = RENGINE_CURRENT_VERSION
+
 		return_response = {
 			'status': False,
 			'update_available': False,
 			'latest_version': None,
-			'current_version': RENGINE_CURRENT_VERSION,
-			'redirect_link': 'https://github.com/whiterabb17/rengine/releases'
+			'current_version': current_version,
+			'redirect_link': 'https://github.com/whiterabb17/rengine/releases',
+			'v3_available': False,
+			'v3_version': 'UnReleased',
 		}
 
+		# 1. Check for v2 updates (rengine repo)
+		v2_github_api = 'https://api.github.com/repos/whiterabb17/rengine/releases'
+		v2_version_url = 'https://raw.githubusercontent.com/whiterabb17/rengine/master/web/.version'
+
 		try:
-			response = requests.get(github_api).json()
-			if 'message' in response and 'rate limit' in response['message'].lower():
+			v2_releases = requests.get(v2_github_api).json()
+			if 'message' in v2_releases and 'rate limit' in v2_releases['message'].lower():
 				return_response['message'] = 'RateLimited'
-			elif isinstance(response, list) and len(response) > 0:
-				latest_release_name = response[0]['name']
-				latest_release_version = re.search(r'v?(\d+\.)?(\d+\.)?(\*|\d+)', latest_release_name)
-				if latest_release_version:
-					latest_release_version = latest_release_version.group(0).replace('v', '')
-					return_response['latest_version'] = latest_release_version
-					return_response['changelog'] = response[0]['body']
+			elif isinstance(v2_releases, list) and len(v2_releases) > 0:
+				latest_v2_name = v2_releases[0]['name']
+				latest_v2_version = re.search(r'v?(\d+\.)?(\d+\.)?(\*|\d+)', latest_v2_name)
+				if latest_v2_version:
+					return_response['latest_version'] = latest_v2_version.group(0).replace('v', '')
+					return_response['changelog'] = v2_releases[0]['body']
 					return_response['status'] = True
 		except Exception as e:
-			logger.error(f"Error fetching GitHub releases: {str(e)}")
+			logger.error(f"Error fetching v2 releases: {str(e)}")
 
-		# Fallback: check .version file in master branch
-		version_url = 'https://raw.githubusercontent.com/whiterabb17/rengine/master/web/.version'
+		# Check v2 raw .version fallback
 		try:
-			raw_version_response = requests.get(version_url)
-			if raw_version_response.status_code == 200:
-				raw_version = raw_version_response.text.strip().replace('v', '')
-				# If raw_version is higher than latest release or no release found
-				if not return_response['latest_version'] or version.parse(raw_version) > version.parse(return_response['latest_version']):
-					return_response['latest_version'] = raw_version
+			v2_raw_response = requests.get(v2_version_url)
+			if v2_raw_response.status_code == 200:
+				v2_raw_version = v2_raw_response.text.strip().replace('v', '')
+				if not return_response['latest_version'] or version.parse(v2_raw_version) > version.parse(return_response['latest_version']):
+					return_response['latest_version'] = v2_raw_version
 					return_response['redirect_link'] = 'https://github.com/whiterabb17/rengine'
 					return_response['changelog'] = 'A new update is available in the repository. Please pull the latest changes from the master branch.'
 					return_response['status'] = True
 		except Exception as e:
-			logger.error(f"Error fetching raw .version: {str(e)}")
+			logger.error(f"Error fetching v2 raw version: {str(e)}")
 
-		if return_response['status'] and return_response['latest_version']:
-			is_version_update_available = version.parse(return_response['current_version']) < version.parse(return_response['latest_version'])
-			return_response['update_available'] = is_version_update_available
+		# 2. Check for v3 updates (r3ngine repo)
+		# Trying both standard raw and the specific one provided by user
+		v3_version_urls = [
+			'https://raw.githubusercontent.com/whiterabb17/r3ngine/master/web/.version',
+			'https://github.com/whiterabb17/r3ngine/raw/refs/heads/master/web/.version'
+		]
 
-			if is_version_update_available:
-				create_inappnotification(
-					title='reNgine Update Available',
-					description=f'Update to version {return_response["latest_version"]} is available',
-					notification_type=SYSTEM_LEVEL_NOTIFICATION,
-					project_slug=None,
-					icon='mdi-update',
-					redirect_link=return_response['redirect_link'],
-					open_in_new_tab=True
-				)
+		v3_changelog_url = 'https://raw.githubusercontent.com/whiterabb17/r3ngine/master/CHANGELOG.md'
+
+		for v3_url in v3_version_urls:
+			try:
+				v3_raw_response = requests.get(v3_url)
+				if v3_raw_response.status_code == 200:
+					v3_raw_version = v3_raw_response.text.strip().replace('v', '')
+					return_response['v3_version'] = v3_raw_version
+					if current_version.startswith('2.'):
+						return_response['v3_available'] = True
+					
+					# Fetch v3 changelog
+					try:
+						v3_changelog_response = requests.get(v3_changelog_url)
+						if v3_changelog_response.status_code == 200:
+							return_response['v3_changelog'] = v3_changelog_response.text
+					except Exception as e:
+						logger.error(f"Error fetching v3 changelog: {str(e)}")
+					
+					break
+			except Exception as e:
+				logger.error(f"Error fetching v3 version from {v3_url}: {str(e)}")
+
+		# Determine if update is available for current version branch
+		if current_version.startswith('2.'):
+			if return_response['latest_version']:
+				return_response['update_available'] = version.parse(current_version) < version.parse(return_response['latest_version'])
+		elif current_version.startswith('3.'):
+			# If user is already on v3, use v3_version as latest_version
+			if return_response['v3_version'] != 'UnReleased':
+				return_response['latest_version'] = return_response['v3_version']
+				return_response['changelog'] = return_response.get('v3_changelog', 'New version available in r3ngine repo.')
+				return_response['update_available'] = version.parse(current_version) < version.parse(return_response['v3_version'])
+				return_response['redirect_link'] = 'https://github.com/whiterabb17/r3ngine'
+				return_response['status'] = True
+
+		# Create in-app notifications
+		if return_response['update_available']:
+			create_inappnotification(
+				title='reNgine Update Available',
+				description=f'Update to version {return_response["latest_version"]} is available',
+				notification_type=SYSTEM_LEVEL_NOTIFICATION,
+				project_slug=None,
+				icon='mdi-update',
+				redirect_link=return_response['redirect_link'],
+				open_in_new_tab=True
+			)
+		
+		if return_response['v3_available']:
+			create_inappnotification(
+				title='reNgine v3 is here!',
+				description=f'reNgine v3 version {return_response["v3_version"]} is now available. Check it out at https://github.com/whiterabb17/r3ngine',
+				notification_type=SYSTEM_LEVEL_NOTIFICATION,
+				project_slug=None,
+				icon='mdi-rocket-launch',
+				redirect_link='https://github.com/whiterabb17/r3ngine',
+				open_in_new_tab=True
+			)
 
 		return Response(return_response)
+
 
 
 class UninstallTool(APIView):
@@ -1675,6 +1732,17 @@ class GetFileContents(APIView):
 
 		response = {}
 		response['status'] = False
+
+		if 'changelog' in req.query_params:
+			from django.conf import settings
+			path = os.path.join(settings.BASE_DIR, '../CHANGELOG.md')
+			if os.path.exists(path):
+				f = open(path, "r")
+				response['status'] = True
+				response['content'] = f.read()
+				return Response(response)
+			else:
+				return Response({'status': False, 'message': 'Changelog not found!'})
 
 		if 'nuclei_config' in req.query_params:
 			path = "/root/.config/nuclei/config.yaml"

@@ -59,6 +59,8 @@ def index(request, slug):
     critical_count = vulnerabilities.filter(severity=4).count()
     unknown_count = vulnerabilities.filter(severity=-1).count()
     firewall_count = subdomains.filter(Q(waf__name__icontains='Sophos') | Q(ip_addresses__ports__number__in=[4444, 500, 4500])).distinct().count()
+    secret_leaks = SecretLeak.objects.filter(scan_history__domain__project=project)
+    secret_leak_count = secret_leaks.count()
 
     vulnerability_feed = vulnerabilities.order_by('-discovered_date')[:50]
     activity_feed = scan_activities.order_by('-time')[:50]
@@ -88,6 +90,10 @@ def index(request, slug):
         discovered_date__gte=last_week).annotate(
         date=TruncDay('discovered_date')).values("date").annotate(
             count=Count('id')).order_by("-date")
+    count_leaks_by_date = secret_leaks.filter(
+        discovered_date__gte=last_week).annotate(
+        date=TruncDay('discovered_date')).values("date").annotate(
+            count=Count('id')).order_by("-date")
 
     last_7_dates = [(timezone.now() - timedelta(days=i)).date()
                     for i in range(0, 7)]
@@ -97,6 +103,7 @@ def index(request, slug):
     vulns_in_last_week = []
     scans_in_last_week = []
     endpoints_in_last_week = []
+    leaks_in_last_week = []
 
     for date in last_7_dates:
         _target = count_targets_by_date.filter(date=date)
@@ -104,6 +111,7 @@ def index(request, slug):
         _vuln = count_vulns_by_date.filter(date=date)
         _scan = count_scans_by_date.filter(date=date)
         _endpoint = count_endpoints_by_date.filter(date=date)
+        _leak = count_leaks_by_date.filter(date=date)
         if _target:
             targets_in_last_week.append(_target[0]['created_count'])
         else:
@@ -124,15 +132,21 @@ def index(request, slug):
             endpoints_in_last_week.append(_endpoint[0]['count'])
         else:
             endpoints_in_last_week.append(0)
+        if _leak:
+            leaks_in_last_week.append(_leak[0]['count'])
+        else:
+            leaks_in_last_week.append(0)
 
     targets_in_last_week.reverse()
     subdomains_in_last_week.reverse()
     vulns_in_last_week.reverse()
     scans_in_last_week.reverse()
     endpoints_in_last_week.reverse()
+    leaks_in_last_week.reverse()
 
     context = {
         'dashboard_data_active': 'active',
+        'secret_leak_count': secret_leak_count,
         'domain_count': domain_count,
         'endpoint_count': endpoint_count,
         'scan_count': scan_count,
@@ -156,6 +170,7 @@ def index(request, slug):
         'vulns_in_last_week': vulns_in_last_week,
         'scans_in_last_week': scans_in_last_week,
         'endpoints_in_last_week': endpoints_in_last_week,
+        'leaks_in_last_week': leaks_in_last_week,
         'last_7_dates': last_7_dates,
         'project': project
     }

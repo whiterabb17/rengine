@@ -10,13 +10,10 @@ from rest_framework import permissions
 
 from reNgine.views import serve_protected_media
 
+from .openapi_info import info
+
 schema_view = get_schema_view(
-   openapi.Info(
-      title="reNgine API",
-      default_version='v1',
-      description="reNgine: An Automated reconnaissance framework.",
-      contact=openapi.Contact(email="yogesh.ojha11@gmail.com"),
-   ),
+   info,
    public=True,
    permission_classes=[permissions.AllowAny],
 )

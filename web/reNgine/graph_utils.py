@@ -89,6 +89,22 @@ class Neo4jManager:
             MERGE (e)-[:HAS_PARAMETER]->(p)
         """, name=param_name, type=param_type, url=endpoint_url)
 
+    def sync_all_scans(self):
+        """Syncs all scan results from PostgreSQL to Neo4j."""
+        from startScan.models import ScanHistory
+        scans = ScanHistory.objects.all()
+        total_scans = scans.count()
+        logger.info(f"Starting global graph synchronization for {total_scans} scans.")
+        
+        for index, scan in enumerate(scans, 1):
+            logger.info(f"[{index}/{total_scans}] Syncing scan: {scan.domain.name} (ID: {scan.id})")
+            try:
+                self.sync_scan_results(scan.id)
+            except Exception as e:
+                logger.error(f"Failed to sync scan {scan.id}: {e}")
+        
+        logger.info("Global graph synchronization completed successfully.")
+
     def get_cytoscape_json(self, scan_history_id):
         """Returns graph data in Cytoscape format."""
         if not self.driver:

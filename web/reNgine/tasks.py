@@ -54,6 +54,18 @@ logger = get_task_logger(__name__)
 #----------------------#
 
 
+@app.task(name='sync_all_scans_to_graph', queue='main_scan_queue', base=RengineTask, bind=True)
+def sync_all_scans_to_graph(self):
+	"""Sync all pre-existing scan results to Neo4j graph."""
+	print(">>> [GRAPH SYNC] Starting global graph synchronization...")
+	logger.info("Starting global graph synchronization...")
+	nm = Neo4jManager()
+	nm.sync_all_scans()
+	nm.close()
+	logger.info("Global graph synchronization completed.")
+	print(">>> [GRAPH SYNC] Global graph synchronization completed.")
+
+
 @app.task(name='initiate_scan', bind=False, queue='initiate_scan_queue')
 def initiate_scan(
 		scan_history_id,
@@ -806,6 +818,29 @@ def osint_discovery(config, host, scan_history_id, activity_id, results_dir, ctx
 		)
 		grouped_tasks.append(_task)
 
+	leaks_config = config.get(LEAKS_AND_SECRETS, {})
+	if leaks_config:
+		if leaks_config.get(LEAKLOOKUP):
+			_task = leaklookup.si(
+				host=host,
+				scan_history_id=scan_history_id,
+				activity_id=activity_id,
+				results_dir=results_dir,
+				ctx=ctx
+			)
+			grouped_tasks.append(_task)
+
+		if leaks_config.get(GITLEAKS) or leaks_config.get(TRUFFLEHOG):
+			_task = secret_scanning.si(
+				config=leaks_config,
+				host=host,
+				scan_history_id=scan_history_id,
+				activity_id=activity_id,
+				results_dir=results_dir,
+				ctx=ctx
+			)
+			grouped_tasks.append(_task)
+
 	celery_group = group(grouped_tasks)
 	job = celery_group.apply_async()
 	while not job.ready():
@@ -1272,6 +1307,129 @@ def h8mail(config, host, scan_history_id, activity_id, results_dir, ctx={}):
 		# if email:
 		# 	self.notify(fields={'Emails': f'• `{email.address}`'})
 	return creds
+
+
+@app.task(name='leaklookup', queue='osint_discovery_queue', base=RengineTask, bind=True)
+def leaklookup(self, host=None, ctx=None):
+	"""Run LeakLookup query."""
+	api_key = get_leaklookup_key()
+	if not api_key:
+		return "LeakLookup API key not found. Skipping."
+
+	try:
+		url = "https://leak-lookup.com/api/search"
+		params = {
+			'key': api_key,
+			'type': 'domain',
+			'query': host
+		}
+		response = requests.post(url, data=params, timeout=30)
+		if response.status_code == 200:
+			data = response.json()
+			if data.get('error') == 'false':
+				leaks = data.get('message', {})
+				leak_count = 0
+				for db_name, contents in leaks.items():
+					for match in contents:
+						save_secret_leak(
+							scan_history=self.scan,
+							tool_name=LEAKLOOKUP,
+							secret_type="Data Leak",
+							source_url=db_name,
+							match_content=match,
+							status='unverified'
+						)
+						leak_count += 1
+				return f"Found {leak_count} leaks in {len(leaks)} databases."
+			return f"LeakLookup error: {data.get('message')}"
+		return f"LeakLookup HTTP error: {response.status_code}"
+	except Exception as e:
+		logger.error(f"Error in LeakLookup: {e}")
+		raise e
+
+
+@app.task(name='secret_scanning', queue='osint_discovery_queue', base=RengineTask, bind=True)
+def secret_scanning(self, config=None, host=None, ctx=None):
+	"""Scan for secrets in JS files and potentially other sources."""
+	if not self.scan:
+		return "No scan history found."
+
+	endpoints = EndPoint.objects.filter(scan_history=self.scan)
+	js_endpoints = [e for e in endpoints if e.http_url.endswith('.js')]
+
+	if not js_endpoints:
+		return "No JS files found to scan."
+
+	temp_dir = f"{self.results_dir}/secrets_temp"
+	os.makedirs(temp_dir, exist_ok=True)
+
+	# Download JS files
+	for js in js_endpoints:
+		try:
+			filename = "".join([c if c.isalnum() else "_" for c in js.http_url]) + ".js"
+			filepath = os.path.join(temp_dir, filename)
+			resp = requests.get(js.http_url, timeout=10, verify=False)
+			if resp.status_code == 200:
+				with open(filepath, 'w') as f:
+					f.write(resp.text)
+		except Exception as e:
+			logger.error(f"Failed to download {js.http_url}: {e}")
+
+	findings_count = 0
+
+	# Run Gitleaks
+	if config.get(GITLEAKS):
+		report_path = f"{temp_dir}/gitleaks_report.json"
+		# Gitleaks v8+ detect command
+		cmd = f"gitleaks detect --source {temp_dir} --report-format json --report-path {report_path} --exit-code 0"
+		subprocess.run(cmd, shell=True)
+		
+		if os.path.exists(report_path):
+			try:
+				with open(report_path, 'r') as f:
+					findings = json.load(f)
+					for finding in findings:
+						# Map finding to SecretLeak
+						save_secret_leak(
+							scan_history=self.scan,
+							tool_name=GITLEAKS,
+							secret_type=finding.get('Description', 'Secret'),
+							source_url=finding.get('File', 'Unknown'),
+							match_content=finding.get('Secret', ''),
+							status='unverified'
+						)
+						findings_count += 1
+			except Exception as e:
+				logger.error(f"Error parsing Gitleaks report: {e}")
+
+	# Run Trufflehog
+	if config.get(TRUFFLEHOG):
+		# Trufflehog v3 filesystem command
+		cmd = f"trufflehog filesystem {temp_dir} --json"
+		process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+		stdout, stderr = process.communicate()
+		
+		for line in stdout.decode().splitlines():
+			if not line: continue
+			try:
+				finding = json.loads(line)
+				# Trufflehog v3 output format varies, but usually has 'SourceMetadata' or 'DetectorName'
+				save_secret_leak(
+					scan_history=self.scan,
+					tool_name=TRUFFLEHOG,
+					secret_type=finding.get('DetectorName', 'Secret'),
+					source_url=finding.get('SourceMetadata', {}).get('Data', {}).get('Filesystem', {}).get('file', 'Unknown'),
+					match_content=finding.get('Raw', ''),
+					status='unverified'
+				)
+				findings_count += 1
+			except Exception as e:
+				logger.error(f"Error parsing Trufflehog finding: {e}")
+
+	# Cleanup
+	shutil.rmtree(temp_dir, ignore_errors=True)
+
+	return f"Secret scanning completed. Found {findings_count} findings."
 
 
 @app.task(name='spiderfoot_scan', queue='spiderfoot_queue', base=RengineTask, bind=True)
@@ -5283,6 +5441,21 @@ def save_ip_address(ip_address, subdomain=None, subscan=None, **kwargs):
 		geo_localize.delay(ip_address, ip.id)
 
 	return ip, created
+
+
+def save_secret_leak(scan_history, tool_name, secret_type, source_url, match_content, subdomain=None, status='unverified'):
+	leak, created = SecretLeak.objects.get_or_create(
+		scan_history=scan_history,
+		tool_name=tool_name,
+		secret_type=secret_type,
+		source_url=source_url,
+		match_content=match_content,
+		subdomain=subdomain,
+	)
+	if created:
+		leak.status = status
+		leak.save()
+	return leak, created
 
 
 def save_imported_subdomains(subdomains, ctx={}):

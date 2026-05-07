@@ -512,6 +512,16 @@ def get_spiderfoot_keys():
 	return {k.module_name: k.key_value for k in keys}
 
 
+def get_leaklookup_key():
+	"""Get LeakLookup API key from DB.
+
+	Returns:
+		str: LeakLookup API key or ''.
+	"""
+	key_obj = LeakLookupAPIKey.objects.first()
+	return key_obj.key if key_obj else ''
+
+
 def get_random_proxy():
 	"""Get a random proxy from the list of proxies input by user in the UI.
 

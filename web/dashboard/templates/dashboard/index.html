@@ -21,7 +21,7 @@ Dashboard
 
 {% block main_content %}
 <div class="row">
-	<div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12">
+	<div class="col-xl col-lg-4 col-md-6 col-sm-12 col-12">
 		<div class="card" id="tooltip-container">
 			<div class="card-body">
 				<i class="fa fa-info-circle text-muted float-end" data-bs-container="#tooltip-container" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Total Number of Targets/Domains"></i>
@@ -38,7 +38,7 @@ Dashboard
 			</div>
 		</div>
 	</div>
-	<div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12">
+	<div class="col-xl col-lg-4 col-md-6 col-sm-12 col-12">
 		<div class="card" id="tooltip-container1">
 			<div class="card-body">
 				<i class="fa fa-info-circle text-muted float-end" data-bs-container="#tooltip-container1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Total Number of Subdomains discovered by reNgine across all targets."></i>
@@ -55,7 +55,7 @@ Dashboard
 			</div>
 		</div>
 	</div>
-	<div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12">
+	<div class="col-xl col-lg-4 col-md-6 col-sm-12 col-12">
 		<div class="card" id="tooltip-container2">
 			<div class="card-body">
 				<i class="fa fa-info-circle text-muted float-end" data-bs-container="#tooltip-container2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Total Endpoints/URLs discovered by reNgine across all targets & subdomains."></i>
@@ -72,7 +72,24 @@ Dashboard
 			</div>
 		</div>
 	</div>
-	<div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12">
+	<div class="col-xl col-lg-4 col-md-6 col-sm-12 col-12">
+		<div class="card" id="tooltip-container-leaks">
+			<div class="card-body">
+				<i class="fa fa-info-circle text-muted float-end" data-bs-container="#tooltip-container-leaks" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Total Number of Secrets and Credentials leaked across all targets."></i>
+				<h4 class="mt-0 font-16 text-warning stat-card-title">
+					<i class="mdi mdi-key-variant stat-card-icon stat-card-icon--orange"></i>
+					Credential Leaks
+				</h4>
+				<h2 class="text-warning my-3 text-center"><span data-plugin="counterup">{{secret_leak_count|intcomma}}</span></h2>
+				<div id="leaks_chart"></div>
+				<br>
+				<p class="text-warning mb-0 mt-2"><span class="badge badge-soft-warning rounded-pill float-end">Secrets & PII Found</span></p>
+				<br>
+				<br>
+			</div>
+		</div>
+	</div>
+	<div class="col-xl col-lg-4 col-md-6 col-sm-12 col-12">
 		<div class="card" id="tooltip-container3">
 			<div class="card-body">
 				<i class="fa fa-info-circle text-muted float-end" data-bs-container="#tooltip-container3" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Total Vulnerabilities discovered by reNgine across all targets, subdomains & endpoints."></i>
@@ -464,6 +481,43 @@ $(document).ready(function() {
 		fill: fill_options,
 	};
 	new ApexCharts(document.querySelector("#endpoint_chart"), endpoint_chart_options).render();
+
+	var leaks_chart_options = {
+		chart: {
+			type: "area",
+			height: 50,
+			sparkline: {
+				enabled: !0
+			}
+		},
+		stroke: {
+			width: 2,
+			curve: "smooth"
+		},
+		fill: {
+			opacity: .2
+		},
+		series: [{
+			name: "Leaks Discovered",
+			data: [{{leaks_in_last_week.0}},{{leaks_in_last_week.1}},{{leaks_in_last_week.2}},{{leaks_in_last_week.3}},{{leaks_in_last_week.4}},{{leaks_in_last_week.5}},{{leaks_in_last_week.6}}]
+		}],
+		yaxis: {
+			min: 0
+		},
+		labels: label_dates,
+		colors: ['#ff9800'],
+		subtitle: {
+			text: "",
+			offsetX: 10,
+			offsetY: 35,
+			style: {
+				fontSize: "13px"
+			}
+		},
+		fill: fill_options,
+	};
+	new ApexCharts(document.querySelector("#leaks_chart"), leaks_chart_options).render();
+
 
 
 	var vuln_chart_options = {

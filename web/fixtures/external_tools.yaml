@@ -497,3 +497,39 @@
     is_github_cloned: false
     github_clone_path: null
     subdomain_gathering_command: null
+
+- model: scanEngine.installedexternaltool
+  pk: 29
+  fields:
+    logo_url: https://raw.githubusercontent.com/gitleaks/gitleaks/master/docs/logo.png
+    name: gitleaks
+    description: Gitleaks is a SAST tool for detecting and preventing hardcoded secrets like passwords, api keys, and tokens in git repos.
+    github_url: https://github.com/gitleaks/gitleaks
+    license_url: https://github.com/gitleaks/gitleaks/blob/master/LICENSE
+    version_lookup_command: gitleaks version
+    update_command: go install github.com/gitleaks/gitleaks/v8@latest
+    install_command: go install github.com/gitleaks/gitleaks/v8@latest
+    version_match_regex: (\d+\.)?(\d+\.)?(\*|\d+)
+    is_default: true
+    is_subdomain_gathering: false
+    is_github_cloned: false
+    github_clone_path: null
+    subdomain_gathering_command: null
+
+- model: scanEngine.installedexternaltool
+  pk: 30
+  fields:
+    logo_url: https://raw.githubusercontent.com/trufflesecurity/trufflehog/main/docs/logo.png
+    name: trufflehog
+    description: Find leaked credentials.
+    github_url: https://github.com/trufflesecurity/trufflehog
+    license_url: https://github.com/trufflesecurity/trufflehog/blob/main/LICENSE
+    version_lookup_command: trufflehog --version
+    update_command: go install github.com/trufflesecurity/trufflehog/v3@latest
+    install_command: go install github.com/trufflesecurity/trufflehog/v3@latest
+    version_match_regex: (\d+\.)?(\d+\.)?(\*|\d+)
+    is_default: true
+    is_subdomain_gathering: false
+    is_github_cloned: false
+    github_clone_path: null
+    subdomain_gathering_command: null

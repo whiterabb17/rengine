@@ -45,6 +45,9 @@ body[data-v3-theme="hacker"] {
 }
 
 /* --- OVERLAY SIDEBAR & NAVBAR (HACKER THEME) --- */
+body[data-v3-theme="hacker"] .breadcrumb-item>a {
+    color: #adb4ba;
+}
 
 html body[data-v3-theme="hacker"] #wrapper .neon-sidebar,
 html body[data-v3-theme="hacker"] .neon-sidebar {
@@ -714,12 +717,13 @@ body[data-v3-theme="hacker"] .table-light {
 
 body[data-v3-theme="hacker"] .table thead th,
 body[data-v3-theme="hacker"] table.dataTable thead th,
-body[data-v3-theme="hacker"] .table > thead > tr > th,
+body[data-v3-theme="hacker"] .table>thead>tr>th,
 body[data-v3-theme="hacker"] thead th,
 body[data-v3-theme="hacker"] .checkbox-column {
     border-bottom: 2px solid var(--neon-purple) !important;
     text-shadow: var(--glow-purple) !important;
-    background: #0c0a14bf !important; /* Exact color requested by user */
+    background: #0c0a14bf !important;
+    /* Exact color requested by user */
     text-transform: uppercase !important;
     letter-spacing: 1px !important;
     font-weight: 700 !important;
@@ -747,37 +751,53 @@ body[data-v3-theme="hacker"] .table .text-muted {
     opacity: 1 !important;
 }
 
-/* Status Badge Styling - Darker backgrounds with neon text */
-body[data-v3-theme="hacker"] .badge.bg-success {
-    background-color: rgba(0, 100, 60, 0.45) !important;
+/* Status Badge Styling - Vibrant Neon styles */
+body[data-v3-theme="hacker"] .badge.bg-success,
+body[data-v3-theme="hacker"] .badge.badge-soft-success {
+    background-color: rgba(0, 255, 136, 0.12) !important;
     color: #00ff88 !important;
-    border: 1px solid rgba(0, 255, 136, 0.3) !important;
-    text-shadow: 0 0 5px rgba(0, 255, 136, 0.5);
-    box-shadow: 0 0 10px rgba(0, 255, 136, 0.1);
+    border: 1px solid rgba(0, 255, 136, 0.4) !important;
+    text-shadow: 0 0 8px rgba(0, 255, 136, 0.6);
+    box-shadow: 0 0 12px rgba(0, 255, 136, 0.15);
 }
 
-body[data-v3-theme="hacker"] .badge.bg-danger {
-    background-color: rgba(120, 20, 30, 0.45) !important;
+body[data-v3-theme="hacker"] .badge.bg-danger,
+body[data-v3-theme="hacker"] .badge.badge-soft-danger {
+    background-color: rgba(255, 68, 68, 0.12) !important;
     color: #ff4444 !important;
-    border: 1px solid rgba(255, 68, 68, 0.3) !important;
-    text-shadow: 0 0 5px rgba(255, 68, 68, 0.5);
-    box-shadow: 0 0 10px rgba(255, 68, 68, 0.1);
+    border: 1px solid rgba(255, 68, 68, 0.4) !important;
+    text-shadow: 0 0 8px rgba(255, 68, 68, 0.6);
 }
 
-body[data-v3-theme="hacker"] .badge.bg-warning {
-    background-color: rgba(120, 80, 0, 0.45) !important;
+body[data-v3-theme="hacker"] .badge.bg-warning,
+body[data-v3-theme="hacker"] .badge.badge-soft-warning {
+    background-color: rgba(255, 170, 0, 0.12) !important;
     color: #ffaa00 !important;
-    border: 1px solid rgba(255, 170, 0, 0.3) !important;
-    text-shadow: 0 0 5px rgba(255, 170, 0, 0.5);
-    box-shadow: 0 0 10px rgba(255, 170, 0, 0.1);
+    border: 1px solid rgba(255, 170, 0, 0.4) !important;
+    text-shadow: 0 0 8px rgba(255, 170, 0, 0.6);
 }
 
 body[data-v3-theme="hacker"] .badge.bg-info,
 body[data-v3-theme="hacker"] .badge.badge-soft-info {
-    background-color: rgba(0, 80, 120, 0.45) !important;
-    color: #00bfff !important;
-    border: 1px solid rgba(0, 191, 255, 0.3) !important;
-    text-shadow: 0 0 5px rgba(0, 191, 255, 0.5);
+    background-color: rgba(0, 240, 255, 0.12) !important;
+    color: #00f0ff !important;
+    border: 1px solid rgba(0, 240, 255, 0.4) !important;
+    text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
+}
+
+body[data-v3-theme="hacker"] .badge-critical {
+    background-color: rgba(255, 0, 85, 0.18) !important;
+    color: #ff0055 !important;
+    border: 1px solid rgba(255, 0, 85, 0.6) !important;
+    text-shadow: 0 0 10px rgba(255, 0, 85, 0.8) !important;
+    box-shadow: 0 0 15px rgba(255, 0, 85, 0.3) !important;
+}
+
+body[data-v3-theme="hacker"] .badge-low {
+    background-color: rgba(240, 255, 66, 0.12) !important;
+    color: #f0ff42 !important;
+    border: 1px solid rgba(240, 255, 66, 0.4) !important;
+    text-shadow: 0 0 8px rgba(240, 255, 66, 0.6) !important;
 }
 
 /* Charts Glow */

@@ -95,6 +95,14 @@ urlpatterns = [
         views.fetch_exploit_source,
         name='fetch_exploit_source'),
     path(
+        'update/leak_status/<int:id>',
+        views.update_leak_status,
+        name='update_leak_status'),
+    path(
+        'delete/leak/<int:id>',
+        views.delete_leak,
+        name='delete_leak'),
+    path(
         '<slug:slug>/start/multiple/',
         views.start_multiple_scan,
         name='start_multiple_scan'),

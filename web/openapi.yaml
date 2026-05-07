@@ -1,0 +1,6687 @@
+swagger: '2.0'
+info:
+  title: reNgine API
+  description: 'reNgine: An Automated reconnaissance framework.'
+  contact:
+    email: yogesh.ojha11@gmail.com
+  version: v1
+basePath: /api
+consumes:
+- application/json
+produces:
+- application/json
+- application/json
+securityDefinitions:
+  Basic:
+    type: basic
+security:
+- Basic: []
+paths:
+  /action/create/project:
+    get:
+      operationId: action_create_project_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - action
+    parameters: []
+  /action/initiate/subtask/:
+    post:
+      operationId: action_initiate_subtask_create
+      description: ''
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - action
+    parameters: []
+  /action/rows/delete/:
+    post:
+      operationId: action_rows_delete_create
+      description: ''
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - action
+    parameters: []
+  /action/stop/scan/:
+    post:
+      operationId: action_stop_scan_create
+      description: ''
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - action
+    parameters: []
+  /action/subdomain/delete/:
+    post:
+      operationId: action_subdomain_delete_create
+      description: ''
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - action
+    parameters: []
+  /action/vulnerability/delete/:
+    post:
+      operationId: action_vulnerability_delete_create
+      description: ''
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - action
+    parameters: []
+  /add/recon_note/:
+    post:
+      operationId: add_recon_note_create
+      description: ''
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - add
+    parameters: []
+  /add/target/:
+    post:
+      operationId: add_target_create
+      description: ''
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - add
+    parameters: []
+  /external/tool/get_current_release/:
+    get:
+      operationId: external_tool_get_current_release_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - external
+    parameters: []
+  /fetch/most_common_vulnerability/:
+    post:
+      operationId: fetch_most_common_vulnerability_create
+      description: ''
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - fetch
+    parameters: []
+  /fetch/most_vulnerable/:
+    post:
+      operationId: fetch_most_vulnerable_create
+      description: ''
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - fetch
+    parameters: []
+  /fetch/results/subscan/:
+    get:
+      operationId: fetch_results_subscan_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - fetch
+    parameters: []
+  /getFileContents/:
+    get:
+      operationId: getFileContents_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - getFileContents
+    parameters: []
+  /github/tool/get_latest_releases/:
+    get:
+      operationId: github_tool_get_latest_releases_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - github
+    parameters: []
+  /hackerone-programs/:
+    get:
+      operationId: hackerone-programs_list
+      description: "This class manages the HackerOne Program model, \nprovides basic\
+        \ fetching of programs and caching"
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - hackerone-programs
+    parameters: []
+  /hackerone-programs/bookmarked_programs/:
+    get:
+      operationId: hackerone-programs_bookmarked_programs
+      description: "This class manages the HackerOne Program model, \nprovides basic\
+        \ fetching of programs and caching"
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - hackerone-programs
+    parameters: []
+  /hackerone-programs/bounty_programs/:
+    get:
+      operationId: hackerone-programs_bounty_programs
+      description: "This class manages the HackerOne Program model, \nprovides basic\
+        \ fetching of programs and caching"
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - hackerone-programs
+    parameters: []
+  /hackerone-programs/import_programs/:
+    post:
+      operationId: hackerone-programs_import_programs
+      description: "This class manages the HackerOne Program model, \nprovides basic\
+        \ fetching of programs and caching"
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - hackerone-programs
+    parameters: []
+  /hackerone-programs/refresh_cache/:
+    post:
+      operationId: hackerone-programs_refresh_cache
+      description: "This class manages the HackerOne Program model, \nprovides basic\
+        \ fetching of programs and caching"
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - hackerone-programs
+    parameters: []
+  /hackerone-programs/sync_bookmarked/:
+    get:
+      operationId: hackerone-programs_sync_bookmarked
+      description: "This class manages the HackerOne Program model, \nprovides basic\
+        \ fetching of programs and caching"
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - hackerone-programs
+    parameters: []
+  /hackerone-programs/{id}/program_details/:
+    get:
+      operationId: hackerone-programs_program_details
+      description: "This class manages the HackerOne Program model, \nprovides basic\
+        \ fetching of programs and caching"
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - hackerone-programs
+    parameters:
+    - name: id
+      in: path
+      required: true
+      type: string
+  /listActivityLogs/:
+    get:
+      operationId: listActivityLogs_list
+      description: ''
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Command'
+      tags:
+      - listActivityLogs
+    post:
+      operationId: listActivityLogs_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Command'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Command'
+      tags:
+      - listActivityLogs
+    parameters: []
+  /listActivityLogs/{id}/:
+    get:
+      operationId: listActivityLogs_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Command'
+      tags:
+      - listActivityLogs
+    put:
+      operationId: listActivityLogs_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Command'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Command'
+      tags:
+      - listActivityLogs
+    patch:
+      operationId: listActivityLogs_partial_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Command'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Command'
+      tags:
+      - listActivityLogs
+    delete:
+      operationId: listActivityLogs_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - listActivityLogs
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this command.
+      required: true
+      type: integer
+  /listDatatableSubdomain/:
+    get:
+      operationId: listDatatableSubdomain_list
+      description: ''
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Subdomain'
+      tags:
+      - listDatatableSubdomain
+    post:
+      operationId: listDatatableSubdomain_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Subdomain'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Subdomain'
+      tags:
+      - listDatatableSubdomain
+    parameters: []
+  /listDatatableSubdomain/{id}/:
+    get:
+      operationId: listDatatableSubdomain_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Subdomain'
+      tags:
+      - listDatatableSubdomain
+    put:
+      operationId: listDatatableSubdomain_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Subdomain'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Subdomain'
+      tags:
+      - listDatatableSubdomain
+    patch:
+      operationId: listDatatableSubdomain_partial_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Subdomain'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Subdomain'
+      tags:
+      - listDatatableSubdomain
+    delete:
+      operationId: listDatatableSubdomain_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - listDatatableSubdomain
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this subdomain.
+      required: true
+      type: integer
+  /listDirectories/:
+    get:
+      operationId: listDirectories_list
+      description: ''
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/DirectoryFile'
+      tags:
+      - listDirectories
+    post:
+      operationId: listDirectories_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/DirectoryFile'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/DirectoryFile'
+      tags:
+      - listDirectories
+    parameters: []
+  /listDirectories/{id}/:
+    get:
+      operationId: listDirectories_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/DirectoryFile'
+      tags:
+      - listDirectories
+    put:
+      operationId: listDirectories_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/DirectoryFile'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/DirectoryFile'
+      tags:
+      - listDirectories
+    patch:
+      operationId: listDirectories_partial_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/DirectoryFile'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/DirectoryFile'
+      tags:
+      - listDirectories
+    delete:
+      operationId: listDirectories_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - listDirectories
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this directory file.
+      required: true
+      type: integer
+  /listEndPointChanges/:
+    get:
+      operationId: listEndPointChanges_list
+      description: This viewset will return the EndPoint changes
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/EndPointChanges'
+      tags:
+      - listEndPointChanges
+    post:
+      operationId: listEndPointChanges_create
+      description: This viewset will return the EndPoint changes
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/EndPointChanges'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/EndPointChanges'
+      tags:
+      - listEndPointChanges
+    parameters: []
+  /listEndPointChanges/{id}/:
+    get:
+      operationId: listEndPointChanges_read
+      description: This viewset will return the EndPoint changes
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/EndPointChanges'
+      tags:
+      - listEndPointChanges
+    put:
+      operationId: listEndPointChanges_update
+      description: This viewset will return the EndPoint changes
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/EndPointChanges'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/EndPointChanges'
+      tags:
+      - listEndPointChanges
+    patch:
+      operationId: listEndPointChanges_partial_update
+      description: This viewset will return the EndPoint changes
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/EndPointChanges'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/EndPointChanges'
+      tags:
+      - listEndPointChanges
+    delete:
+      operationId: listEndPointChanges_delete
+      description: This viewset will return the EndPoint changes
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - listEndPointChanges
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this end point.
+      required: true
+      type: integer
+  /listEndpoints/:
+    get:
+      operationId: listEndpoints_list
+      description: ''
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Endpoint'
+      tags:
+      - listEndpoints
+    post:
+      operationId: listEndpoints_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Endpoint'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Endpoint'
+      tags:
+      - listEndpoints
+    parameters: []
+  /listEndpoints/{id}/:
+    get:
+      operationId: listEndpoints_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Endpoint'
+      tags:
+      - listEndpoints
+    put:
+      operationId: listEndpoints_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Endpoint'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Endpoint'
+      tags:
+      - listEndpoints
+    patch:
+      operationId: listEndpoints_partial_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Endpoint'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Endpoint'
+      tags:
+      - listEndpoints
+    delete:
+      operationId: listEndpoints_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - listEndpoints
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this end point.
+      required: true
+      type: integer
+  /listEngines/:
+    get:
+      operationId: listEngines_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - listEngines
+    parameters: []
+  /listInterestingEndpoints/:
+    get:
+      operationId: listInterestingEndpoints_list
+      description: ''
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Endpoint'
+      tags:
+      - listInterestingEndpoints
+    post:
+      operationId: listInterestingEndpoints_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Endpoint'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Endpoint'
+      tags:
+      - listInterestingEndpoints
+    parameters: []
+  /listInterestingEndpoints/{id}/:
+    get:
+      operationId: listInterestingEndpoints_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Endpoint'
+      tags:
+      - listInterestingEndpoints
+    put:
+      operationId: listInterestingEndpoints_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Endpoint'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Endpoint'
+      tags:
+      - listInterestingEndpoints
+    patch:
+      operationId: listInterestingEndpoints_partial_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Endpoint'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Endpoint'
+      tags:
+      - listInterestingEndpoints
+    delete:
+      operationId: listInterestingEndpoints_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - listInterestingEndpoints
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this end point.
+      required: true
+      type: integer
+  /listInterestingKeywords/:
+    get:
+      operationId: listInterestingKeywords_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - listInterestingKeywords
+    parameters: []
+  /listInterestingSubdomains/:
+    get:
+      operationId: listInterestingSubdomains_list
+      description: ''
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Subdomain'
+      tags:
+      - listInterestingSubdomains
+    post:
+      operationId: listInterestingSubdomains_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Subdomain'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Subdomain'
+      tags:
+      - listInterestingSubdomains
+    parameters: []
+  /listInterestingSubdomains/{id}/:
+    get:
+      operationId: listInterestingSubdomains_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Subdomain'
+      tags:
+      - listInterestingSubdomains
+    put:
+      operationId: listInterestingSubdomains_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Subdomain'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Subdomain'
+      tags:
+      - listInterestingSubdomains
+    patch:
+      operationId: listInterestingSubdomains_partial_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Subdomain'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Subdomain'
+      tags:
+      - listInterestingSubdomains
+    delete:
+      operationId: listInterestingSubdomains_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - listInterestingSubdomains
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this subdomain.
+      required: true
+      type: integer
+  /listIps/:
+    get:
+      operationId: listIps_list
+      description: ''
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/IpSubdomain'
+      tags:
+      - listIps
+    post:
+      operationId: listIps_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/IpSubdomain'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/IpSubdomain'
+      tags:
+      - listIps
+    parameters: []
+  /listIps/{id}/:
+    get:
+      operationId: listIps_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/IpSubdomain'
+      tags:
+      - listIps
+    put:
+      operationId: listIps_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/IpSubdomain'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/IpSubdomain'
+      tags:
+      - listIps
+    patch:
+      operationId: listIps_partial_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/IpSubdomain'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/IpSubdomain'
+      tags:
+      - listIps
+    delete:
+      operationId: listIps_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - listIps
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this subdomain.
+      required: true
+      type: integer
+  /listOrganizations/:
+    get:
+      operationId: listOrganizations_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - listOrganizations
+    parameters: []
+  /listScanHistory/:
+    get:
+      operationId: listScanHistory_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - listScanHistory
+    parameters: []
+  /listScanLogs/:
+    get:
+      operationId: listScanLogs_list
+      description: ''
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Command'
+      tags:
+      - listScanLogs
+    post:
+      operationId: listScanLogs_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Command'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Command'
+      tags:
+      - listScanLogs
+    parameters: []
+  /listScanLogs/{id}/:
+    get:
+      operationId: listScanLogs_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Command'
+      tags:
+      - listScanLogs
+    put:
+      operationId: listScanLogs_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Command'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Command'
+      tags:
+      - listScanLogs
+    patch:
+      operationId: listScanLogs_partial_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Command'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Command'
+      tags:
+      - listScanLogs
+    delete:
+      operationId: listScanLogs_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - listScanLogs
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this command.
+      required: true
+      type: integer
+  /listSubScans/:
+    post:
+      operationId: listSubScans_create
+      description: ''
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - listSubScans
+    parameters: []
+  /listSubdomainChanges/:
+    get:
+      operationId: listSubdomainChanges_list
+      description: 'This viewset will return the Subdomain changes
+
+        To get the new subdomains, we will look for ScanHistory with
+
+        subdomain_discovery = True and the status of the last scan has to be
+
+        successful and calculate difference'
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/SubdomainChanges'
+      tags:
+      - listSubdomainChanges
+    post:
+      operationId: listSubdomainChanges_create
+      description: 'This viewset will return the Subdomain changes
+
+        To get the new subdomains, we will look for ScanHistory with
+
+        subdomain_discovery = True and the status of the last scan has to be
+
+        successful and calculate difference'
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/SubdomainChanges'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/SubdomainChanges'
+      tags:
+      - listSubdomainChanges
+    parameters: []
+  /listSubdomainChanges/{id}/:
+    get:
+      operationId: listSubdomainChanges_read
+      description: 'This viewset will return the Subdomain changes
+
+        To get the new subdomains, we will look for ScanHistory with
+
+        subdomain_discovery = True and the status of the last scan has to be
+
+        successful and calculate difference'
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/SubdomainChanges'
+      tags:
+      - listSubdomainChanges
+    put:
+      operationId: listSubdomainChanges_update
+      description: 'This viewset will return the Subdomain changes
+
+        To get the new subdomains, we will look for ScanHistory with
+
+        subdomain_discovery = True and the status of the last scan has to be
+
+        successful and calculate difference'
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/SubdomainChanges'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/SubdomainChanges'
+      tags:
+      - listSubdomainChanges
+    patch:
+      operationId: listSubdomainChanges_partial_update
+      description: 'This viewset will return the Subdomain changes
+
+        To get the new subdomains, we will look for ScanHistory with
+
+        subdomain_discovery = True and the status of the last scan has to be
+
+        successful and calculate difference'
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/SubdomainChanges'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/SubdomainChanges'
+      tags:
+      - listSubdomainChanges
+    delete:
+      operationId: listSubdomainChanges_delete
+      description: 'This viewset will return the Subdomain changes
+
+        To get the new subdomains, we will look for ScanHistory with
+
+        subdomain_discovery = True and the status of the last scan has to be
+
+        successful and calculate difference'
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - listSubdomainChanges
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this subdomain.
+      required: true
+      type: integer
+  /listSubdomains/:
+    get:
+      operationId: listSubdomains_list
+      description: ''
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Subdomain'
+      tags:
+      - listSubdomains
+    post:
+      operationId: listSubdomains_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Subdomain'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Subdomain'
+      tags:
+      - listSubdomains
+    parameters: []
+  /listSubdomains/{id}/:
+    get:
+      operationId: listSubdomains_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Subdomain'
+      tags:
+      - listSubdomains
+    put:
+      operationId: listSubdomains_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Subdomain'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Subdomain'
+      tags:
+      - listSubdomains
+    patch:
+      operationId: listSubdomains_partial_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Subdomain'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Subdomain'
+      tags:
+      - listSubdomains
+    delete:
+      operationId: listSubdomains_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - listSubdomains
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this subdomain.
+      required: true
+      type: integer
+  /listTargets/:
+    get:
+      operationId: listTargets_list
+      description: ''
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Domain'
+      tags:
+      - listTargets
+    post:
+      operationId: listTargets_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Domain'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Domain'
+      tags:
+      - listTargets
+    parameters: []
+  /listTargets/{id}/:
+    get:
+      operationId: listTargets_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Domain'
+      tags:
+      - listTargets
+    put:
+      operationId: listTargets_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Domain'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Domain'
+      tags:
+      - listTargets
+    patch:
+      operationId: listTargets_partial_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Domain'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Domain'
+      tags:
+      - listTargets
+    delete:
+      operationId: listTargets_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - listTargets
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this domain.
+      required: true
+      type: integer
+  /listTodoNotes/:
+    get:
+      operationId: listTodoNotes_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - listTodoNotes
+    parameters: []
+  /listVulnerability/:
+    get:
+      operationId: listVulnerability_list
+      description: ''
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Vulnerability'
+      tags:
+      - listVulnerability
+    post:
+      operationId: listVulnerability_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Vulnerability'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Vulnerability'
+      tags:
+      - listVulnerability
+    parameters: []
+  /listVulnerability/{id}/:
+    get:
+      operationId: listVulnerability_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Vulnerability'
+      tags:
+      - listVulnerability
+    put:
+      operationId: listVulnerability_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Vulnerability'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Vulnerability'
+      tags:
+      - listVulnerability
+    patch:
+      operationId: listVulnerability_partial_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Vulnerability'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Vulnerability'
+      tags:
+      - listVulnerability
+    delete:
+      operationId: listVulnerability_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - listVulnerability
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this vulnerability.
+      required: true
+      type: integer
+  /notifications/:
+    get:
+      operationId: notifications_list
+      description: 'This class manages the notification model, provided CRUD operation
+        on notif model
+
+        such as read notif, clear all, fetch all notifications etc'
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/InAppNotification'
+      tags:
+      - notifications
+    post:
+      operationId: notifications_create
+      description: 'This class manages the notification model, provided CRUD operation
+        on notif model
+
+        such as read notif, clear all, fetch all notifications etc'
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/InAppNotification'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/InAppNotification'
+      tags:
+      - notifications
+    parameters: []
+  /notifications/clear_all/:
+    post:
+      operationId: notifications_clear_all
+      description: 'This class manages the notification model, provided CRUD operation
+        on notif model
+
+        such as read notif, clear all, fetch all notifications etc'
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/InAppNotification'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/InAppNotification'
+      tags:
+      - notifications
+    parameters: []
+  /notifications/mark_all_read/:
+    post:
+      operationId: notifications_mark_all_read
+      description: 'This class manages the notification model, provided CRUD operation
+        on notif model
+
+        such as read notif, clear all, fetch all notifications etc'
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/InAppNotification'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/InAppNotification'
+      tags:
+      - notifications
+    parameters: []
+  /notifications/unread_count/:
+    get:
+      operationId: notifications_unread_count
+      description: 'This class manages the notification model, provided CRUD operation
+        on notif model
+
+        such as read notif, clear all, fetch all notifications etc'
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/InAppNotification'
+      tags:
+      - notifications
+    parameters: []
+  /notifications/{id}/:
+    get:
+      operationId: notifications_read
+      description: 'This class manages the notification model, provided CRUD operation
+        on notif model
+
+        such as read notif, clear all, fetch all notifications etc'
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/InAppNotification'
+      tags:
+      - notifications
+    put:
+      operationId: notifications_update
+      description: 'This class manages the notification model, provided CRUD operation
+        on notif model
+
+        such as read notif, clear all, fetch all notifications etc'
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/InAppNotification'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/InAppNotification'
+      tags:
+      - notifications
+    patch:
+      operationId: notifications_partial_update
+      description: 'This class manages the notification model, provided CRUD operation
+        on notif model
+
+        such as read notif, clear all, fetch all notifications etc'
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/InAppNotification'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/InAppNotification'
+      tags:
+      - notifications
+    delete:
+      operationId: notifications_delete
+      description: 'This class manages the notification model, provided CRUD operation
+        on notif model
+
+        such as read notif, clear all, fetch all notifications etc'
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - notifications
+    parameters:
+    - name: id
+      in: path
+      required: true
+      type: string
+  /notifications/{id}/mark_read/:
+    post:
+      operationId: notifications_mark_read
+      description: 'This class manages the notification model, provided CRUD operation
+        on notif model
+
+        such as read notif, clear all, fetch all notifications etc'
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/InAppNotification'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/InAppNotification'
+      tags:
+      - notifications
+    parameters:
+    - name: id
+      in: path
+      required: true
+      type: string
+  /queryAllScanResultVisualise/:
+    get:
+      operationId: queryAllScanResultVisualise_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - queryAllScanResultVisualise
+    parameters: []
+  /queryDorkTypes/:
+    get:
+      operationId: queryDorkTypes_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - queryDorkTypes
+    parameters: []
+  /queryDorks/:
+    get:
+      operationId: queryDorks_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - queryDorks
+    parameters: []
+  /queryEmails/:
+    get:
+      operationId: queryEmails_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - queryEmails
+    parameters: []
+  /queryEmployees/:
+    get:
+      operationId: queryEmployees_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - queryEmployees
+    parameters: []
+  /queryEndpoints/:
+    get:
+      operationId: queryEndpoints_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - queryEndpoints
+    parameters: []
+  /queryInterestingSubdomains/:
+    get:
+      operationId: queryInterestingSubdomains_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - queryInterestingSubdomains
+    parameters: []
+  /queryIps/:
+    get:
+      operationId: queryIps_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - queryIps
+    parameters: []
+  /queryMetadata/:
+    get:
+      operationId: queryMetadata_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - queryMetadata
+    parameters: []
+  /queryOsintUsers/:
+    get:
+      operationId: queryOsintUsers_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - queryOsintUsers
+    parameters: []
+  /queryPorts/:
+    get:
+      operationId: queryPorts_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - queryPorts
+    parameters: []
+  /querySubdomains/:
+    get:
+      operationId: querySubdomains_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - querySubdomains
+    post:
+      operationId: querySubdomains_create
+      description: ''
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - querySubdomains
+    parameters: []
+  /queryTargetsInOrganization/:
+    get:
+      operationId: queryTargetsInOrganization_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - queryTargetsInOrganization
+    parameters: []
+  /queryTargetsWithoutOrganization/:
+    get:
+      operationId: queryTargetsWithoutOrganization_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - queryTargetsWithoutOrganization
+    parameters: []
+  /queryTechnologies/:
+    get:
+      operationId: queryTechnologies_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - queryTechnologies
+    parameters: []
+  /rengine/update/:
+    get:
+      operationId: rengine_update_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - rengine
+    parameters: []
+  /scan_status/:
+    get:
+      operationId: scan_status_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - scan_status
+    parameters: []
+  /search/:
+    get:
+      operationId: search_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - search
+    parameters: []
+  /search/history/:
+    get:
+      operationId: search_history_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - search
+    parameters: []
+  /toggle-bug-bounty-mode/:
+    post:
+      operationId: toggle-bug-bounty-mode_create
+      description: This class manages the user bug bounty mode
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - toggle-bug-bounty-mode
+    parameters: []
+  /toggle/subdomain/important/:
+    post:
+      operationId: toggle_subdomain_important_create
+      description: ''
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - toggle
+    parameters: []
+  /tool/ollama/:
+    get:
+      operationId: tool_ollama_list
+      description: 'API to download Ollama Models
+
+        sends a POST request to download the model'
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - tool
+    put:
+      operationId: tool_ollama_update
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - tool
+    delete:
+      operationId: tool_ollama_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - tool
+    parameters: []
+  /tool/uninstall/:
+    get:
+      operationId: tool_uninstall_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - tool
+    parameters: []
+  /tool/update/:
+    get:
+      operationId: tool_update_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - tool
+    parameters: []
+  /tools/cms_detector/:
+    get:
+      operationId: tools_cms_detector_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - tools
+    parameters: []
+  /tools/cve_details/:
+    get:
+      operationId: tools_cve_details_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - tools
+    parameters: []
+  /tools/domain_ip_history:
+    get:
+      operationId: tools_domain_ip_history_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - tools
+    parameters: []
+  /tools/gpt_get_possible_attacks/:
+    get:
+      operationId: tools_gpt_get_possible_attacks_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - tools
+    parameters: []
+  /tools/gpt_vulnerability_report/:
+    get:
+      operationId: tools_gpt_vulnerability_report_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - tools
+    parameters: []
+  /tools/ip_to_domain/:
+    get:
+      operationId: tools_ip_to_domain_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - tools
+    parameters: []
+  /tools/reverse/whois/:
+    get:
+      operationId: tools_reverse_whois_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - tools
+    parameters: []
+  /tools/waf_detector/:
+    get:
+      operationId: tools_waf_detector_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - tools
+    parameters: []
+  /tools/whois/:
+    get:
+      operationId: tools_whois_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - tools
+    parameters: []
+  /update-theme/:
+    post:
+      operationId: update-theme_create
+      description: This class manages the user theme and intensity
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - update-theme
+    parameters: []
+  /vulnerability/report/:
+    get:
+      operationId: vulnerability_report_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - vulnerability
+    parameters: []
+definitions:
+  Command:
+    required:
+    - time
+    type: object
+    properties:
+      id:
+        title: Id
+        type: integer
+        readOnly: true
+      command:
+        title: Command
+        type: string
+        x-nullable: true
+      return_code:
+        title: Return code
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+        x-nullable: true
+      output:
+        title: Output
+        type: string
+        x-nullable: true
+      time:
+        title: Time
+        type: string
+        format: date-time
+      scan_history:
+        required:
+        - start_scan_date
+        - domain
+        - scan_type
+        type: object
+        properties:
+          id:
+            title: Id
+            type: integer
+            readOnly: true
+          start_scan_date:
+            title: Start scan date
+            type: string
+            format: date-time
+          scan_status:
+            title: Scan status
+            type: integer
+            enum:
+            - -1
+            - 0
+            - 1
+            - 2
+            - 3
+          results_dir:
+            title: Results dir
+            type: string
+            maxLength: 100
+          celery_ids:
+            type: array
+            items:
+              title: Celery ids
+              type: string
+              maxLength: 100
+              minLength: 1
+          tasks:
+            type: array
+            items:
+              title: Tasks
+              type: string
+              maxLength: 200
+              minLength: 1
+            x-nullable: true
+          stop_scan_date:
+            title: Stop scan date
+            type: string
+            format: date-time
+            x-nullable: true
+          used_gf_patterns:
+            title: Used gf patterns
+            type: string
+            maxLength: 500
+            x-nullable: true
+          error_message:
+            title: Error message
+            type: string
+            maxLength: 300
+            x-nullable: true
+          cfg_out_of_scope_subdomains:
+            type: array
+            items:
+              title: Cfg out of scope subdomains
+              type: string
+              maxLength: 200
+              minLength: 1
+            x-nullable: true
+          cfg_starting_point_path:
+            title: Cfg starting point path
+            type: string
+            maxLength: 200
+            x-nullable: true
+          cfg_excluded_paths:
+            type: array
+            items:
+              title: Cfg excluded paths
+              type: string
+              maxLength: 200
+              minLength: 1
+            x-nullable: true
+          cfg_imported_subdomains:
+            type: array
+            items:
+              title: Cfg imported subdomains
+              type: string
+              maxLength: 200
+              minLength: 1
+            x-nullable: true
+          cfg_custom_dorks:
+            title: Cfg custom dorks
+            type: string
+            x-nullable: true
+          domain:
+            title: Domain
+            type: integer
+          scan_type:
+            title: Scan type
+            type: integer
+          initiated_by:
+            title: Initiated by
+            type: integer
+            x-nullable: true
+          aborted_by:
+            title: Aborted by
+            type: integer
+            x-nullable: true
+          emails:
+            type: array
+            items:
+              type: integer
+            uniqueItems: true
+          employees:
+            type: array
+            items:
+              type: integer
+            uniqueItems: true
+          buckets:
+            type: array
+            items:
+              type: integer
+            uniqueItems: true
+          dorks:
+            type: array
+            items:
+              type: integer
+            uniqueItems: true
+        readOnly: true
+      activity:
+        required:
+        - title
+        - name
+        - time
+        - status
+        type: object
+        properties:
+          id:
+            title: Id
+            type: integer
+            readOnly: true
+          title:
+            title: Title
+            type: string
+            maxLength: 1000
+            minLength: 1
+          name:
+            title: Name
+            type: string
+            maxLength: 1000
+            minLength: 1
+          time:
+            title: Time
+            type: string
+            format: date-time
+          status:
+            title: Status
+            type: integer
+            maximum: 2147483647
+            minimum: -2147483648
+          error_message:
+            title: Error message
+            type: string
+            maxLength: 300
+            x-nullable: true
+          traceback:
+            title: Traceback
+            type: string
+            x-nullable: true
+          celery_id:
+            title: Celery id
+            type: string
+            maxLength: 100
+            x-nullable: true
+          scan_of:
+            title: Scan of
+            type: integer
+            x-nullable: true
+        readOnly: true
+  Port:
+    type: object
+    properties:
+      id:
+        title: Id
+        type: integer
+        readOnly: true
+      number:
+        title: Number
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      service_name:
+        title: Service name
+        type: string
+        maxLength: 100
+        x-nullable: true
+      description:
+        title: Description
+        type: string
+        maxLength: 1000
+        x-nullable: true
+      is_uncommon:
+        title: Is uncommon
+        type: boolean
+  Ip:
+    required:
+    - ports
+    - ip_subscan_ids
+    type: object
+    properties:
+      id:
+        title: Id
+        type: integer
+        readOnly: true
+      ports:
+        type: array
+        items:
+          $ref: '#/definitions/Port'
+      address:
+        title: Address
+        type: string
+        maxLength: 100
+        x-nullable: true
+      is_cdn:
+        title: Is cdn
+        type: boolean
+      version:
+        title: Version
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+        x-nullable: true
+      is_private:
+        title: Is private
+        type: boolean
+      reverse_pointer:
+        title: Reverse pointer
+        type: string
+        maxLength: 100
+        x-nullable: true
+      geo_iso:
+        title: Geo iso
+        type: integer
+        x-nullable: true
+      ip_subscan_ids:
+        type: array
+        items:
+          type: integer
+        uniqueItems: true
+  Waf:
+    required:
+    - name
+    type: object
+    properties:
+      id:
+        title: Id
+        type: integer
+        readOnly: true
+      name:
+        title: Name
+        type: string
+        maxLength: 500
+        minLength: 1
+      manufacturer:
+        title: Manufacturer
+        type: string
+        maxLength: 500
+        x-nullable: true
+  Technology:
+    type: object
+    properties:
+      id:
+        title: Id
+        type: integer
+        readOnly: true
+      name:
+        title: Name
+        type: string
+        maxLength: 500
+        x-nullable: true
+  DirectoryFile:
+    type: object
+    properties:
+      id:
+        title: Id
+        type: integer
+        readOnly: true
+      length:
+        title: Length
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      lines:
+        title: Lines
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      http_status:
+        title: Http status
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      words:
+        title: Words
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      name:
+        title: Name
+        type: string
+        maxLength: 500
+        x-nullable: true
+      url:
+        title: Url
+        type: string
+        maxLength: 5000
+        x-nullable: true
+      content_type:
+        title: Content type
+        type: string
+        maxLength: 100
+        x-nullable: true
+  DirectoryScan:
+    required:
+    - directory_files
+    type: object
+    properties:
+      id:
+        title: Id
+        type: integer
+        readOnly: true
+      scanned_date:
+        title: Scanned date
+        type: string
+        readOnly: true
+      formatted_date_for_id:
+        title: Formatted date for id
+        type: string
+        readOnly: true
+      directory_files:
+        type: array
+        items:
+          $ref: '#/definitions/DirectoryFile'
+      command_line:
+        title: Command line
+        type: string
+        maxLength: 5000
+        x-nullable: true
+      dir_subscan_ids:
+        type: array
+        items:
+          type: integer
+        uniqueItems: true
+  WafBypassFinding:
+    required:
+    - technique
+    - subdomain
+    type: object
+    properties:
+      id:
+        title: Id
+        type: integer
+        readOnly: true
+      technique:
+        title: Technique
+        type: string
+        maxLength: 200
+        minLength: 1
+      is_successful:
+        title: Is successful
+        type: boolean
+      payload_evidence:
+        title: Payload evidence
+        type: string
+        x-nullable: true
+      discovered_date:
+        title: Discovered date
+        type: string
+        format: date-time
+        readOnly: true
+      subdomain:
+        title: Subdomain
+        type: integer
+  Subdomain:
+    required:
+    - ip_addresses
+    - waf
+    - technologies
+    - directories
+    - name
+    type: object
+    properties:
+      id:
+        title: Id
+        type: integer
+        readOnly: true
+      vuln_count:
+        title: Vuln count
+        type: string
+        readOnly: true
+      is_interesting:
+        title: Is interesting
+        type: string
+        readOnly: true
+      endpoint_count:
+        title: Endpoint count
+        type: string
+        readOnly: true
+      info_count:
+        title: Info count
+        type: string
+        readOnly: true
+      low_count:
+        title: Low count
+        type: string
+        readOnly: true
+      medium_count:
+        title: Medium count
+        type: string
+        readOnly: true
+      high_count:
+        title: High count
+        type: string
+        readOnly: true
+      critical_count:
+        title: Critical count
+        type: string
+        readOnly: true
+      todos_count:
+        title: Todos count
+        type: string
+        readOnly: true
+      directories_count:
+        title: Directories count
+        type: string
+        readOnly: true
+      subscan_count:
+        title: Subscan count
+        type: string
+        readOnly: true
+      ip_addresses:
+        type: array
+        items:
+          $ref: '#/definitions/Ip'
+      waf:
+        type: array
+        items:
+          $ref: '#/definitions/Waf'
+      technologies:
+        type: array
+        items:
+          $ref: '#/definitions/Technology'
+      directories:
+        type: array
+        items:
+          $ref: '#/definitions/DirectoryScan'
+      waf_bypass_findings:
+        type: array
+        items:
+          $ref: '#/definitions/WafBypassFinding'
+        readOnly: true
+      name:
+        title: Name
+        type: string
+        maxLength: 1000
+        minLength: 1
+      is_imported_subdomain:
+        title: Is imported subdomain
+        type: boolean
+      is_important:
+        title: Is important
+        type: boolean
+        x-nullable: true
+      http_url:
+        title: Http url
+        type: string
+        maxLength: 10000
+        x-nullable: true
+      screenshot_path:
+        title: Screenshot path
+        type: string
+        maxLength: 1000
+        x-nullable: true
+      http_header_path:
+        title: Http header path
+        type: string
+        maxLength: 1000
+        x-nullable: true
+      discovered_date:
+        title: Discovered date
+        type: string
+        format: date-time
+        x-nullable: true
+      cname:
+        title: Cname
+        type: string
+        maxLength: 5000
+        x-nullable: true
+      is_cdn:
+        title: Is cdn
+        type: boolean
+        x-nullable: true
+      cdn_name:
+        title: Cdn name
+        type: string
+        maxLength: 200
+        x-nullable: true
+      http_status:
+        title: Http status
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      content_type:
+        title: Content type
+        type: string
+        maxLength: 100
+        x-nullable: true
+      response_time:
+        title: Response time
+        type: number
+        x-nullable: true
+      webserver:
+        title: Webserver
+        type: string
+        maxLength: 1000
+        x-nullable: true
+      content_length:
+        title: Content length
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+        x-nullable: true
+      page_title:
+        title: Page title
+        type: string
+        maxLength: 1000
+        x-nullable: true
+      origin_ip:
+        title: Origin ip
+        type: string
+        maxLength: 45
+        x-nullable: true
+      attack_surface:
+        title: Attack surface
+        type: string
+        x-nullable: true
+      scan_history:
+        title: Scan history
+        type: integer
+        x-nullable: true
+      target_domain:
+        title: Target domain
+        type: integer
+        x-nullable: true
+  EndPointChanges:
+    required:
+    - http_url
+    type: object
+    properties:
+      id:
+        title: Id
+        type: integer
+        readOnly: true
+      change:
+        title: Change
+        type: string
+        readOnly: true
+      source:
+        title: Source
+        type: string
+        maxLength: 200
+        x-nullable: true
+      http_url:
+        title: Http url
+        type: string
+        maxLength: 30000
+        minLength: 1
+      content_length:
+        title: Content length
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+        x-nullable: true
+      page_title:
+        title: Page title
+        type: string
+        maxLength: 30000
+        x-nullable: true
+      http_status:
+        title: Http status
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+        x-nullable: true
+      content_type:
+        title: Content type
+        type: string
+        maxLength: 100
+        x-nullable: true
+      discovered_date:
+        title: Discovered date
+        type: string
+        format: date-time
+        x-nullable: true
+      response_time:
+        title: Response time
+        type: number
+        x-nullable: true
+      webserver:
+        title: Webserver
+        type: string
+        maxLength: 1000
+        x-nullable: true
+      is_default:
+        title: Is default
+        type: boolean
+        x-nullable: true
+      matched_gf_patterns:
+        title: Matched gf patterns
+        type: string
+        maxLength: 10000
+        x-nullable: true
+      scan_history:
+        title: Scan history
+        type: integer
+        x-nullable: true
+      target_domain:
+        title: Target domain
+        type: integer
+        x-nullable: true
+      subdomain:
+        title: Subdomain
+        type: integer
+        x-nullable: true
+      techs:
+        type: array
+        items:
+          type: integer
+          x-nullable: true
+        uniqueItems: true
+      endpoint_subscan_ids:
+        type: array
+        items:
+          type: integer
+        uniqueItems: true
+  Parameter:
+    required:
+    - name
+    type: object
+    properties:
+      name:
+        title: Name
+        type: string
+        maxLength: 1000
+        minLength: 1
+      value:
+        title: Value
+        type: string
+        maxLength: 1000
+        x-nullable: true
+      type:
+        title: Type
+        type: string
+        maxLength: 100
+        x-nullable: true
+  Endpoint:
+    required:
+    - techs
+    - http_url
+    type: object
+    properties:
+      id:
+        title: Id
+        type: integer
+        readOnly: true
+      techs:
+        type: array
+        items:
+          $ref: '#/definitions/Technology'
+      parameters:
+        type: array
+        items:
+          $ref: '#/definitions/Parameter'
+        readOnly: true
+      source:
+        title: Source
+        type: string
+        maxLength: 200
+        x-nullable: true
+      http_url:
+        title: Http url
+        type: string
+        maxLength: 30000
+        minLength: 1
+      content_length:
+        title: Content length
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+        x-nullable: true
+      page_title:
+        title: Page title
+        type: string
+        maxLength: 30000
+        x-nullable: true
+      http_status:
+        title: Http status
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+        x-nullable: true
+      content_type:
+        title: Content type
+        type: string
+        maxLength: 100
+        x-nullable: true
+      discovered_date:
+        title: Discovered date
+        type: string
+        format: date-time
+        x-nullable: true
+      response_time:
+        title: Response time
+        type: number
+        x-nullable: true
+      webserver:
+        title: Webserver
+        type: string
+        maxLength: 1000
+        x-nullable: true
+      is_default:
+        title: Is default
+        type: boolean
+        x-nullable: true
+      matched_gf_patterns:
+        title: Matched gf patterns
+        type: string
+        maxLength: 10000
+        x-nullable: true
+      scan_history:
+        title: Scan history
+        type: integer
+        x-nullable: true
+      target_domain:
+        title: Target domain
+        type: integer
+        x-nullable: true
+      subdomain:
+        title: Subdomain
+        type: integer
+        x-nullable: true
+      endpoint_subscan_ids:
+        type: array
+        items:
+          type: integer
+        uniqueItems: true
+  IpSubdomain:
+    required:
+    - name
+    type: object
+    properties:
+      name:
+        title: Name
+        type: string
+        maxLength: 1000
+        minLength: 1
+      ip_addresses:
+        type: array
+        items:
+          required:
+          - ports
+          - ip_subscan_ids
+          type: object
+          properties:
+            id:
+              title: Id
+              type: integer
+              readOnly: true
+            address:
+              title: Address
+              type: string
+              maxLength: 100
+              x-nullable: true
+            is_cdn:
+              title: Is cdn
+              type: boolean
+            version:
+              title: Version
+              type: integer
+              maximum: 2147483647
+              minimum: -2147483648
+              x-nullable: true
+            is_private:
+              title: Is private
+              type: boolean
+            reverse_pointer:
+              title: Reverse pointer
+              type: string
+              maxLength: 100
+              x-nullable: true
+            geo_iso:
+              title: Geo iso
+              type: integer
+              x-nullable: true
+            ports:
+              type: array
+              items:
+                type: integer
+              uniqueItems: true
+            ip_subscan_ids:
+              type: array
+              items:
+                type: integer
+              uniqueItems: true
+        readOnly: true
+  SubdomainChanges:
+    required:
+    - name
+    type: object
+    properties:
+      id:
+        title: Id
+        type: integer
+        readOnly: true
+      change:
+        title: Change
+        type: string
+        readOnly: true
+      is_interesting:
+        title: Is interesting
+        type: string
+        readOnly: true
+      name:
+        title: Name
+        type: string
+        maxLength: 1000
+        minLength: 1
+      is_imported_subdomain:
+        title: Is imported subdomain
+        type: boolean
+      is_important:
+        title: Is important
+        type: boolean
+        x-nullable: true
+      http_url:
+        title: Http url
+        type: string
+        maxLength: 10000
+        x-nullable: true
+      screenshot_path:
+        title: Screenshot path
+        type: string
+        maxLength: 1000
+        x-nullable: true
+      http_header_path:
+        title: Http header path
+        type: string
+        maxLength: 1000
+        x-nullable: true
+      discovered_date:
+        title: Discovered date
+        type: string
+        format: date-time
+        x-nullable: true
+      cname:
+        title: Cname
+        type: string
+        maxLength: 5000
+        x-nullable: true
+      is_cdn:
+        title: Is cdn
+        type: boolean
+        x-nullable: true
+      cdn_name:
+        title: Cdn name
+        type: string
+        maxLength: 200
+        x-nullable: true
+      http_status:
+        title: Http status
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      content_type:
+        title: Content type
+        type: string
+        maxLength: 100
+        x-nullable: true
+      response_time:
+        title: Response time
+        type: number
+        x-nullable: true
+      webserver:
+        title: Webserver
+        type: string
+        maxLength: 1000
+        x-nullable: true
+      content_length:
+        title: Content length
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+        x-nullable: true
+      page_title:
+        title: Page title
+        type: string
+        maxLength: 1000
+        x-nullable: true
+      origin_ip:
+        title: Origin ip
+        type: string
+        maxLength: 45
+        x-nullable: true
+      attack_surface:
+        title: Attack surface
+        type: string
+        x-nullable: true
+      scan_history:
+        title: Scan history
+        type: integer
+        x-nullable: true
+      target_domain:
+        title: Target domain
+        type: integer
+        x-nullable: true
+      technologies:
+        type: array
+        items:
+          type: integer
+        uniqueItems: true
+      ip_addresses:
+        type: array
+        items:
+          type: integer
+        uniqueItems: true
+      directories:
+        type: array
+        items:
+          type: integer
+        uniqueItems: true
+      waf:
+        type: array
+        items:
+          type: integer
+        uniqueItems: true
+  Domain:
+    required:
+    - name
+    type: object
+    properties:
+      id:
+        title: Id
+        type: integer
+        readOnly: true
+      vuln_count:
+        title: Vuln count
+        type: string
+        readOnly: true
+      organization:
+        title: Organization
+        type: string
+        readOnly: true
+      most_recent_scan:
+        title: Most recent scan
+        type: string
+        readOnly: true
+      insert_date:
+        title: Insert date
+        type: string
+        readOnly: true
+      insert_date_humanized:
+        title: Insert date humanized
+        type: string
+        readOnly: true
+      start_scan_date:
+        title: Start scan date
+        type: string
+        readOnly: true
+      start_scan_date_humanized:
+        title: Start scan date humanized
+        type: string
+        readOnly: true
+      name:
+        title: Name
+        type: string
+        maxLength: 300
+        minLength: 1
+      h1_team_handle:
+        title: H1 team handle
+        type: string
+        maxLength: 100
+        x-nullable: true
+      ip_address_cidr:
+        title: Ip address cidr
+        type: string
+        maxLength: 100
+        x-nullable: true
+      description:
+        title: Description
+        type: string
+        x-nullable: true
+      request_headers:
+        title: Request headers
+        type: object
+        x-nullable: true
+      is_monitored:
+        title: Is monitored
+        type: boolean
+      monitor_frequency:
+        title: Monitor frequency
+        type: string
+        enum:
+        - hourly
+        - daily
+        - weekly
+        - monthly
+      monitor_scan_scope:
+        title: Monitor scan scope
+        type: string
+        enum:
+        - targeted
+        - full
+      last_monitored:
+        title: Last monitored
+        type: string
+        format: date-time
+        x-nullable: true
+      domain_info:
+        type: object
+        properties:
+          id:
+            title: Id
+            type: integer
+            readOnly: true
+          dnssec:
+            title: Dnssec
+            type: boolean
+          created:
+            title: Created
+            type: string
+            format: date-time
+            x-nullable: true
+          updated:
+            title: Updated
+            type: string
+            format: date-time
+            x-nullable: true
+          expires:
+            title: Expires
+            type: string
+            format: date-time
+            x-nullable: true
+          geolocation_iso:
+            title: Geolocation iso
+            type: string
+            maxLength: 10
+            x-nullable: true
+          whois_server:
+            title: Whois server
+            type: string
+            maxLength: 150
+            x-nullable: true
+          registrar:
+            type: object
+            properties:
+              id:
+                title: Id
+                type: integer
+                readOnly: true
+              name:
+                title: Name
+                type: string
+                maxLength: 500
+                x-nullable: true
+              phone:
+                title: Phone
+                type: string
+                maxLength: 150
+                x-nullable: true
+              email:
+                title: Email
+                type: string
+                maxLength: 350
+                x-nullable: true
+              url:
+                title: Url
+                type: string
+                maxLength: 1000
+                x-nullable: true
+            readOnly: true
+          registrant:
+            type: object
+            properties:
+              id:
+                title: Id
+                type: integer
+                readOnly: true
+              name:
+                title: Name
+                type: string
+                maxLength: 500
+                x-nullable: true
+              organization:
+                title: Organization
+                type: string
+                maxLength: 500
+                x-nullable: true
+              address:
+                title: Address
+                type: string
+                maxLength: 500
+                x-nullable: true
+              city:
+                title: City
+                type: string
+                maxLength: 100
+                x-nullable: true
+              state:
+                title: State
+                type: string
+                maxLength: 100
+                x-nullable: true
+              zip_code:
+                title: Zip code
+                type: string
+                maxLength: 100
+                x-nullable: true
+              country:
+                title: Country
+                type: string
+                maxLength: 100
+                x-nullable: true
+              email:
+                title: Email
+                type: string
+                maxLength: 500
+                x-nullable: true
+              phone:
+                title: Phone
+                type: string
+                maxLength: 150
+                x-nullable: true
+              fax:
+                title: Fax
+                type: string
+                maxLength: 150
+                x-nullable: true
+              id_str:
+                title: Id str
+                type: string
+                maxLength: 500
+                x-nullable: true
+            readOnly: true
+          admin:
+            type: object
+            properties:
+              id:
+                title: Id
+                type: integer
+                readOnly: true
+              name:
+                title: Name
+                type: string
+                maxLength: 500
+                x-nullable: true
+              organization:
+                title: Organization
+                type: string
+                maxLength: 500
+                x-nullable: true
+              address:
+                title: Address
+                type: string
+                maxLength: 500
+                x-nullable: true
+              city:
+                title: City
+                type: string
+                maxLength: 100
+                x-nullable: true
+              state:
+                title: State
+                type: string
+                maxLength: 100
+                x-nullable: true
+              zip_code:
+                title: Zip code
+                type: string
+                maxLength: 100
+                x-nullable: true
+              country:
+                title: Country
+                type: string
+                maxLength: 100
+                x-nullable: true
+              email:
+                title: Email
+                type: string
+                maxLength: 500
+                x-nullable: true
+              phone:
+                title: Phone
+                type: string
+                maxLength: 150
+                x-nullable: true
+              fax:
+                title: Fax
+                type: string
+                maxLength: 150
+                x-nullable: true
+              id_str:
+                title: Id str
+                type: string
+                maxLength: 500
+                x-nullable: true
+            readOnly: true
+          tech:
+            type: object
+            properties:
+              id:
+                title: Id
+                type: integer
+                readOnly: true
+              name:
+                title: Name
+                type: string
+                maxLength: 500
+                x-nullable: true
+              organization:
+                title: Organization
+                type: string
+                maxLength: 500
+                x-nullable: true
+              address:
+                title: Address
+                type: string
+                maxLength: 500
+                x-nullable: true
+              city:
+                title: City
+                type: string
+                maxLength: 100
+                x-nullable: true
+              state:
+                title: State
+                type: string
+                maxLength: 100
+                x-nullable: true
+              zip_code:
+                title: Zip code
+                type: string
+                maxLength: 100
+                x-nullable: true
+              country:
+                title: Country
+                type: string
+                maxLength: 100
+                x-nullable: true
+              email:
+                title: Email
+                type: string
+                maxLength: 500
+                x-nullable: true
+              phone:
+                title: Phone
+                type: string
+                maxLength: 150
+                x-nullable: true
+              fax:
+                title: Fax
+                type: string
+                maxLength: 150
+                x-nullable: true
+              id_str:
+                title: Id str
+                type: string
+                maxLength: 500
+                x-nullable: true
+            readOnly: true
+          status:
+            type: array
+            items:
+              required:
+              - name
+              type: object
+              properties:
+                id:
+                  title: Id
+                  type: integer
+                  readOnly: true
+                name:
+                  title: Name
+                  type: string
+                  maxLength: 500
+                  minLength: 1
+            readOnly: true
+          name_servers:
+            type: array
+            items:
+              required:
+              - name
+              type: object
+              properties:
+                id:
+                  title: Id
+                  type: integer
+                  readOnly: true
+                name:
+                  title: Name
+                  type: string
+                  maxLength: 500
+                  minLength: 1
+            readOnly: true
+          dns_records:
+            type: array
+            items:
+              required:
+              - name
+              - type
+              type: object
+              properties:
+                id:
+                  title: Id
+                  type: integer
+                  readOnly: true
+                name:
+                  title: Name
+                  type: string
+                  maxLength: 500
+                  minLength: 1
+                type:
+                  title: Type
+                  type: string
+                  maxLength: 50
+                  minLength: 1
+            readOnly: true
+          related_domains:
+            type: array
+            items:
+              required:
+              - name
+              type: object
+              properties:
+                id:
+                  title: Id
+                  type: integer
+                  readOnly: true
+                name:
+                  title: Name
+                  type: string
+                  maxLength: 250
+                  minLength: 1
+            readOnly: true
+          related_tlds:
+            type: array
+            items:
+              required:
+              - name
+              type: object
+              properties:
+                id:
+                  title: Id
+                  type: integer
+                  readOnly: true
+                name:
+                  title: Name
+                  type: string
+                  maxLength: 250
+                  minLength: 1
+            readOnly: true
+          similar_domains:
+            type: array
+            items:
+              required:
+              - name
+              type: object
+              properties:
+                id:
+                  title: Id
+                  type: integer
+                  readOnly: true
+                name:
+                  title: Name
+                  type: string
+                  maxLength: 250
+                  minLength: 1
+            readOnly: true
+          historical_ips:
+            type: array
+            items:
+              required:
+              - ip
+              - location
+              - owner
+              - last_seen
+              type: object
+              properties:
+                id:
+                  title: Id
+                  type: integer
+                  readOnly: true
+                ip:
+                  title: Ip
+                  type: string
+                  maxLength: 150
+                  minLength: 1
+                location:
+                  title: Location
+                  type: string
+                  maxLength: 500
+                  minLength: 1
+                owner:
+                  title: Owner
+                  type: string
+                  maxLength: 500
+                  minLength: 1
+                last_seen:
+                  title: Last seen
+                  type: string
+                  maxLength: 500
+                  minLength: 1
+            readOnly: true
+        readOnly: true
+      project:
+        required:
+        - name
+        - slug
+        - insert_date
+        type: object
+        properties:
+          id:
+            title: Id
+            type: integer
+            readOnly: true
+          name:
+            title: Name
+            type: string
+            maxLength: 500
+            minLength: 1
+          slug:
+            title: Slug
+            type: string
+            format: slug
+            pattern: ^[-a-zA-Z0-9_]+$
+            maxLength: 50
+            minLength: 1
+          insert_date:
+            title: Insert date
+            type: string
+            format: date-time
+        readOnly: true
+      monitor_engine:
+        required:
+        - engine_name
+        - yaml_configuration
+        type: object
+        properties:
+          id:
+            title: Id
+            type: integer
+            readOnly: true
+          engine_name:
+            title: Engine name
+            type: string
+            maxLength: 200
+            minLength: 1
+          yaml_configuration:
+            title: Yaml configuration
+            type: string
+            minLength: 1
+          default_engine:
+            title: Default engine
+            type: boolean
+            x-nullable: true
+        readOnly: true
+      monitor_periodic_task:
+        required:
+        - name
+        - task
+        type: object
+        properties:
+          id:
+            title: ID
+            type: integer
+            readOnly: true
+          name:
+            title: Name
+            description: Short Description For This Task
+            type: string
+            maxLength: 200
+            minLength: 1
+          task:
+            title: Task Name
+            description: 'The Name of the Celery Task that Should be Run.  (Example:
+              "proj.tasks.import_contacts")'
+            type: string
+            maxLength: 200
+            minLength: 1
+          args:
+            title: Positional Arguments
+            description: 'JSON encoded positional arguments (Example: ["arg1", "arg2"])'
+            type: string
+          kwargs:
+            title: Keyword Arguments
+            description: 'JSON encoded keyword arguments (Example: {"argument": "value"})'
+            type: string
+          queue:
+            title: Queue Override
+            description: Queue defined in CELERY_TASK_QUEUES. Leave None for default
+              queuing.
+            type: string
+            maxLength: 200
+            x-nullable: true
+          exchange:
+            title: Exchange
+            description: Override Exchange for low-level AMQP routing
+            type: string
+            maxLength: 200
+            x-nullable: true
+          routing_key:
+            title: Routing Key
+            description: Override Routing Key for low-level AMQP routing
+            type: string
+            maxLength: 200
+            x-nullable: true
+          headers:
+            title: AMQP Message Headers
+            description: JSON encoded message headers for the AMQP message.
+            type: string
+          priority:
+            title: Priority
+            description: 'Priority Number between 0 and 255. Supported by: RabbitMQ,
+              Redis (priority reversed, 0 is highest).'
+            type: integer
+            maximum: 255
+            minimum: 0
+            x-nullable: true
+          expires:
+            title: Expires Datetime
+            description: Datetime after which the schedule will no longer trigger
+              the task to run
+            type: string
+            format: date-time
+            x-nullable: true
+          expire_seconds:
+            title: Expires timedelta with seconds
+            description: Timedelta with seconds which the schedule will no longer
+              trigger the task to run
+            type: integer
+            maximum: 2147483647
+            minimum: 0
+            x-nullable: true
+          one_off:
+            title: One-off Task
+            description: If True, the schedule will only run the task a single time
+            type: boolean
+          start_time:
+            title: Start Datetime
+            description: Datetime when the schedule should begin triggering the task
+              to run
+            type: string
+            format: date-time
+            x-nullable: true
+          enabled:
+            title: Enabled
+            description: Set to False to disable the schedule
+            type: boolean
+          last_run_at:
+            title: Last Run Datetime
+            description: Datetime that the schedule last triggered the task to run.
+              Reset to None if enabled is set to False.
+            type: string
+            format: date-time
+            readOnly: true
+          total_run_count:
+            title: Total Run Count
+            description: Running count of how many times the schedule has triggered
+              the task
+            type: integer
+            readOnly: true
+          date_changed:
+            title: Last Modified
+            description: Datetime that this PeriodicTask was last modified
+            type: string
+            format: date-time
+            readOnly: true
+          description:
+            title: Description
+            description: Detailed description about the details of this Periodic Task
+            type: string
+          interval:
+            required:
+            - every
+            - period
+            type: object
+            properties:
+              id:
+                title: ID
+                type: integer
+                readOnly: true
+              every:
+                title: Number of Periods
+                description: Number of interval periods to wait before running the
+                  task again
+                type: integer
+                maximum: 2147483647
+                minimum: 1
+              period:
+                title: Interval Period
+                description: 'The type of period between task runs (Example: days)'
+                type: string
+                enum:
+                - days
+                - hours
+                - minutes
+                - seconds
+                - microseconds
+            readOnly: true
+          crontab:
+            type: object
+            properties:
+              id:
+                title: ID
+                type: integer
+                readOnly: true
+              minute:
+                title: Minute(s)
+                description: 'Cron Minutes to Run. Use "*" for "all". (Example: "0,30")'
+                type: string
+                maxLength: 240
+                minLength: 1
+              hour:
+                title: Hour(s)
+                description: 'Cron Hours to Run. Use "*" for "all". (Example: "8,20")'
+                type: string
+                maxLength: 96
+                minLength: 1
+              day_of_month:
+                title: Day(s) Of The Month
+                description: 'Cron Days Of The Month to Run. Use "*" for "all". (Example:
+                  "1,15")'
+                type: string
+                maxLength: 124
+                minLength: 1
+              month_of_year:
+                title: Month(s) Of The Year
+                description: 'Cron Months (1-12) Of The Year to Run. Use "*" for "all".
+                  (Example: "1,12")'
+                type: string
+                maxLength: 64
+                minLength: 1
+              day_of_week:
+                title: Day(s) Of The Week
+                description: 'Cron Days Of The Week to Run. Use "*" for "all", Sunday
+                  is 0 or 7, Monday is 1. (Example: "0,5")'
+                type: string
+                maxLength: 64
+                minLength: 1
+              timezone:
+                title: Cron Timezone
+                description: Timezone to Run the Cron Schedule on. Default is UTC.
+                type: string
+                enum:
+                - Atlantic/Stanley
+                - Africa/Douala
+                - Etc/GMT+5
+                - Indian/Cocos
+                - America/Santa_Isabel
+                - Atlantic/Jan_Mayen
+                - Africa/Lome
+                - Europe/Vaduz
+                - Pacific/Port_Moresby
+                - Australia/Queensland
+                - Asia/Yerevan
+                - Africa/Abidjan
+                - PST8PDT
+                - Etc/GMT-11
+                - America/Pangnirtung
+                - Africa/Asmera
+                - America/North_Dakota/New_Salem
+                - Asia/Barnaul
+                - Pacific/Honolulu
+                - GMT+0
+                - America/Lower_Princes
+                - America/Thunder_Bay
+                - Europe/Brussels
+                - EST
+                - America/Adak
+                - Asia/Amman
+                - Pacific/Wallis
+                - Africa/Accra
+                - Asia/Pontianak
+                - America/Panama
+                - Africa/Lubumbashi
+                - Etc/GMT-14
+                - America/Fortaleza
+                - Etc/UTC
+                - CST6CDT
+                - America/Coyhaique
+                - Asia/Qatar
+                - Asia/Kuwait
+                - Portugal
+                - Asia/Irkutsk
+                - America/El_Salvador
+                - Asia/Aqtau
+                - Asia/Srednekolymsk
+                - Europe/Jersey
+                - America/Mexico_City
+                - Asia/Vientiane
+                - America/Antigua
+                - Asia/Ho_Chi_Minh
+                - Pacific/Majuro
+                - Antarctica/Rothera
+                - America/Maceio
+                - Australia/West
+                - Africa/Tripoli
+                - America/Detroit
+                - America/Bahia_Banderas
+                - Europe/Helsinki
+                - Universal
+                - America/Bahia
+                - Indian/Antananarivo
+                - Europe/Zaporozhye
+                - Asia/Magadan
+                - Pacific/Tongatapu
+                - Asia/Ashkhabad
+                - Pacific/Johnston
+                - America/Anchorage
+                - Brazil/East
+                - America/Mazatlan
+                - Canada/Saskatchewan
+                - Pacific/Fakaofo
+                - America/Menominee
+                - America/Noronha
+                - Africa/El_Aaiun
+                - America/Grenada
+                - Asia/Anadyr
+                - America/Santarem
+                - US/Samoa
+                - Asia/Tbilisi
+                - Europe/Zagreb
+                - Pacific/Kosrae
+                - US/Aleutian
+                - Pacific/Fiji
+                - Asia/Qostanay
+                - EST5EDT
+                - Europe/Belfast
+                - America/Nuuk
+                - Canada/Yukon
+                - Asia/Kamchatka
+                - America/Denver
+                - Etc/GMT-0
+                - America/Guatemala
+                - Asia/Katmandu
+                - Eire
+                - Europe/Uzhgorod
+                - America/Boa_Vista
+                - America/Port_of_Spain
+                - America/Creston
+                - US/Hawaii
+                - America/Sitka
+                - NZ-CHAT
+                - Indian/Maldives
+                - Asia/Singapore
+                - CET
+                - Africa/Djibouti
+                - America/Campo_Grande
+                - America/St_Johns
+                - Brazil/Acre
+                - America/Los_Angeles
+                - Europe/Dublin
+                - Pacific/Saipan
+                - Asia/Shanghai
+                - Africa/Mogadishu
+                - America/Iqaluit
+                - US/Eastern
+                - Europe/Busingen
+                - Asia/Choibalsan
+                - Asia/Phnom_Penh
+                - US/Pacific
+                - Australia/Yancowinna
+                - Africa/Sao_Tome
+                - Africa/Maseru
+                - Etc/GMT-4
+                - Asia/Ashgabat
+                - America/Santo_Domingo
+                - Pacific/Gambier
+                - Pacific/Noumea
+                - Brazil/West
+                - UCT
+                - Australia/Eucla
+                - Africa/Bangui
+                - America/Edmonton
+                - America/Indiana/Winamac
+                - Etc/GMT+6
+                - Europe/Sarajevo
+                - America/Ojinaga
+                - Asia/Aden
+                - America/Louisville
+                - America/Grand_Turk
+                - Asia/Kuala_Lumpur
+                - America/Argentina/Salta
+                - Australia/Broken_Hill
+                - Asia/Bishkek
+                - Asia/Bahrain
+                - America/Cayenne
+                - America/Miquelon
+                - Africa/Juba
+                - Asia/Damascus
+                - Europe/Tirane
+                - America/Anguilla
+                - Asia/Brunei
+                - W-SU
+                - Asia/Macao
+                - Europe/Kyiv
+                - Atlantic/Azores
+                - Asia/Saigon
+                - America/Hermosillo
+                - America/Caracas
+                - Etc/GMT+7
+                - Europe/Vilnius
+                - Europe/Zurich
+                - Asia/Thimbu
+                - Africa/Dar_es_Salaam
+                - Asia/Tehran
+                - America/Kentucky/Louisville
+                - Africa/Khartoum
+                - Africa/Ouagadougou
+                - Etc/GMT+0
+                - Chile/EasterIsland
+                - Asia/Famagusta
+                - Antarctica/Troll
+                - Asia/Atyrau
+                - Etc/GMT+3
+                - America/Ciudad_Juarez
+                - America/Blanc-Sablon
+                - America/Marigot
+                - HST
+                - Asia/Tomsk
+                - Etc/GMT+4
+                - Antarctica/South_Pole
+                - America/Knox_IN
+                - Etc/GMT-10
+                - GMT
+                - Etc/GMT0
+                - Asia/Chongqing
+                - Etc/GMT-9
+                - Europe/Kiev
+                - America/Glace_Bay
+                - America/Manaus
+                - Australia/Lord_Howe
+                - Africa/Kinshasa
+                - Cuba
+                - Australia/Melbourne
+                - America/Scoresbysund
+                - Europe/Andorra
+                - Africa/Gaborone
+                - Africa/Monrovia
+                - Pacific/Kwajalein
+                - Turkey
+                - Europe/Tallinn
+                - US/East-Indiana
+                - America/Sao_Paulo
+                - America/Argentina/Catamarca
+                - Asia/Pyongyang
+                - Pacific/Kiritimati
+                - America/St_Vincent
+                - Australia/North
+                - Pacific/Niue
+                - America/Costa_Rica
+                - Europe/Sofia
+                - Australia/Victoria
+                - Africa/Lagos
+                - Asia/Harbin
+                - America/La_Paz
+                - Africa/Lusaka
+                - America/Argentina/Jujuy
+                - America/St_Thomas
+                - America/Argentina/San_Juan
+                - Asia/Kolkata
+                - Indian/Mayotte
+                - Europe/Lisbon
+                - Antarctica/Palmer
+                - Atlantic/Faroe
+                - America/Fort_Wayne
+                - Hongkong
+                - Asia/Kabul
+                - GMT-0
+                - Asia/Nicosia
+                - Arctic/Longyearbyen
+                - Pacific/Palau
+                - America/Port-au-Prince
+                - America/Havana
+                - Australia/Adelaide
+                - America/Chicago
+                - Asia/Dushanbe
+                - MST7MDT
+                - America/Shiprock
+                - Pacific/Kanton
+                - Pacific/Apia
+                - Europe/Chisinau
+                - America/Kentucky/Monticello
+                - America/Argentina/La_Rioja
+                - America/Thule
+                - America/Goose_Bay
+                - Asia/Tashkent
+                - America/Argentina/Ushuaia
+                - Etc/UCT
+                - Africa/Tunis
+                - America/Cancun
+                - NZ
+                - America/Winnipeg
+                - Pacific/Pago_Pago
+                - Mexico/BajaSur
+                - Etc/Greenwich
+                - Asia/Makassar
+                - Asia/Muscat
+                - Europe/Bucharest
+                - US/Michigan
+                - MST
+                - Atlantic/Madeira
+                - Australia/Darwin
+                - Europe/Stockholm
+                - Africa/Nouakchott
+                - Etc/GMT
+                - Japan
+                - Antarctica/Davis
+                - America/Halifax
+                - Pacific/Galapagos
+                - America/Juneau
+                - America/Dawson
+                - Africa/Bujumbura
+                - Australia/LHI
+                - Etc/Universal
+                - Etc/GMT-1
+                - Europe/Paris
+                - Canada/Newfoundland
+                - America/Atka
+                - Africa/Malabo
+                - Asia/Kuching
+                - Australia/NSW
+                - America/Argentina/San_Luis
+                - UTC
+                - America/Curacao
+                - America/Belem
+                - America/Rio_Branco
+                - Europe/Warsaw
+                - Asia/Novosibirsk
+                - Pacific/Ponape
+                - Pacific/Tarawa
+                - Etc/GMT+2
+                - Pacific/Samoa
+                - Asia/Tel_Aviv
+                - America/Barbados
+                - America/St_Kitts
+                - America/Indiana/Vincennes
+                - Egypt
+                - America/Rankin_Inlet
+                - Europe/Simferopol
+                - Pacific/Guadalcanal
+                - Pacific/Enderbury
+                - Europe/Athens
+                - America/North_Dakota/Beulah
+                - Asia/Almaty
+                - Asia/Qyzylorda
+                - America/Danmarkshavn
+                - America/Dawson_Creek
+                - Indian/Mauritius
+                - Canada/Mountain
+                - Europe/Copenhagen
+                - Antarctica/Mawson
+                - America/Cambridge_Bay
+                - Africa/Kigali
+                - America/Argentina/Rio_Gallegos
+                - Europe/Vienna
+                - Asia/Macau
+                - America/Argentina/ComodRivadavia
+                - Africa/Casablanca
+                - Asia/Istanbul
+                - Pacific/Yap
+                - America/Godthab
+                - America/Recife
+                - Europe/Ulyanovsk
+                - Pacific/Midway
+                - Atlantic/St_Helena
+                - America/Phoenix
+                - Europe/Vatican
+                - America/Guayaquil
+                - America/Yakutat
+                - Europe/Bratislava
+                - Indian/Christmas
+                - Australia/Tasmania
+                - America/Porto_Velho
+                - Asia/Ulaanbaatar
+                - America/Lima
+                - America/Argentina/Cordoba
+                - Asia/Oral
+                - Africa/Luanda
+                - America/Indiana/Tell_City
+                - America/Indiana/Marengo
+                - US/Alaska
+                - America/Indiana/Knox
+                - Africa/Bamako
+                - Asia/Bangkok
+                - Pacific/Guam
+                - Canada/Central
+                - Asia/Manila
+                - America/Eirunepe
+                - America/New_York
+                - Europe/Tiraspol
+                - Africa/Ceuta
+                - Etc/GMT+8
+                - Israel
+                - Europe/Monaco
+                - Europe/Istanbul
+                - Antarctica/Syowa
+                - Asia/Aqtobe
+                - Asia/Jayapura
+                - Africa/Maputo
+                - Asia/Chungking
+                - America/Tijuana
+                - Asia/Sakhalin
+                - Indian/Reunion
+                - America/North_Dakota/Center
+                - Europe/Saratov
+                - Etc/Zulu
+                - Greenwich
+                - America/Tortola
+                - Atlantic/Cape_Verde
+                - Indian/Kerguelen
+                - America/Nome
+                - America/Paramaribo
+                - America/Inuvik
+                - Africa/Kampala
+                - America/Porto_Acre
+                - Antarctica/McMurdo
+                - Asia/Dili
+                - US/Mountain
+                - America/Jamaica
+                - ROC
+                - Indian/Mahe
+                - Africa/Blantyre
+                - America/Araguaina
+                - Africa/Addis_Ababa
+                - Africa/Niamey
+                - Pacific/Bougainville
+                - Asia/Jakarta
+                - Africa/Cairo
+                - America/Punta_Arenas
+                - EET
+                - Africa/Algiers
+                - Europe/Prague
+                - America/Montserrat
+                - Africa/Dakar
+                - Asia/Hovd
+                - America/Asuncion
+                - Asia/Jerusalem
+                - US/Indiana-Starke
+                - Pacific/Wake
+                - America/Virgin
+                - America/Guyana
+                - America/Monterrey
+                - Etc/GMT+10
+                - Europe/Ljubljana
+                - Asia/Novokuznetsk
+                - Etc/GMT+9
+                - Europe/Amsterdam
+                - Mexico/General
+                - Africa/Bissau
+                - Africa/Brazzaville
+                - Pacific/Chuuk
+                - Etc/GMT-3
+                - Europe/Podgorica
+                - America/Cuiaba
+                - Australia/South
+                - Zulu
+                - America/Argentina/Buenos_Aires
+                - America/Cayman
+                - Pacific/Funafuti
+                - Asia/Ulan_Bator
+                - Australia/ACT
+                - Etc/GMT+11
+                - Asia/Samarkand
+                - Africa/Johannesburg
+                - America/Moncton
+                - Etc/GMT-7
+                - Australia/Canberra
+                - Africa/Asmara
+                - Navajo
+                - America/Merida
+                - Asia/Baghdad
+                - Asia/Colombo
+                - America/Yellowknife
+                - Iran
+                - Antarctica/DumontDUrville
+                - Africa/Libreville
+                - Indian/Comoro
+                - Europe/Minsk
+                - Europe/London
+                - Singapore
+                - America/Rainy_River
+                - Europe/Volgograd
+                - Etc/GMT-8
+                - Africa/Banjul
+                - America/Rosario
+                - Asia/Gaza
+                - America/Kralendijk
+                - America/Nipigon
+                - Australia/Lindeman
+                - America/Swift_Current
+                - Australia/Perth
+                - Atlantic/Reykjavik
+                - WET
+                - America/St_Lucia
+                - Asia/Yangon
+                - America/Fort_Nelson
+                - Europe/Riga
+                - Asia/Karachi
+                - Asia/Yekaterinburg
+                - Asia/Chita
+                - America/Whitehorse
+                - Antarctica/Casey
+                - Jamaica
+                - Europe/Astrakhan
+                - Europe/Kaliningrad
+                - Etc/GMT-2
+                - Etc/GMT-13
+                - GB
+                - Asia/Tokyo
+                - Europe/Gibraltar
+                - Atlantic/Canary
+                - Europe/Isle_of_Man
+                - Asia/Kashgar
+                - Asia/Dacca
+                - Africa/Ndjamena
+                - Canada/Pacific
+                - America/Managua
+                - Europe/Mariehamn
+                - America/Tegucigalpa
+                - Asia/Seoul
+                - America/St_Barthelemy
+                - America/Atikokan
+                - Europe/Nicosia
+                - America/Belize
+                - Indian/Chagos
+                - Etc/GMT-5
+                - Africa/Conakry
+                - Africa/Porto-Novo
+                - Asia/Kathmandu
+                - Asia/Dubai
+                - Asia/Urumqi
+                - Pacific/Nauru
+                - America/Ensenada
+                - Antarctica/Vostok
+                - Australia/Hobart
+                - Libya
+                - Europe/Skopje
+                - America/Matamoros
+                - Asia/Baku
+                - Etc/GMT+1
+                - America/Jujuy
+                - Pacific/Chatham
+                - Asia/Calcutta
+                - Africa/Timbuktu
+                - US/Central
+                - Africa/Nairobi
+                - Poland
+                - America/Argentina/Tucuman
+                - America/Catamarca
+                - Europe/Oslo
+                - Europe/Berlin
+                - GMT0
+                - Asia/Rangoon
+                - Asia/Dhaka
+                - Canada/Atlantic
+                - Asia/Vladivostok
+                - Kwajalein
+                - America/Regina
+                - Australia/Currie
+                - Asia/Ust-Nera
+                - Europe/Madrid
+                - Etc/GMT-6
+                - Chile/Continental
+                - America/Dominica
+                - America/Buenos_Aires
+                - Etc/GMT-12
+                - Asia/Ujung_Pandang
+                - Europe/San_Marino
+                - Pacific/Auckland
+                - America/Puerto_Rico
+                - Pacific/Pitcairn
+                - ROK
+                - America/Martinique
+                - Asia/Taipei
+                - America/Indianapolis
+                - America/Resolute
+                - America/Indiana/Indianapolis
+                - Africa/Windhoek
+                - Antarctica/Macquarie
+                - America/Coral_Harbour
+                - America/Montevideo
+                - Pacific/Tahiti
+                - Pacific/Easter
+                - Europe/Belgrade
+                - America/Bogota
+                - Atlantic/Bermuda
+                - US/Arizona
+                - America/Santiago
+                - Africa/Mbabane
+                - Mexico/BajaNorte
+                - Pacific/Rarotonga
+                - America/Mendoza
+                - Africa/Freetown
+                - Atlantic/South_Georgia
+                - Asia/Hebron
+                - Asia/Omsk
+                - Europe/Budapest
+                - Europe/Moscow
+                - Iceland
+                - America/Aruba
+                - Etc/GMT+12
+                - Asia/Krasnoyarsk
+                - GB-Eire
+                - Pacific/Norfolk
+                - Asia/Thimphu
+                - Europe/Malta
+                - America/Nassau
+                - America/Metlakatla
+                - America/Vancouver
+                - Canada/Eastern
+                - America/Toronto
+                - Asia/Riyadh
+                - Asia/Yakutsk
+                - PRC
+                - America/Guadeloupe
+                - America/Montreal
+                - MET
+                - America/Indiana/Vevay
+                - Pacific/Efate
+                - Europe/Guernsey
+                - Australia/Sydney
+                - Africa/Harare
+                - Asia/Beirut
+                - America/Chihuahua
+                - America/Cordoba
+                - Asia/Khandyga
+                - America/Boise
+                - Europe/Rome
+                - Pacific/Pohnpei
+                - America/Argentina/Mendoza
+                - America/Indiana/Petersburg
+                - Europe/Luxembourg
+                - Asia/Hong_Kong
+                - Atlantic/Faeroe
+                - Europe/Kirov
+                - Pacific/Marquesas
+                - Brazil/DeNoronha
+                - Australia/Brisbane
+                - Europe/Samara
+                - Pacific/Truk
+            readOnly: true
+          solar:
+            required:
+            - event
+            - latitude
+            - longitude
+            type: object
+            properties:
+              id:
+                title: ID
+                type: integer
+                readOnly: true
+              event:
+                title: Solar Event
+                description: The type of solar event when the job should run
+                type: string
+                enum:
+                - dawn_astronomical
+                - dawn_civil
+                - dawn_nautical
+                - dusk_astronomical
+                - dusk_civil
+                - dusk_nautical
+                - solar_noon
+                - sunrise
+                - sunset
+              latitude:
+                title: Latitude
+                description: Run the task when the event happens at this latitude
+                type: string
+                format: decimal
+              longitude:
+                title: Longitude
+                description: Run the task when the event happens at this longitude
+                type: string
+                format: decimal
+            readOnly: true
+          clocked:
+            required:
+            - clocked_time
+            type: object
+            properties:
+              id:
+                title: ID
+                type: integer
+                readOnly: true
+              clocked_time:
+                title: Clock Time
+                description: Run the task at clocked time
+                type: string
+                format: date-time
+            readOnly: true
+        readOnly: true
+  Vulnerability:
+    required:
+    - name
+    type: object
+    properties:
+      id:
+        title: Id
+        type: integer
+        readOnly: true
+      discovered_date:
+        title: Discovered date
+        type: string
+        readOnly: true
+      severity:
+        title: Severity
+        type: string
+        readOnly: true
+      scan_history:
+        title: Scan history
+        type: string
+        readOnly: true
+      source:
+        title: Source
+        type: string
+        maxLength: 200
+        x-nullable: true
+      template:
+        title: Template
+        type: string
+        maxLength: 100
+        x-nullable: true
+      template_url:
+        title: Template url
+        type: string
+        maxLength: 2500
+        x-nullable: true
+      template_id:
+        title: Template id
+        type: string
+        maxLength: 200
+        x-nullable: true
+      matcher_name:
+        title: Matcher name
+        type: string
+        maxLength: 500
+        x-nullable: true
+      name:
+        title: Name
+        type: string
+        maxLength: 2500
+        minLength: 1
+      description:
+        title: Description
+        type: string
+        x-nullable: true
+      impact:
+        title: Impact
+        type: string
+        x-nullable: true
+      remediation:
+        title: Remediation
+        type: string
+        x-nullable: true
+      extracted_results:
+        type: array
+        items:
+          title: Extracted results
+          type: string
+          maxLength: 5000
+          minLength: 1
+        x-nullable: true
+      cvss_metrics:
+        title: Cvss metrics
+        type: string
+        maxLength: 500
+        x-nullable: true
+      cvss_score:
+        title: Cvss score
+        type: number
+        x-nullable: true
+      curl_command:
+        title: Curl command
+        type: string
+        maxLength: 15000
+        x-nullable: true
+      type:
+        title: Type
+        type: string
+        maxLength: 100
+        x-nullable: true
+      http_url:
+        title: Http url
+        type: string
+        maxLength: 10000
+        minLength: 1
+        x-nullable: true
+      open_status:
+        title: Open status
+        type: boolean
+        x-nullable: true
+      hackerone_report_id:
+        title: Hackerone report id
+        type: string
+        maxLength: 50
+        x-nullable: true
+      request:
+        title: Request
+        type: string
+        x-nullable: true
+      response:
+        title: Response
+        type: string
+        x-nullable: true
+      is_gpt_used:
+        title: Is gpt used
+        type: boolean
+        x-nullable: true
+      exploit_url:
+        title: Exploit url
+        type: string
+        maxLength: 2500
+        x-nullable: true
+      validation_status:
+        title: Validation status
+        type: string
+        enum:
+        - unverified
+        - verified
+        - not_working
+        - patched
+      subdomain:
+        required:
+        - name
+        type: object
+        properties:
+          id:
+            title: Id
+            type: integer
+            readOnly: true
+          name:
+            title: Name
+            type: string
+            maxLength: 1000
+            minLength: 1
+          is_imported_subdomain:
+            title: Is imported subdomain
+            type: boolean
+          is_important:
+            title: Is important
+            type: boolean
+            x-nullable: true
+          http_url:
+            title: Http url
+            type: string
+            maxLength: 10000
+            x-nullable: true
+          screenshot_path:
+            title: Screenshot path
+            type: string
+            maxLength: 1000
+            x-nullable: true
+          http_header_path:
+            title: Http header path
+            type: string
+            maxLength: 1000
+            x-nullable: true
+          discovered_date:
+            title: Discovered date
+            type: string
+            format: date-time
+            x-nullable: true
+          cname:
+            title: Cname
+            type: string
+            maxLength: 5000
+            x-nullable: true
+          is_cdn:
+            title: Is cdn
+            type: boolean
+            x-nullable: true
+          cdn_name:
+            title: Cdn name
+            type: string
+            maxLength: 200
+            x-nullable: true
+          http_status:
+            title: Http status
+            type: integer
+            maximum: 2147483647
+            minimum: -2147483648
+          content_type:
+            title: Content type
+            type: string
+            maxLength: 100
+            x-nullable: true
+          response_time:
+            title: Response time
+            type: number
+            x-nullable: true
+          webserver:
+            title: Webserver
+            type: string
+            maxLength: 1000
+            x-nullable: true
+          content_length:
+            title: Content length
+            type: integer
+            maximum: 2147483647
+            minimum: -2147483648
+            x-nullable: true
+          page_title:
+            title: Page title
+            type: string
+            maxLength: 1000
+            x-nullable: true
+          origin_ip:
+            title: Origin ip
+            type: string
+            maxLength: 45
+            x-nullable: true
+          attack_surface:
+            title: Attack surface
+            type: string
+            x-nullable: true
+          scan_history:
+            required:
+            - start_scan_date
+            - domain
+            - scan_type
+            type: object
+            properties:
+              id:
+                title: Id
+                type: integer
+                readOnly: true
+              start_scan_date:
+                title: Start scan date
+                type: string
+                format: date-time
+              scan_status:
+                title: Scan status
+                type: integer
+                enum:
+                - -1
+                - 0
+                - 1
+                - 2
+                - 3
+              results_dir:
+                title: Results dir
+                type: string
+                maxLength: 100
+              celery_ids:
+                type: array
+                items:
+                  title: Celery ids
+                  type: string
+                  maxLength: 100
+                  minLength: 1
+              tasks:
+                type: array
+                items:
+                  title: Tasks
+                  type: string
+                  maxLength: 200
+                  minLength: 1
+                x-nullable: true
+              stop_scan_date:
+                title: Stop scan date
+                type: string
+                format: date-time
+                x-nullable: true
+              used_gf_patterns:
+                title: Used gf patterns
+                type: string
+                maxLength: 500
+                x-nullable: true
+              error_message:
+                title: Error message
+                type: string
+                maxLength: 300
+                x-nullable: true
+              cfg_out_of_scope_subdomains:
+                type: array
+                items:
+                  title: Cfg out of scope subdomains
+                  type: string
+                  maxLength: 200
+                  minLength: 1
+                x-nullable: true
+              cfg_starting_point_path:
+                title: Cfg starting point path
+                type: string
+                maxLength: 200
+                x-nullable: true
+              cfg_excluded_paths:
+                type: array
+                items:
+                  title: Cfg excluded paths
+                  type: string
+                  maxLength: 200
+                  minLength: 1
+                x-nullable: true
+              cfg_imported_subdomains:
+                type: array
+                items:
+                  title: Cfg imported subdomains
+                  type: string
+                  maxLength: 200
+                  minLength: 1
+                x-nullable: true
+              cfg_custom_dorks:
+                title: Cfg custom dorks
+                type: string
+                x-nullable: true
+              domain:
+                title: Domain
+                type: integer
+              scan_type:
+                title: Scan type
+                type: integer
+              initiated_by:
+                title: Initiated by
+                type: integer
+                x-nullable: true
+              aborted_by:
+                title: Aborted by
+                type: integer
+                x-nullable: true
+              emails:
+                type: array
+                items:
+                  type: integer
+                uniqueItems: true
+              employees:
+                type: array
+                items:
+                  type: integer
+                uniqueItems: true
+              buckets:
+                type: array
+                items:
+                  type: integer
+                uniqueItems: true
+              dorks:
+                type: array
+                items:
+                  type: integer
+                uniqueItems: true
+            readOnly: true
+          target_domain:
+            required:
+            - name
+            type: object
+            properties:
+              id:
+                title: Id
+                type: integer
+                readOnly: true
+              name:
+                title: Name
+                type: string
+                maxLength: 300
+                minLength: 1
+              h1_team_handle:
+                title: H1 team handle
+                type: string
+                maxLength: 100
+                x-nullable: true
+              ip_address_cidr:
+                title: Ip address cidr
+                type: string
+                maxLength: 100
+                x-nullable: true
+              description:
+                title: Description
+                type: string
+                x-nullable: true
+              insert_date:
+                title: Insert date
+                type: string
+                format: date-time
+                x-nullable: true
+              start_scan_date:
+                title: Start scan date
+                type: string
+                format: date-time
+                x-nullable: true
+              request_headers:
+                title: Request headers
+                type: object
+                x-nullable: true
+              is_monitored:
+                title: Is monitored
+                type: boolean
+              monitor_frequency:
+                title: Monitor frequency
+                type: string
+                enum:
+                - hourly
+                - daily
+                - weekly
+                - monthly
+              monitor_scan_scope:
+                title: Monitor scan scope
+                type: string
+                enum:
+                - targeted
+                - full
+              last_monitored:
+                title: Last monitored
+                type: string
+                format: date-time
+                x-nullable: true
+              domain_info:
+                title: Domain info
+                type: integer
+                x-nullable: true
+              project:
+                title: Project
+                type: integer
+                x-nullable: true
+              monitor_engine:
+                title: Monitor engine
+                type: integer
+                x-nullable: true
+              monitor_periodic_task:
+                title: Monitor periodic task
+                type: integer
+                x-nullable: true
+            readOnly: true
+          technologies:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  title: Id
+                  type: integer
+                  readOnly: true
+                name:
+                  title: Name
+                  type: string
+                  maxLength: 500
+                  x-nullable: true
+            readOnly: true
+          ip_addresses:
+            type: array
+            items:
+              required:
+              - ports
+              - ip_subscan_ids
+              type: object
+              properties:
+                id:
+                  title: Id
+                  type: integer
+                  readOnly: true
+                address:
+                  title: Address
+                  type: string
+                  maxLength: 100
+                  x-nullable: true
+                is_cdn:
+                  title: Is cdn
+                  type: boolean
+                version:
+                  title: Version
+                  type: integer
+                  maximum: 2147483647
+                  minimum: -2147483648
+                  x-nullable: true
+                is_private:
+                  title: Is private
+                  type: boolean
+                reverse_pointer:
+                  title: Reverse pointer
+                  type: string
+                  maxLength: 100
+                  x-nullable: true
+                geo_iso:
+                  title: Geo iso
+                  type: integer
+                  x-nullable: true
+                ports:
+                  type: array
+                  items:
+                    type: integer
+                  uniqueItems: true
+                ip_subscan_ids:
+                  type: array
+                  items:
+                    type: integer
+                  uniqueItems: true
+            readOnly: true
+          directories:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  title: Id
+                  type: integer
+                  readOnly: true
+                command_line:
+                  title: Command line
+                  type: string
+                  maxLength: 5000
+                  x-nullable: true
+                scanned_date:
+                  title: Scanned date
+                  type: string
+                  format: date-time
+                  x-nullable: true
+                directory_files:
+                  type: array
+                  items:
+                    type: integer
+                  uniqueItems: true
+                dir_subscan_ids:
+                  type: array
+                  items:
+                    type: integer
+                  uniqueItems: true
+            readOnly: true
+          waf:
+            type: array
+            items:
+              required:
+              - name
+              type: object
+              properties:
+                id:
+                  title: Id
+                  type: integer
+                  readOnly: true
+                name:
+                  title: Name
+                  type: string
+                  maxLength: 500
+                  minLength: 1
+                manufacturer:
+                  title: Manufacturer
+                  type: string
+                  maxLength: 500
+                  x-nullable: true
+            readOnly: true
+        readOnly: true
+      endpoint:
+        required:
+        - http_url
+        type: object
+        properties:
+          id:
+            title: Id
+            type: integer
+            readOnly: true
+          source:
+            title: Source
+            type: string
+            maxLength: 200
+            x-nullable: true
+          http_url:
+            title: Http url
+            type: string
+            maxLength: 30000
+            minLength: 1
+          content_length:
+            title: Content length
+            type: integer
+            maximum: 2147483647
+            minimum: -2147483648
+            x-nullable: true
+          page_title:
+            title: Page title
+            type: string
+            maxLength: 30000
+            x-nullable: true
+          http_status:
+            title: Http status
+            type: integer
+            maximum: 2147483647
+            minimum: -2147483648
+            x-nullable: true
+          content_type:
+            title: Content type
+            type: string
+            maxLength: 100
+            x-nullable: true
+          discovered_date:
+            title: Discovered date
+            type: string
+            format: date-time
+            x-nullable: true
+          response_time:
+            title: Response time
+            type: number
+            x-nullable: true
+          webserver:
+            title: Webserver
+            type: string
+            maxLength: 1000
+            x-nullable: true
+          is_default:
+            title: Is default
+            type: boolean
+            x-nullable: true
+          matched_gf_patterns:
+            title: Matched gf patterns
+            type: string
+            maxLength: 10000
+            x-nullable: true
+          scan_history:
+            required:
+            - start_scan_date
+            - domain
+            - scan_type
+            type: object
+            properties:
+              id:
+                title: Id
+                type: integer
+                readOnly: true
+              start_scan_date:
+                title: Start scan date
+                type: string
+                format: date-time
+              scan_status:
+                title: Scan status
+                type: integer
+                enum:
+                - -1
+                - 0
+                - 1
+                - 2
+                - 3
+              results_dir:
+                title: Results dir
+                type: string
+                maxLength: 100
+              celery_ids:
+                type: array
+                items:
+                  title: Celery ids
+                  type: string
+                  maxLength: 100
+                  minLength: 1
+              tasks:
+                type: array
+                items:
+                  title: Tasks
+                  type: string
+                  maxLength: 200
+                  minLength: 1
+                x-nullable: true
+              stop_scan_date:
+                title: Stop scan date
+                type: string
+                format: date-time
+                x-nullable: true
+              used_gf_patterns:
+                title: Used gf patterns
+                type: string
+                maxLength: 500
+                x-nullable: true
+              error_message:
+                title: Error message
+                type: string
+                maxLength: 300
+                x-nullable: true
+              cfg_out_of_scope_subdomains:
+                type: array
+                items:
+                  title: Cfg out of scope subdomains
+                  type: string
+                  maxLength: 200
+                  minLength: 1
+                x-nullable: true
+              cfg_starting_point_path:
+                title: Cfg starting point path
+                type: string
+                maxLength: 200
+                x-nullable: true
+              cfg_excluded_paths:
+                type: array
+                items:
+                  title: Cfg excluded paths
+                  type: string
+                  maxLength: 200
+                  minLength: 1
+                x-nullable: true
+              cfg_imported_subdomains:
+                type: array
+                items:
+                  title: Cfg imported subdomains
+                  type: string
+                  maxLength: 200
+                  minLength: 1
+                x-nullable: true
+              cfg_custom_dorks:
+                title: Cfg custom dorks
+                type: string
+                x-nullable: true
+              domain:
+                title: Domain
+                type: integer
+              scan_type:
+                title: Scan type
+                type: integer
+              initiated_by:
+                title: Initiated by
+                type: integer
+                x-nullable: true
+              aborted_by:
+                title: Aborted by
+                type: integer
+                x-nullable: true
+              emails:
+                type: array
+                items:
+                  type: integer
+                uniqueItems: true
+              employees:
+                type: array
+                items:
+                  type: integer
+                uniqueItems: true
+              buckets:
+                type: array
+                items:
+                  type: integer
+                uniqueItems: true
+              dorks:
+                type: array
+                items:
+                  type: integer
+                uniqueItems: true
+            readOnly: true
+          target_domain:
+            required:
+            - name
+            type: object
+            properties:
+              id:
+                title: Id
+                type: integer
+                readOnly: true
+              name:
+                title: Name
+                type: string
+                maxLength: 300
+                minLength: 1
+              h1_team_handle:
+                title: H1 team handle
+                type: string
+                maxLength: 100
+                x-nullable: true
+              ip_address_cidr:
+                title: Ip address cidr
+                type: string
+                maxLength: 100
+                x-nullable: true
+              description:
+                title: Description
+                type: string
+                x-nullable: true
+              insert_date:
+                title: Insert date
+                type: string
+                format: date-time
+                x-nullable: true
+              start_scan_date:
+                title: Start scan date
+                type: string
+                format: date-time
+                x-nullable: true
+              request_headers:
+                title: Request headers
+                type: object
+                x-nullable: true
+              is_monitored:
+                title: Is monitored
+                type: boolean
+              monitor_frequency:
+                title: Monitor frequency
+                type: string
+                enum:
+                - hourly
+                - daily
+                - weekly
+                - monthly
+              monitor_scan_scope:
+                title: Monitor scan scope
+                type: string
+                enum:
+                - targeted
+                - full
+              last_monitored:
+                title: Last monitored
+                type: string
+                format: date-time
+                x-nullable: true
+              domain_info:
+                title: Domain info
+                type: integer
+                x-nullable: true
+              project:
+                title: Project
+                type: integer
+                x-nullable: true
+              monitor_engine:
+                title: Monitor engine
+                type: integer
+                x-nullable: true
+              monitor_periodic_task:
+                title: Monitor periodic task
+                type: integer
+                x-nullable: true
+            readOnly: true
+          subdomain:
+            required:
+            - name
+            type: object
+            properties:
+              id:
+                title: Id
+                type: integer
+                readOnly: true
+              name:
+                title: Name
+                type: string
+                maxLength: 1000
+                minLength: 1
+              is_imported_subdomain:
+                title: Is imported subdomain
+                type: boolean
+              is_important:
+                title: Is important
+                type: boolean
+                x-nullable: true
+              http_url:
+                title: Http url
+                type: string
+                maxLength: 10000
+                x-nullable: true
+              screenshot_path:
+                title: Screenshot path
+                type: string
+                maxLength: 1000
+                x-nullable: true
+              http_header_path:
+                title: Http header path
+                type: string
+                maxLength: 1000
+                x-nullable: true
+              discovered_date:
+                title: Discovered date
+                type: string
+                format: date-time
+                x-nullable: true
+              cname:
+                title: Cname
+                type: string
+                maxLength: 5000
+                x-nullable: true
+              is_cdn:
+                title: Is cdn
+                type: boolean
+                x-nullable: true
+              cdn_name:
+                title: Cdn name
+                type: string
+                maxLength: 200
+                x-nullable: true
+              http_status:
+                title: Http status
+                type: integer
+                maximum: 2147483647
+                minimum: -2147483648
+              content_type:
+                title: Content type
+                type: string
+                maxLength: 100
+                x-nullable: true
+              response_time:
+                title: Response time
+                type: number
+                x-nullable: true
+              webserver:
+                title: Webserver
+                type: string
+                maxLength: 1000
+                x-nullable: true
+              content_length:
+                title: Content length
+                type: integer
+                maximum: 2147483647
+                minimum: -2147483648
+                x-nullable: true
+              page_title:
+                title: Page title
+                type: string
+                maxLength: 1000
+                x-nullable: true
+              origin_ip:
+                title: Origin ip
+                type: string
+                maxLength: 45
+                x-nullable: true
+              attack_surface:
+                title: Attack surface
+                type: string
+                x-nullable: true
+              scan_history:
+                title: Scan history
+                type: integer
+                x-nullable: true
+              target_domain:
+                title: Target domain
+                type: integer
+                x-nullable: true
+              technologies:
+                type: array
+                items:
+                  type: integer
+                uniqueItems: true
+              ip_addresses:
+                type: array
+                items:
+                  type: integer
+                uniqueItems: true
+              directories:
+                type: array
+                items:
+                  type: integer
+                uniqueItems: true
+              waf:
+                type: array
+                items:
+                  type: integer
+                uniqueItems: true
+            readOnly: true
+          techs:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  title: Id
+                  type: integer
+                  readOnly: true
+                name:
+                  title: Name
+                  type: string
+                  maxLength: 500
+                  x-nullable: true
+            readOnly: true
+          endpoint_subscan_ids:
+            type: array
+            items:
+              required:
+              - start_scan_date
+              - status
+              - scan_history
+              - subdomain
+              type: object
+              properties:
+                id:
+                  title: Id
+                  type: integer
+                  readOnly: true
+                type:
+                  title: Type
+                  type: string
+                  maxLength: 100
+                  x-nullable: true
+                start_scan_date:
+                  title: Start scan date
+                  type: string
+                  format: date-time
+                status:
+                  title: Status
+                  type: integer
+                  maximum: 2147483647
+                  minimum: -2147483648
+                celery_ids:
+                  type: array
+                  items:
+                    title: Celery ids
+                    type: string
+                    maxLength: 100
+                    minLength: 1
+                stop_scan_date:
+                  title: Stop scan date
+                  type: string
+                  format: date-time
+                  x-nullable: true
+                error_message:
+                  title: Error message
+                  type: string
+                  maxLength: 300
+                  x-nullable: true
+                scan_history:
+                  title: Scan history
+                  type: integer
+                subdomain:
+                  title: Subdomain
+                  type: integer
+                engine:
+                  title: Engine
+                  type: integer
+                  x-nullable: true
+                subdomain_subscan_ids:
+                  type: array
+                  items:
+                    type: integer
+                  uniqueItems: true
+            readOnly: true
+        readOnly: true
+      target_domain:
+        required:
+        - name
+        type: object
+        properties:
+          id:
+            title: Id
+            type: integer
+            readOnly: true
+          name:
+            title: Name
+            type: string
+            maxLength: 300
+            minLength: 1
+          h1_team_handle:
+            title: H1 team handle
+            type: string
+            maxLength: 100
+            x-nullable: true
+          ip_address_cidr:
+            title: Ip address cidr
+            type: string
+            maxLength: 100
+            x-nullable: true
+          description:
+            title: Description
+            type: string
+            x-nullable: true
+          insert_date:
+            title: Insert date
+            type: string
+            format: date-time
+            x-nullable: true
+          start_scan_date:
+            title: Start scan date
+            type: string
+            format: date-time
+            x-nullable: true
+          request_headers:
+            title: Request headers
+            type: object
+            x-nullable: true
+          is_monitored:
+            title: Is monitored
+            type: boolean
+          monitor_frequency:
+            title: Monitor frequency
+            type: string
+            enum:
+            - hourly
+            - daily
+            - weekly
+            - monthly
+          monitor_scan_scope:
+            title: Monitor scan scope
+            type: string
+            enum:
+            - targeted
+            - full
+          last_monitored:
+            title: Last monitored
+            type: string
+            format: date-time
+            x-nullable: true
+          domain_info:
+            type: object
+            properties:
+              id:
+                title: Id
+                type: integer
+                readOnly: true
+              dnssec:
+                title: Dnssec
+                type: boolean
+              created:
+                title: Created
+                type: string
+                format: date-time
+                x-nullable: true
+              updated:
+                title: Updated
+                type: string
+                format: date-time
+                x-nullable: true
+              expires:
+                title: Expires
+                type: string
+                format: date-time
+                x-nullable: true
+              geolocation_iso:
+                title: Geolocation iso
+                type: string
+                maxLength: 10
+                x-nullable: true
+              whois_server:
+                title: Whois server
+                type: string
+                maxLength: 150
+                x-nullable: true
+              registrar:
+                title: Registrar
+                type: integer
+                x-nullable: true
+              registrant:
+                title: Registrant
+                type: integer
+                x-nullable: true
+              admin:
+                title: Admin
+                type: integer
+                x-nullable: true
+              tech:
+                title: Tech
+                type: integer
+                x-nullable: true
+              status:
+                type: array
+                items:
+                  type: integer
+                uniqueItems: true
+              name_servers:
+                type: array
+                items:
+                  type: integer
+                uniqueItems: true
+              dns_records:
+                type: array
+                items:
+                  type: integer
+                uniqueItems: true
+              related_domains:
+                type: array
+                items:
+                  type: integer
+                uniqueItems: true
+              related_tlds:
+                type: array
+                items:
+                  type: integer
+                uniqueItems: true
+              similar_domains:
+                type: array
+                items:
+                  type: integer
+                uniqueItems: true
+              historical_ips:
+                type: array
+                items:
+                  type: integer
+                uniqueItems: true
+            readOnly: true
+          project:
+            required:
+            - name
+            - slug
+            - insert_date
+            type: object
+            properties:
+              id:
+                title: Id
+                type: integer
+                readOnly: true
+              name:
+                title: Name
+                type: string
+                maxLength: 500
+                minLength: 1
+              slug:
+                title: Slug
+                type: string
+                format: slug
+                pattern: ^[-a-zA-Z0-9_]+$
+                maxLength: 50
+                minLength: 1
+              insert_date:
+                title: Insert date
+                type: string
+                format: date-time
+            readOnly: true
+          monitor_engine:
+            required:
+            - engine_name
+            - yaml_configuration
+            type: object
+            properties:
+              id:
+                title: Id
+                type: integer
+                readOnly: true
+              engine_name:
+                title: Engine name
+                type: string
+                maxLength: 200
+                minLength: 1
+              yaml_configuration:
+                title: Yaml configuration
+                type: string
+                minLength: 1
+              default_engine:
+                title: Default engine
+                type: boolean
+                x-nullable: true
+            readOnly: true
+          monitor_periodic_task:
+            required:
+            - name
+            - task
+            type: object
+            properties:
+              id:
+                title: ID
+                type: integer
+                readOnly: true
+              name:
+                title: Name
+                description: Short Description For This Task
+                type: string
+                maxLength: 200
+                minLength: 1
+              task:
+                title: Task Name
+                description: 'The Name of the Celery Task that Should be Run.  (Example:
+                  "proj.tasks.import_contacts")'
+                type: string
+                maxLength: 200
+                minLength: 1
+              args:
+                title: Positional Arguments
+                description: 'JSON encoded positional arguments (Example: ["arg1",
+                  "arg2"])'
+                type: string
+              kwargs:
+                title: Keyword Arguments
+                description: 'JSON encoded keyword arguments (Example: {"argument":
+                  "value"})'
+                type: string
+              queue:
+                title: Queue Override
+                description: Queue defined in CELERY_TASK_QUEUES. Leave None for default
+                  queuing.
+                type: string
+                maxLength: 200
+                x-nullable: true
+              exchange:
+                title: Exchange
+                description: Override Exchange for low-level AMQP routing
+                type: string
+                maxLength: 200
+                x-nullable: true
+              routing_key:
+                title: Routing Key
+                description: Override Routing Key for low-level AMQP routing
+                type: string
+                maxLength: 200
+                x-nullable: true
+              headers:
+                title: AMQP Message Headers
+                description: JSON encoded message headers for the AMQP message.
+                type: string
+              priority:
+                title: Priority
+                description: 'Priority Number between 0 and 255. Supported by: RabbitMQ,
+                  Redis (priority reversed, 0 is highest).'
+                type: integer
+                maximum: 255
+                minimum: 0
+                x-nullable: true
+              expires:
+                title: Expires Datetime
+                description: Datetime after which the schedule will no longer trigger
+                  the task to run
+                type: string
+                format: date-time
+                x-nullable: true
+              expire_seconds:
+                title: Expires timedelta with seconds
+                description: Timedelta with seconds which the schedule will no longer
+                  trigger the task to run
+                type: integer
+                maximum: 2147483647
+                minimum: 0
+                x-nullable: true
+              one_off:
+                title: One-off Task
+                description: If True, the schedule will only run the task a single
+                  time
+                type: boolean
+              start_time:
+                title: Start Datetime
+                description: Datetime when the schedule should begin triggering the
+                  task to run
+                type: string
+                format: date-time
+                x-nullable: true
+              enabled:
+                title: Enabled
+                description: Set to False to disable the schedule
+                type: boolean
+              last_run_at:
+                title: Last Run Datetime
+                description: Datetime that the schedule last triggered the task to
+                  run. Reset to None if enabled is set to False.
+                type: string
+                format: date-time
+                readOnly: true
+              total_run_count:
+                title: Total Run Count
+                description: Running count of how many times the schedule has triggered
+                  the task
+                type: integer
+                readOnly: true
+              date_changed:
+                title: Last Modified
+                description: Datetime that this PeriodicTask was last modified
+                type: string
+                format: date-time
+                readOnly: true
+              description:
+                title: Description
+                description: Detailed description about the details of this Periodic
+                  Task
+                type: string
+              interval:
+                title: Interval Schedule
+                description: Interval Schedule to run the task on.  Set only one schedule
+                  type, leave the others null.
+                type: integer
+                x-nullable: true
+              crontab:
+                title: Crontab Schedule
+                description: Crontab Schedule to run the task on.  Set only one schedule
+                  type, leave the others null.
+                type: integer
+                x-nullable: true
+              solar:
+                title: Solar Schedule
+                description: Solar Schedule to run the task on.  Set only one schedule
+                  type, leave the others null.
+                type: integer
+                x-nullable: true
+              clocked:
+                title: Clocked Schedule
+                description: Clocked Schedule to run the task on.  Set only one schedule
+                  type, leave the others null.
+                type: integer
+                x-nullable: true
+            readOnly: true
+        readOnly: true
+      tags:
+        type: array
+        items:
+          required:
+          - name
+          type: object
+          properties:
+            id:
+              title: Id
+              type: integer
+              readOnly: true
+            name:
+              title: Name
+              type: string
+              maxLength: 100
+              minLength: 1
+        readOnly: true
+      references:
+        type: array
+        items:
+          required:
+          - url
+          type: object
+          properties:
+            id:
+              title: Id
+              type: integer
+              readOnly: true
+            url:
+              title: Url
+              type: string
+              maxLength: 5000
+              minLength: 1
+        readOnly: true
+      cve_ids:
+        type: array
+        items:
+          required:
+          - name
+          type: object
+          properties:
+            id:
+              title: Id
+              type: integer
+              readOnly: true
+            name:
+              title: Name
+              type: string
+              maxLength: 100
+              minLength: 1
+        readOnly: true
+      cwe_ids:
+        type: array
+        items:
+          required:
+          - name
+          type: object
+          properties:
+            id:
+              title: Id
+              type: integer
+              readOnly: true
+            name:
+              title: Name
+              type: string
+              maxLength: 100
+              minLength: 1
+        readOnly: true
+      vuln_subscan_ids:
+        type: array
+        items:
+          required:
+          - start_scan_date
+          - status
+          type: object
+          properties:
+            id:
+              title: Id
+              type: integer
+              readOnly: true
+            type:
+              title: Type
+              type: string
+              maxLength: 100
+              x-nullable: true
+            start_scan_date:
+              title: Start scan date
+              type: string
+              format: date-time
+            status:
+              title: Status
+              type: integer
+              maximum: 2147483647
+              minimum: -2147483648
+            celery_ids:
+              type: array
+              items:
+                title: Celery ids
+                type: string
+                maxLength: 100
+                minLength: 1
+            stop_scan_date:
+              title: Stop scan date
+              type: string
+              format: date-time
+              x-nullable: true
+            error_message:
+              title: Error message
+              type: string
+              maxLength: 300
+              x-nullable: true
+            scan_history:
+              required:
+              - start_scan_date
+              - domain
+              - scan_type
+              type: object
+              properties:
+                id:
+                  title: Id
+                  type: integer
+                  readOnly: true
+                start_scan_date:
+                  title: Start scan date
+                  type: string
+                  format: date-time
+                scan_status:
+                  title: Scan status
+                  type: integer
+                  enum:
+                  - -1
+                  - 0
+                  - 1
+                  - 2
+                  - 3
+                results_dir:
+                  title: Results dir
+                  type: string
+                  maxLength: 100
+                celery_ids:
+                  type: array
+                  items:
+                    title: Celery ids
+                    type: string
+                    maxLength: 100
+                    minLength: 1
+                tasks:
+                  type: array
+                  items:
+                    title: Tasks
+                    type: string
+                    maxLength: 200
+                    minLength: 1
+                  x-nullable: true
+                stop_scan_date:
+                  title: Stop scan date
+                  type: string
+                  format: date-time
+                  x-nullable: true
+                used_gf_patterns:
+                  title: Used gf patterns
+                  type: string
+                  maxLength: 500
+                  x-nullable: true
+                error_message:
+                  title: Error message
+                  type: string
+                  maxLength: 300
+                  x-nullable: true
+                cfg_out_of_scope_subdomains:
+                  type: array
+                  items:
+                    title: Cfg out of scope subdomains
+                    type: string
+                    maxLength: 200
+                    minLength: 1
+                  x-nullable: true
+                cfg_starting_point_path:
+                  title: Cfg starting point path
+                  type: string
+                  maxLength: 200
+                  x-nullable: true
+                cfg_excluded_paths:
+                  type: array
+                  items:
+                    title: Cfg excluded paths
+                    type: string
+                    maxLength: 200
+                    minLength: 1
+                  x-nullable: true
+                cfg_imported_subdomains:
+                  type: array
+                  items:
+                    title: Cfg imported subdomains
+                    type: string
+                    maxLength: 200
+                    minLength: 1
+                  x-nullable: true
+                cfg_custom_dorks:
+                  title: Cfg custom dorks
+                  type: string
+                  x-nullable: true
+                domain:
+                  title: Domain
+                  type: integer
+                scan_type:
+                  title: Scan type
+                  type: integer
+                initiated_by:
+                  title: Initiated by
+                  type: integer
+                  x-nullable: true
+                aborted_by:
+                  title: Aborted by
+                  type: integer
+                  x-nullable: true
+                emails:
+                  type: array
+                  items:
+                    type: integer
+                  uniqueItems: true
+                employees:
+                  type: array
+                  items:
+                    type: integer
+                  uniqueItems: true
+                buckets:
+                  type: array
+                  items:
+                    type: integer
+                  uniqueItems: true
+                dorks:
+                  type: array
+                  items:
+                    type: integer
+                  uniqueItems: true
+              readOnly: true
+            subdomain:
+              required:
+              - name
+              type: object
+              properties:
+                id:
+                  title: Id
+                  type: integer
+                  readOnly: true
+                name:
+                  title: Name
+                  type: string
+                  maxLength: 1000
+                  minLength: 1
+                is_imported_subdomain:
+                  title: Is imported subdomain
+                  type: boolean
+                is_important:
+                  title: Is important
+                  type: boolean
+                  x-nullable: true
+                http_url:
+                  title: Http url
+                  type: string
+                  maxLength: 10000
+                  x-nullable: true
+                screenshot_path:
+                  title: Screenshot path
+                  type: string
+                  maxLength: 1000
+                  x-nullable: true
+                http_header_path:
+                  title: Http header path
+                  type: string
+                  maxLength: 1000
+                  x-nullable: true
+                discovered_date:
+                  title: Discovered date
+                  type: string
+                  format: date-time
+                  x-nullable: true
+                cname:
+                  title: Cname
+                  type: string
+                  maxLength: 5000
+                  x-nullable: true
+                is_cdn:
+                  title: Is cdn
+                  type: boolean
+                  x-nullable: true
+                cdn_name:
+                  title: Cdn name
+                  type: string
+                  maxLength: 200
+                  x-nullable: true
+                http_status:
+                  title: Http status
+                  type: integer
+                  maximum: 2147483647
+                  minimum: -2147483648
+                content_type:
+                  title: Content type
+                  type: string
+                  maxLength: 100
+                  x-nullable: true
+                response_time:
+                  title: Response time
+                  type: number
+                  x-nullable: true
+                webserver:
+                  title: Webserver
+                  type: string
+                  maxLength: 1000
+                  x-nullable: true
+                content_length:
+                  title: Content length
+                  type: integer
+                  maximum: 2147483647
+                  minimum: -2147483648
+                  x-nullable: true
+                page_title:
+                  title: Page title
+                  type: string
+                  maxLength: 1000
+                  x-nullable: true
+                origin_ip:
+                  title: Origin ip
+                  type: string
+                  maxLength: 45
+                  x-nullable: true
+                attack_surface:
+                  title: Attack surface
+                  type: string
+                  x-nullable: true
+                scan_history:
+                  title: Scan history
+                  type: integer
+                  x-nullable: true
+                target_domain:
+                  title: Target domain
+                  type: integer
+                  x-nullable: true
+                technologies:
+                  type: array
+                  items:
+                    type: integer
+                  uniqueItems: true
+                ip_addresses:
+                  type: array
+                  items:
+                    type: integer
+                  uniqueItems: true
+                directories:
+                  type: array
+                  items:
+                    type: integer
+                  uniqueItems: true
+                waf:
+                  type: array
+                  items:
+                    type: integer
+                  uniqueItems: true
+              readOnly: true
+            engine:
+              required:
+              - engine_name
+              - yaml_configuration
+              type: object
+              properties:
+                id:
+                  title: Id
+                  type: integer
+                  readOnly: true
+                engine_name:
+                  title: Engine name
+                  type: string
+                  maxLength: 200
+                  minLength: 1
+                yaml_configuration:
+                  title: Yaml configuration
+                  type: string
+                  minLength: 1
+                default_engine:
+                  title: Default engine
+                  type: boolean
+                  x-nullable: true
+              readOnly: true
+            subdomain_subscan_ids:
+              type: array
+              items:
+                required:
+                - name
+                type: object
+                properties:
+                  id:
+                    title: Id
+                    type: integer
+                    readOnly: true
+                  name:
+                    title: Name
+                    type: string
+                    maxLength: 1000
+                    minLength: 1
+                  is_imported_subdomain:
+                    title: Is imported subdomain
+                    type: boolean
+                  is_important:
+                    title: Is important
+                    type: boolean
+                    x-nullable: true
+                  http_url:
+                    title: Http url
+                    type: string
+                    maxLength: 10000
+                    x-nullable: true
+                  screenshot_path:
+                    title: Screenshot path
+                    type: string
+                    maxLength: 1000
+                    x-nullable: true
+                  http_header_path:
+                    title: Http header path
+                    type: string
+                    maxLength: 1000
+                    x-nullable: true
+                  discovered_date:
+                    title: Discovered date
+                    type: string
+                    format: date-time
+                    x-nullable: true
+                  cname:
+                    title: Cname
+                    type: string
+                    maxLength: 5000
+                    x-nullable: true
+                  is_cdn:
+                    title: Is cdn
+                    type: boolean
+                    x-nullable: true
+                  cdn_name:
+                    title: Cdn name
+                    type: string
+                    maxLength: 200
+                    x-nullable: true
+                  http_status:
+                    title: Http status
+                    type: integer
+                    maximum: 2147483647
+                    minimum: -2147483648
+                  content_type:
+                    title: Content type
+                    type: string
+                    maxLength: 100
+                    x-nullable: true
+                  response_time:
+                    title: Response time
+                    type: number
+                    x-nullable: true
+                  webserver:
+                    title: Webserver
+                    type: string
+                    maxLength: 1000
+                    x-nullable: true
+                  content_length:
+                    title: Content length
+                    type: integer
+                    maximum: 2147483647
+                    minimum: -2147483648
+                    x-nullable: true
+                  page_title:
+                    title: Page title
+                    type: string
+                    maxLength: 1000
+                    x-nullable: true
+                  origin_ip:
+                    title: Origin ip
+                    type: string
+                    maxLength: 45
+                    x-nullable: true
+                  attack_surface:
+                    title: Attack surface
+                    type: string
+                    x-nullable: true
+                  scan_history:
+                    title: Scan history
+                    type: integer
+                    x-nullable: true
+                  target_domain:
+                    title: Target domain
+                    type: integer
+                    x-nullable: true
+                  technologies:
+                    type: array
+                    items:
+                      type: integer
+                    uniqueItems: true
+                  ip_addresses:
+                    type: array
+                    items:
+                      type: integer
+                    uniqueItems: true
+                  directories:
+                    type: array
+                    items:
+                      type: integer
+                    uniqueItems: true
+                  waf:
+                    type: array
+                    items:
+                      type: integer
+                    uniqueItems: true
+              readOnly: true
+        readOnly: true
+  InAppNotification:
+    required:
+    - title
+    - description
+    - icon
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      title:
+        title: Title
+        type: string
+        maxLength: 255
+        minLength: 1
+      description:
+        title: Description
+        type: string
+        minLength: 1
+      icon:
+        title: Icon
+        type: string
+        maxLength: 50
+        minLength: 1
+      is_read:
+        title: Is read
+        type: boolean
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      notification_type:
+        title: Notification type
+        type: string
+        enum:
+        - system
+        - project
+      status:
+        title: Status
+        type: string
+        enum:
+        - success
+        - info
+        - warning
+        - error
+      redirect_link:
+        title: Redirect link
+        type: string
+        format: uri
+        maxLength: 255
+        x-nullable: true
+      open_in_new_tab:
+        title: Open in new tab
+        type: boolean
+      project:
+        title: Project
+        type: integer
+        x-nullable: true

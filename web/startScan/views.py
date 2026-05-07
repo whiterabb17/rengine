@@ -65,6 +65,7 @@ def detail_scan(request, id, slug):
     scan_activity = ScanActivity.objects.filter(scan_of__id=id).order_by('time')
     cves = CveId.objects.filter(cve_ids__in=vulns)
     cwes = CweId.objects.filter(cwe_ids__in=vulns)
+    secret_leaks = SecretLeak.objects.filter(scan_history=scan)
 
     # HTTP statuses
     http_statuses = (
@@ -201,6 +202,8 @@ def detail_scan(request, id, slug):
         'most_common_tags': common_tags,
         'most_common_vulnerability': common_vulns,
         'asset_countries': asset_countries,
+        'secret_leaks': secret_leaks.order_by('-discovered_date'),
+        'secret_leaks_count': secret_leaks.count(),
     }
 
     # Find number of matched GF patterns
@@ -1052,6 +1055,25 @@ def customize_report(request, id):
 
 
 @has_permission_decorator(PERM_MODIFY_SCAN_REPORT, redirect_url=FOUR_OH_FOUR_URL)
+def update_leak_status(request, id):
+    if request.method == 'POST':
+        leak = get_object_or_404(SecretLeak, id=id)
+        status = request.POST.get('status')
+        if status in ['unverified', 'verified', 'false_positive']:
+            leak.status = status
+            leak.save()
+            return JsonResponse({'status': True})
+    return JsonResponse({'status': False})
+
+
+def delete_leak(request, id):
+    if request.method == 'POST':
+        leak = get_object_or_404(SecretLeak, id=id)
+        leak.delete()
+        return JsonResponse({'status': True})
+    return JsonResponse({'status': False})
+
+
 def create_report(request, id):
     primary_color = '#FFB74D'
     secondary_color = '#212121'
