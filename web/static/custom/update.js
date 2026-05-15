@@ -135,7 +135,7 @@ function update_available(latest_version_number, changelog, redirect_link) {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        window.open(redirect_link || "https://github.com/whiterabb17/rengine/releases", "_blank");
+        window.open(redirect_link || "https://github.com/whiterabb17/r3ngine/releases", "_blank");
       }
     });
   });
@@ -170,7 +170,7 @@ function showAfterUpdatePopup() {
     //   cancelButtonText: "No, thanks",
     // }).then((result) => {
     //   if (result.isConfirmed) {
-    //     window.open("https://rengine.wiki/changelog/latest", "_blank");
+    //     window.open("https://github.com/whiterabb17/r3ngine", "_blank");
     //   }
     //   localStorage.setItem("lastShownUpdateVersion", currentVersion);
     // });
@@ -183,7 +183,7 @@ function showAfterUpdatePopup() {
       cancelButtonText: "No, thanks",
     }).then((result) => {
       if (result.isConfirmed) {
-        window.open(`https://rengine.wiki/whats-new/${currentVersion.replace(/\./g, "_")}`, "_blank");
+        window.open(`https://github.com/whiterabb17/r3ngine`, "_blank");
       }
       localStorage.setItem("lastShownUpdateVersion", currentVersion);
     });
