@@ -6,7 +6,7 @@
 
 <p align="center">
   <h4>REBOOT BETA RELEASE OUT NOW!!</h4>
-  <em>Watch this Repo:</em> <strong>https://github.com/whiterabb17/r3ngine</strong>
+   <strong>https://github.com/whiterabb17/r3ngine</strong>
   <h3>Unofficial Fork of reNgine: The Ultimate Web Reconnaissance & Vulnerability Scanner 🚀</h3>
 </p>
 
