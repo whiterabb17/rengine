@@ -1,7 +1,7 @@
 <p align="center">
 <strong>THE V3 UPDATE CAN BE FOUND AT https://github.com/whiterabb17/r3ngine</strong>
   
-<a href="https://rengine.wiki"><img src=".github/screenshots/banner.gif" alt=""/></a>
+<a href="https://rengine.wiki"><img src="https://github.com/whiterabb17/r3ngine/blob/main/.github/screenshots/r3ngine_dash.png?raw=true" alt=""/></a>
 </p>
 
 <p align="center">
